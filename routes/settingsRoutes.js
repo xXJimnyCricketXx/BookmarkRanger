@@ -18,6 +18,7 @@ router.post('/general', settingsController.saveGeneral);
 
 router.get('/search-providers/add', settingsController.showAddSearchProvider);
 router.post('/search-providers', settingsController.createSearchProvider);
+router.post('/search-providers/:id/delete', settingsController.deleteSearchProvider);
 
 router.get('/interface', settingsController.showInterface);
 router.post('/interface', settingsController.saveInterface);

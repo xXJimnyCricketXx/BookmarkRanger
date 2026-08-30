@@ -78,6 +78,22 @@
 
       <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>
     </form>
+
+    <% if (searchProviders.length > 0) { %>
+      <div class="mt-10 pt-8 border-t border-black/5 dark:border-white/10">
+        <h2 class="text-lg font-black mb-4"><%= t('settings.manage_search_providers') %></h2>
+        <ul class="space-y-2">
+          <% searchProviders.forEach(provider => { %>
+            <li class="card-theme rounded-xl px-4 py-2.5 flex items-center justify-between text-sm gap-3">
+              <span class="truncate"><%= provider.name %> <span class="opacity-40 text-xs"><%= provider.queryTemplate %></span></span>
+              <form action="<%= baseUrl %>/settings/search-providers/<%= provider.id %>/delete" method="POST" onsubmit="return confirm('<%= provider.name %>?')">
+                <button type="submit" title="<%= t('bookmarks.delete') %>" class="shrink-0"><i class="fa-solid fa-trash text-xs opacity-40 hover:opacity-80"></i></button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
   </div>
 </div>
 

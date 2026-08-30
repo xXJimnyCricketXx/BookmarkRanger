@@ -4,12 +4,21 @@
 
 <% if (!settings.hideSearchBar) { %>
 <div class="mb-10">
-  <form action="<%= baseUrl %>/" method="GET">
-    <div class="relative max-w-2xl mx-auto">
-      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 opacity-40"></i>
-      <input type="text" name="q" value="<%= q %>" id="search-input"
-        class="input-theme w-full pl-11 pr-4 py-3 rounded-2xl text-sm shadow-lg"
-        placeholder="<%= t('dashboard.search_placeholder') %>" autofocus>
+  <form action="<%= baseUrl %>/" method="GET" id="search-form">
+    <div class="flex gap-2 max-w-2xl mx-auto">
+      <div class="relative flex-grow">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 opacity-40"></i>
+        <input type="text" name="q" value="<%= q %>" id="search-input"
+          class="input-theme w-full pl-11 pr-4 py-3 rounded-2xl text-sm shadow-lg"
+          placeholder="<%= t('dashboard.search_placeholder') %>" autofocus>
+      </div>
+      <select id="search-provider-select" class="input-theme rounded-2xl text-sm shadow-lg px-3 shrink-0 max-w-[9rem]">
+        <option value="local"><%= t('dashboard.local_search') %></option>
+        <% searchProviders.forEach(provider => { %>
+          <option value="<%= provider.id %>" data-template="<%= provider.queryTemplate %>"><%= provider.name %></option>
+        <% }) %>
+      </select>
+      <button type="submit" class="bg-primary-theme rounded-2xl px-5 text-sm font-bold shadow-lg hover:brightness-110 transition shrink-0"><%= t('dashboard.search_button') %></button>
     </div>
     <p class="text-center text-xs opacity-50 mt-2"><%= t('dashboard.search_help') %></p>
   </form>
@@ -17,6 +26,15 @@
 <script>
   document.getElementById('search-input').addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { e.target.value = ''; e.target.form.submit(); }
+  });
+  document.getElementById('search-form').addEventListener('submit', (e) => {
+    const select = document.getElementById('search-provider-select');
+    const option = select.options[select.selectedIndex];
+    const template = option.dataset.template;
+    if (!template) return; // "local" -> normal form submit
+    e.preventDefault();
+    const query = document.getElementById('search-input').value;
+    if (query) window.open(template + encodeURIComponent(query), '_blank');
   });
 </script>
 <% } %>

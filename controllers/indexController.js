@@ -27,6 +27,7 @@ exports.dashboard = async (req, res) => {
 
     const noResults = isSearch && pinnedBookmarks.length === 0 && pinnedSnippets.length === 0;
     const provider = settings.fallbackSearchProvider;
+    const searchProviders = await prisma.searchProvider.findMany({ orderBy: { name: 'asc' } });
 
     res.render('index', {
         title: settings.siteName,
@@ -38,6 +39,7 @@ exports.dashboard = async (req, res) => {
         isSearch,
         noResults,
         fallbackSearchHref: noResults && provider ? provider.queryTemplate + encodeURIComponent(q) : null,
-        fallbackSearchName: provider ? provider.name : ''
+        fallbackSearchName: provider ? provider.name : '',
+        searchProviders
     });
 };

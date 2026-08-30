@@ -99,6 +99,16 @@ exports.createSearchProvider = async (req, res) => {
     res.redirect(`${res.locals.baseUrl}/settings/general`);
 };
 
+exports.deleteSearchProvider = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const settings = await getSettings();
+    if (settings.fallbackSearchProviderId === id) {
+        await prisma.settings.update({ where: { id: settings.id }, data: { fallbackSearchProviderId: null } });
+    }
+    await prisma.searchProvider.delete({ where: { id } });
+    res.redirect(`${res.locals.baseUrl}/settings/general`);
+};
+
 exports.showInterface = async (req, res) => {
     const settings = await getSettings();
     res.render('settings-interface', { title: 'Einstellungen — Oberfläche', settings });
