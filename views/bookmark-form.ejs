@@ -1,0 +1,49 @@
+<% locals.activeNav = 'bookmarks'; %>
+<%- include('partials/header') %>
+
+<div class="max-w-xl mx-auto">
+  <h1 class="text-2xl font-black mb-6"><%= bookmark ? t('bookmarkForm.title_edit') : t('bookmarkForm.title_add') %></h1>
+
+  <form action="<%= baseUrl %>/bookmarks<%= bookmark ? '/' + bookmark.id : '' %>" method="POST" class="card-theme rounded-3xl shadow-xl p-6 space-y-5">
+    <div>
+      <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.title_label') %></label>
+      <input type="text" name="title" required value="<%= bookmark ? bookmark.title : '' %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+    </div>
+
+    <div>
+      <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.url_label') %></label>
+      <input type="url" name="url" required placeholder="https://example.com" value="<%= bookmark ? bookmark.url : '' %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+    </div>
+
+    <div>
+      <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.description_label') %></label>
+      <input type="text" name="description" value="<%= bookmark && bookmark.description ? bookmark.description : '' %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+    </div>
+
+    <div>
+      <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.category_label') %></label>
+      <select name="categoryId" required class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        <% boards.forEach(board => { %>
+          <optgroup label="<%= board.name %>">
+            <% board.categories.forEach(category => { %>
+              <option value="<%= category.id %>" <%= String(selectedCategoryId) === String(category.id) ? 'selected' : '' %>><%= category.name %></option>
+            <% }) %>
+          </optgroup>
+        <% }) %>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.tags_label') %></label>
+      <input type="text" name="tags" placeholder="<%= t('bookmarkForm.tags_hint') %>"
+        value="<%= bookmark ? bookmark.tags.map(t => t.name).join(', ') : '' %>"
+        class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+    </div>
+
+    <button type="submit" class="w-full bg-primary-theme font-black py-3 rounded-xl hover:brightness-110 transition-all">
+      <%= t('bookmarkForm.submit_btn') %>
+    </button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

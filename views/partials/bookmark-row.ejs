@@ -1,0 +1,21 @@
+<div class="group flex items-center justify-between gap-2 py-1.5">
+  <a href="<%= bookmark.url %>" <%= settings.openLinksInNewTab ? 'target="_blank" rel="noopener"' : '' %> class="flex items-center gap-2 text-sm hover:text-primary-theme transition-colors truncate min-w-0">
+    <% if (bookmark.icon) { %>
+      <img src="<%= baseUrl %><%= bookmark.icon %>" class="w-4 h-4 rounded-sm shrink-0" alt="">
+    <% } else { %>
+      <i class="fa-solid fa-link text-xs opacity-50 w-4 text-center shrink-0"></i>
+    <% } %>
+    <span class="truncate"><%= bookmark.title %></span>
+  </a>
+  <div class="hidden group-hover:flex items-center gap-2 shrink-0">
+    <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/pin" method="POST">
+      <button type="submit" title="<%= bookmark.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>">
+        <i class="fa-solid fa-thumbtack text-xs <%= bookmark.isPinned ? 'text-primary-theme' : 'opacity-40 hover:opacity-80' %>"></i>
+      </button>
+    </form>
+    <a href="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/edit" title="<%= t('bookmarks.edit') %>"><i class="fa-solid fa-pen text-xs opacity-40 hover:opacity-80"></i></a>
+    <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/delete" method="POST" onsubmit="return confirm('<%= bookmark.title %>?')">
+      <button type="submit" title="<%= t('bookmarks.delete') %>"><i class="fa-solid fa-trash text-xs opacity-40 hover:opacity-80"></i></button>
+    </form>
+  </div>
+</div>

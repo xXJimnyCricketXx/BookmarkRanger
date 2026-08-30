@@ -1,0 +1,67 @@
+<% locals.activeNav = 'bookmarks'; %>
+<%- include('partials/header') %>
+
+<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-8">
+  <% boards.forEach(board => { %>
+    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
+  <% }) %>
+  <button type="button" id="new-board-btn" class="tab-link px-4 py-3 text-lg font-bold">+</button>
+</div>
+
+<form id="new-board-form" action="<%= baseUrl %>/bookmarks/boards" method="POST" class="hidden mb-8 flex gap-2 max-w-sm">
+  <input type="text" name="name" required placeholder="<%= t('bookmarks.add_board') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm" autofocus>
+  <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
+</form>
+
+<% if (!activeBoard) { %>
+  <p class="opacity-50 text-sm"><%= t('bookmarks.no_boards') %></p>
+<% } else { %>
+  <% if (categories.length === 0) { %>
+    <p class="opacity-50 text-sm mb-6"><%= t('bookmarks.no_categories') %></p>
+  <% } else { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <% categories.forEach(category => { %>
+        <div class="card-theme rounded-3xl p-5 shadow-lg">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-black text-primary-theme uppercase text-xs tracking-wide truncate"><%= category.name %></h3>
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="<%= baseUrl %>/bookmarks/add?categoryId=<%= category.id %>" title="<%= t('bookmarks.add_bookmark') %>"><i class="fa-solid fa-plus text-xs opacity-50 hover:opacity-90"></i></a>
+              <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/delete" method="POST" onsubmit="return confirm('<%= category.name %>?')">
+                <button type="submit" title="<%= t('bookmarks.delete') %>"><i class="fa-solid fa-trash text-xs opacity-30 hover:opacity-70"></i></button>
+              </form>
+            </div>
+          </div>
+          <% if (category.bookmarks.length === 0) { %>
+            <p class="text-xs opacity-40">—</p>
+          <% } %>
+          <% category.bookmarks.forEach(bookmark => { %>
+            <%- include('partials/bookmark-row', { bookmark }) %>
+          <% }) %>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <button type="button" id="new-category-btn" class="text-sm font-bold flex items-center gap-2 opacity-70 hover:opacity-100">
+    <i class="fa-solid fa-plus"></i> <%= t('bookmarks.add_category') %>
+  </button>
+  <form id="new-category-form" action="<%= baseUrl %>/bookmarks/categories" method="POST" class="hidden mt-3 flex gap-2 max-w-sm">
+    <input type="hidden" name="boardId" value="<%= activeBoard.id %>">
+    <input type="text" name="name" required placeholder="<%= t('bookmarks.add_category') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm">
+    <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
+  </form>
+<% } %>
+
+<script>
+  document.getElementById('new-board-btn').addEventListener('click', () => {
+    document.getElementById('new-board-form').classList.toggle('hidden');
+  });
+  const newCategoryBtn = document.getElementById('new-category-btn');
+  if (newCategoryBtn) {
+    newCategoryBtn.addEventListener('click', () => {
+      document.getElementById('new-category-form').classList.toggle('hidden');
+    });
+  }
+</script>
+
+<%- include('partials/footer') %>
