@@ -5,20 +5,21 @@
 <% if (!settings.hideSearchBar) { %>
 <div class="mb-10">
   <form action="<%= baseUrl %>/" method="GET" id="search-form">
-    <div class="flex gap-2 max-w-2xl mx-auto">
+    <div class="input-theme max-w-2xl mx-auto flex items-stretch rounded-2xl shadow-lg overflow-hidden">
       <div class="relative flex-grow">
         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 opacity-40"></i>
         <input type="text" name="q" value="<%= q %>" id="search-input"
-          class="input-theme w-full pl-11 pr-4 py-3 rounded-2xl text-sm shadow-lg"
+          class="w-full h-full bg-transparent border-0 pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-0"
           placeholder="<%= t('dashboard.search_placeholder') %>" autofocus>
       </div>
-      <select id="search-provider-select" class="input-theme rounded-2xl text-sm shadow-lg px-3 shrink-0 max-w-[9rem]">
+      <select id="search-provider-select"
+        class="bg-transparent border-0 border-l border-black/10 dark:border-white/10 text-sm px-3 shrink-0 max-w-[8.5rem] focus:outline-none focus:ring-0 cursor-pointer">
         <option value="local"><%= t('dashboard.local_search') %></option>
         <% searchProviders.forEach(provider => { %>
           <option value="<%= provider.id %>" data-template="<%= provider.queryTemplate %>"><%= provider.name %></option>
         <% }) %>
       </select>
-      <button type="submit" class="bg-primary-theme rounded-2xl px-5 text-sm font-bold shadow-lg hover:brightness-110 transition shrink-0"><%= t('dashboard.search_button') %></button>
+      <button type="submit" class="bg-primary-theme px-5 text-sm font-bold hover:brightness-110 transition shrink-0"><%= t('dashboard.search_button') %></button>
     </div>
     <p class="text-center text-xs opacity-50 mt-2"><%= t('dashboard.search_help') %></p>
   </form>
