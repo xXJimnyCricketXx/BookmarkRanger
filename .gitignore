@@ -3,8 +3,7 @@ node_modules/
 data/
 backups/*.db
 backups/*.zip
-public/uploads/*
-!public/uploads/.gitkeep
-public/styles/tailwind.css
+public/uploads/favicons/*
+!public/uploads/favicons/.gitkeep
 *.log
 .DS_Store
