@@ -34,6 +34,17 @@
 </div>
 <% } %>
 
+<% if (!noResults && !settings.hideBookmarksSection && pinnedCategories.length > 0) { %>
+<section class="mb-10">
+  <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_categories') %></h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <% pinnedCategories.forEach(category => { %>
+      <%- include('partials/category-column', { category }) %>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
 <% if (!noResults && !settings.hideBookmarksSection) { %>
 <section class="mb-10">
   <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_bookmarks') %></h2>

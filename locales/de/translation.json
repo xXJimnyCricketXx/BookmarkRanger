@@ -29,6 +29,7 @@
   "dashboard": {
     "search_placeholder": "lang:python tags:automation …",
     "search_help": "Suche mit Enter starten, mit Esc leeren.",
+    "pinned_categories": "Angepinnte Kategorien",
     "pinned_bookmarks": "Angepinnte Lesezeichen",
     "pinned_snippets": "Angepinnte Snippets",
     "no_pinned_bookmarks": "Noch keine angepinnten Lesezeichen.",
@@ -119,6 +120,7 @@
     "sort_name": "Nach Name",
     "sort_custom": "Manuelle Reihenfolge",
     "bookmarks_section": "Lesezeichen",
+    "general_pin_categories": "Neue Kategorien standardmäßig anpinnen",
     "general_pin_bookmarks": "Neue Lesezeichen standardmäßig anpinnen",
     "general_open_new_tab": "Lesezeichen in neuem Tab öffnen",
     "snippets_section": "Snippets",

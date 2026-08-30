@@ -1,0 +1,2 @@
+ALTER TABLE "Category" ADD COLUMN "isPinned" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "Settings" ADD COLUMN "pinCategoriesByDefault" BOOLEAN NOT NULL DEFAULT false;

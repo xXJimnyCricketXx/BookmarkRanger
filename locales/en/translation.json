@@ -29,6 +29,7 @@
   "dashboard": {
     "search_placeholder": "lang:python tags:automation …",
     "search_help": "Search by pressing Enter. Clear with Esc.",
+    "pinned_categories": "Pinned categories",
     "pinned_bookmarks": "Pinned bookmarks",
     "pinned_snippets": "Pinned snippets",
     "no_pinned_bookmarks": "No pinned bookmarks yet.",
@@ -119,6 +120,7 @@
     "sort_name": "By name",
     "sort_custom": "Custom order",
     "bookmarks_section": "Bookmarks",
+    "general_pin_categories": "Pin new categories by default",
     "general_pin_bookmarks": "Pin new bookmarks by default",
     "general_open_new_tab": "Open bookmarks in a new tab",
     "snippets_section": "Snippets",

@@ -1,11 +1,13 @@
 const prisma = require('../config/db');
 const { getSettings } = require('../utils/settings');
 const { parseSearchQuery, bookmarkSearchWhere, snippetSearchWhere } = require('../utils/search');
+const { orderByFor } = require('../utils/sorting');
 
 exports.dashboard = async (req, res) => {
     const settings = await getSettings();
     const q = req.query.q || '';
     const parsed = parseSearchQuery(q);
+    const isSearch = Boolean(q);
 
     const pinnedBookmarks = q
         ? await prisma.bookmark.findMany({ where: bookmarkSearchWhere(parsed), include: { tags: true, category: true }, orderBy: { order: 'asc' } })
@@ -15,7 +17,14 @@ exports.dashboard = async (req, res) => {
         ? await prisma.snippet.findMany({ where: snippetSearchWhere(parsed), include: { tags: true }, orderBy: { createdAt: 'desc' } })
         : await prisma.snippet.findMany({ where: { isPinned: true }, include: { tags: true }, orderBy: { createdAt: 'desc' } });
 
-    const isSearch = Boolean(q);
+    const pinnedCategories = isSearch
+        ? []
+        : await prisma.category.findMany({
+            where: { isPinned: true },
+            orderBy: { order: 'asc' },
+            include: { bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } } }
+        });
+
     const noResults = isSearch && pinnedBookmarks.length === 0 && pinnedSnippets.length === 0;
 
     let fallbackSearchHost = '';
@@ -32,6 +41,7 @@ exports.dashboard = async (req, res) => {
         settings,
         pinnedBookmarks,
         pinnedSnippets,
+        pinnedCategories,
         q,
         isSearch,
         noResults,

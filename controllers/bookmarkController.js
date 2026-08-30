@@ -44,6 +44,7 @@ exports.deleteBoard = async (req, res) => {
 exports.createCategory = async (req, res) => {
     const { name, boardId, icon, color } = req.body;
     if (name && name.trim() && boardId) {
+        const settings = await getSettings();
         const count = await prisma.category.count({ where: { boardId: parseInt(boardId, 10) } });
         await prisma.category.create({
             data: {
@@ -51,7 +52,8 @@ exports.createCategory = async (req, res) => {
                 boardId: parseInt(boardId, 10),
                 icon: icon || null,
                 color: color || null,
-                order: count
+                order: count,
+                isPinned: settings.pinCategoriesByDefault
             }
         });
     }
@@ -62,6 +64,13 @@ exports.deleteCategory = async (req, res) => {
     const category = await prisma.category.findUnique({ where: { id: parseInt(req.params.id, 10) } });
     if (category) await prisma.category.delete({ where: { id: category.id } });
     res.redirect(`${res.locals.baseUrl}/bookmarks?board=${category ? category.boardId : ''}`);
+};
+
+exports.togglePinCategory = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const category = await prisma.category.findUnique({ where: { id } });
+    await prisma.category.update({ where: { id }, data: { isPinned: !category.isPinned } });
+    res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${category.boardId}`);
 };
 
 exports.showAddForm = async (req, res) => {

@@ -1,0 +1,22 @@
+<div class="card-theme rounded-3xl p-5 shadow-lg">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="font-black text-primary-theme uppercase text-xs tracking-wide truncate"><%= category.name %></h3>
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="<%= baseUrl %>/bookmarks/add?categoryId=<%= category.id %>" title="<%= t('bookmarks.add_bookmark') %>"><i class="fa-solid fa-plus text-xs opacity-50 hover:opacity-90"></i></a>
+      <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/pin" method="POST">
+        <button type="submit" title="<%= category.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>">
+          <i class="fa-solid fa-thumbtack text-xs <%= category.isPinned ? 'text-primary-theme' : 'opacity-30 hover:opacity-70' %>"></i>
+        </button>
+      </form>
+      <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/delete" method="POST" onsubmit="return confirm('<%= category.name %>?')">
+        <button type="submit" title="<%= t('bookmarks.delete') %>"><i class="fa-solid fa-trash text-xs opacity-30 hover:opacity-70"></i></button>
+      </form>
+    </div>
+  </div>
+  <% if (category.bookmarks.length === 0) { %>
+    <p class="text-xs opacity-40">—</p>
+  <% } %>
+  <% category.bookmarks.forEach(bookmark => { %>
+    <%- include('bookmark-row', { bookmark }) %>
+  <% }) %>
+</div>

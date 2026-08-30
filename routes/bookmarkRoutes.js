@@ -9,6 +9,7 @@ router.post('/boards/:id/delete', bookmarkController.deleteBoard);
 
 router.post('/categories', bookmarkController.createCategory);
 router.post('/categories/:id/delete', bookmarkController.deleteCategory);
+router.post('/categories/:id/pin', bookmarkController.togglePinCategory);
 
 router.get('/add', bookmarkController.showAddForm);
 router.post('/', bookmarkController.create);

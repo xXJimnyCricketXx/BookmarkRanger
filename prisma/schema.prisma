@@ -22,6 +22,7 @@ model Settings {
   sortingType            String  @default("createdAt")
   pinBookmarksByDefault  Boolean @default(false)
   pinSnippetsByDefault   Boolean @default(false)
+  pinCategoriesByDefault Boolean @default(false)
   openLinksInNewTab      Boolean @default(true)
   hideSearchBar          Boolean @default(false)
   hideBookmarksSection   Boolean @default(false)
@@ -53,6 +54,7 @@ model Category {
   icon      String?
   color     String?
   order     Int        @default(0)
+  isPinned  Boolean    @default(false)
   board     Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId   Int
   bookmarks Bookmark[]

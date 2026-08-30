@@ -21,23 +21,7 @@
   <% } else { %>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
       <% categories.forEach(category => { %>
-        <div class="card-theme rounded-3xl p-5 shadow-lg">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-black text-primary-theme uppercase text-xs tracking-wide truncate"><%= category.name %></h3>
-            <div class="flex items-center gap-3 shrink-0">
-              <a href="<%= baseUrl %>/bookmarks/add?categoryId=<%= category.id %>" title="<%= t('bookmarks.add_bookmark') %>"><i class="fa-solid fa-plus text-xs opacity-50 hover:opacity-90"></i></a>
-              <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/delete" method="POST" onsubmit="return confirm('<%= category.name %>?')">
-                <button type="submit" title="<%= t('bookmarks.delete') %>"><i class="fa-solid fa-trash text-xs opacity-30 hover:opacity-70"></i></button>
-              </form>
-            </div>
-          </div>
-          <% if (category.bookmarks.length === 0) { %>
-            <p class="text-xs opacity-40">—</p>
-          <% } %>
-          <% category.bookmarks.forEach(bookmark => { %>
-            <%- include('partials/bookmark-row', { bookmark }) %>
-          <% }) %>
-        </div>
+        <%- include('partials/category-column', { category }) %>
       <% }) %>
     </div>
   <% } %>
