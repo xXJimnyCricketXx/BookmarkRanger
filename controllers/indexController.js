@@ -43,6 +43,28 @@ exports.dashboard = async (req, res) => {
     });
 };
 
+// Used by the dashboard search bar via fetch() so the "no local results -> open
+// external tab" decision happens without a full page reload in between — a reload
+// resets the browser's user-activation state and gets window.open() popup-blocked.
+exports.searchCheck = async (req, res) => {
+    const settings = await getSettings();
+    const q = req.query.q || '';
+    const parsed = parseSearchQuery(q);
+
+    const [bookmarkCount, snippetCount] = await Promise.all([
+        prisma.bookmark.count({ where: bookmarkSearchWhere(parsed) }),
+        prisma.snippet.count({ where: snippetSearchWhere(parsed) })
+    ]);
+
+    const hasResults = bookmarkCount > 0 || snippetCount > 0;
+    const provider = settings.fallbackSearchProvider;
+
+    res.json({
+        hasResults,
+        fallbackHref: !hasResults && provider ? provider.queryTemplate + encodeURIComponent(q) : null
+    });
+};
+
 exports.createSearchProvider = async (req, res) => {
     const { name, queryTemplate } = req.body;
     if (name && name.trim() && queryTemplate && queryTemplate.trim()) {

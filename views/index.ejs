@@ -60,13 +60,33 @@
     if (e.key === 'Escape') { e.target.value = ''; e.target.form.submit(); }
   });
   document.getElementById('search-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = document.getElementById('search-input').value;
+    if (!query) return;
+
     const select = document.getElementById('search-provider-select');
     const option = select.options[select.selectedIndex];
     const template = option.dataset.template;
-    if (!template) return; // "local" -> normal form submit
-    e.preventDefault();
-    const query = document.getElementById('search-input').value;
-    if (query) window.open(template + encodeURIComponent(query), '_blank');
+
+    if (template) {
+      // A specific provider was picked: open it directly, still inside this click's
+      // user-activation window, so the browser never treats it as an unrelated popup.
+      window.open(template + encodeURIComponent(query), '_blank');
+      return;
+    }
+
+    // "Lokale Suche": ask the server first via fetch (no page reload yet) so that if
+    // nothing is found, window.open() below still runs on *this* document — a reload
+    // first would drop the browser's user-activation state and get the tab blocked.
+    fetch('<%= baseUrl %>/api/search-check?q=' + encodeURIComponent(query))
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.fallbackHref) window.open(data.fallbackHref, '_blank');
+        window.location.href = '<%= baseUrl %>/?q=' + encodeURIComponent(query);
+      })
+      .catch(() => {
+        window.location.href = '<%= baseUrl %>/?q=' + encodeURIComponent(query);
+      });
   });
 
   const providerModal = document.getElementById('add-provider-modal');
@@ -87,14 +107,6 @@
     <% if (fallbackSearchHref) { %> <%= t('dashboard.opening_externally') %><% } %>
   </p>
 </div>
-<% if (fallbackSearchHref) { %>
-  <script>
-    // Runs as soon as this script tag is parsed (not deferred to load/DOMContentLoaded),
-    // so it stays inside the same user-gesture window as the search submit and isn't
-    // blocked as an unrelated popup by the browser.
-    window.open(<%- JSON.stringify(fallbackSearchHref) %>, '_blank');
-  </script>
-<% } %>
 <% } %>
 
 <% if (!noResults && !settings.hideBookmarksSection && pinnedCategories.length > 0) { %>
