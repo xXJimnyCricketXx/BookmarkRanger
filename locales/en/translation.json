@@ -5,9 +5,7 @@
     "snippets": "Snippets",
     "settings": "Settings",
     "logout": "Log out",
-    "login": "Log in",
-    "theme_light": "Light theme",
-    "theme_dark": "Dark theme"
+    "login": "Log in"
   },
   "login": {
     "title": "Log in",

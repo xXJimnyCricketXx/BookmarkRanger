@@ -4,8 +4,6 @@ const settingsController = require('../controllers/settingsController');
 
 router.get('/', (req, res) => res.redirect(`${res.locals.baseUrl}/settings/theme`));
 
-router.post('/update-theme', settingsController.updateDarkMode);
-
 router.get('/theme', settingsController.showTheme);
 router.post('/theme', settingsController.saveTheme);
 

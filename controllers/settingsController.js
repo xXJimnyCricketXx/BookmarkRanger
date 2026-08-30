@@ -14,12 +14,6 @@ function dbFilePath() {
     return path.join(__dirname, '..', 'prisma', raw);
 }
 
-exports.updateDarkMode = async (req, res) => {
-    const theme = req.body.theme === 'light' ? 'light' : 'dark';
-    await prisma.account.update({ where: { id: req.session.userId }, data: { theme } });
-    res.json({ ok: true });
-};
-
 exports.showTheme = async (req, res) => {
     const settings = await getSettings();
     res.render('settings-theme', { title: 'Settings — Theme', settings, presets: PRESETS });

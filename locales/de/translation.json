@@ -5,9 +5,7 @@
     "snippets": "Snippets",
     "settings": "Einstellungen",
     "logout": "Abmelden",
-    "login": "Anmelden",
-    "theme_light": "Helles Design",
-    "theme_dark": "Dunkles Design"
+    "login": "Anmelden"
   },
   "login": {
     "title": "Anmelden",
