@@ -104,10 +104,10 @@ const PRESETS = {
 
     autumn: {
         label: 'Autumn',
-        bg: '#2b2b2b',
+        bg: '#704f33',
         text: '#f2e9dc',
         accent: '#f0b44c',
-        header: '#704f33'
+        header: '#f0b44c'
     }
 };
 
