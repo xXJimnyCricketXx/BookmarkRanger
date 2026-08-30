@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Home",
-    "bookmarks": "Bookmarks",
+    "bookmarks": "Lesezeichen",
     "snippets": "Snippets",
     "settings": "Einstellungen",
     "logout": "Abmelden",
@@ -29,17 +29,17 @@
   "dashboard": {
     "search_placeholder": "lang:python tags:automation …",
     "search_help": "Suche mit Enter starten, mit Esc leeren.",
-    "pinned_bookmarks": "Pinned bookmarks",
-    "pinned_snippets": "Pinned snippets",
-    "no_pinned_bookmarks": "Noch keine angepinnten Bookmarks.",
+    "pinned_bookmarks": "Angepinnte Lesezeichen",
+    "pinned_snippets": "Angepinnte Snippets",
+    "no_pinned_bookmarks": "Noch keine angepinnten Lesezeichen.",
     "no_pinned_snippets": "Noch keine angepinnten Snippets.",
     "search_results_for": "Suchergebnisse für"
   },
   "bookmarks": {
-    "title": "Bookmarks",
+    "title": "Lesezeichen",
     "add_board": "Board",
     "add_category": "Kategorie hinzufügen",
-    "add_bookmark": "Bookmark hinzufügen",
+    "add_bookmark": "Lesezeichen hinzufügen",
     "no_boards": "Noch kein Board angelegt. Lege über \"+\" dein erstes Board an.",
     "no_categories": "Noch keine Kategorie in diesem Board.",
     "edit": "Bearbeiten",
@@ -49,8 +49,8 @@
     "view": "Öffnen"
   },
   "bookmarkForm": {
-    "title_add": "Bookmark hinzufügen",
-    "title_edit": "Bookmark bearbeiten",
+    "title_add": "Lesezeichen hinzufügen",
+    "title_edit": "Lesezeichen bearbeiten",
     "title_label": "Titel",
     "url_label": "URL",
     "description_label": "Beschreibung",
@@ -116,8 +116,8 @@
     "sort_created": "Nach Erstelldatum",
     "sort_name": "Nach Name",
     "sort_custom": "Manuelle Reihenfolge",
-    "bookmarks_section": "Bookmarks",
-    "general_pin_bookmarks": "Neue Bookmarks standardmäßig anpinnen",
+    "bookmarks_section": "Lesezeichen",
+    "general_pin_bookmarks": "Neue Lesezeichen standardmäßig anpinnen",
     "general_open_new_tab": "Lesezeichen in neuem Tab öffnen",
     "snippets_section": "Snippets",
     "general_pin_snippets": "Neue Snippets standardmäßig anpinnen",
@@ -125,7 +125,7 @@
     "false": "Nein",
     "interface_site_title": "Eigener Seitentitel",
     "interface_hide_search": "Suchleiste ausblenden",
-    "interface_hide_bookmarks": "Angepinnte Bookmarks im Dashboard ausblenden",
+    "interface_hide_bookmarks": "Angepinnte Lesezeichen im Dashboard ausblenden",
     "interface_hide_snippets": "Angepinnte Snippets im Dashboard ausblenden",
     "account_username": "Benutzername",
     "account_current_password": "Aktuelles Passwort",

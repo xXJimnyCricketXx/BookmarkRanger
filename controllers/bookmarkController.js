@@ -23,7 +23,7 @@ exports.list = async (req, res) => {
         });
     }
 
-    res.render('bookmarks', { title: 'Bookmarks', boards, activeBoard, categories });
+    res.render('bookmarks', { title: 'Lesezeichen', boards, activeBoard, categories });
 };
 
 exports.createBoard = async (req, res) => {
@@ -66,13 +66,13 @@ exports.deleteCategory = async (req, res) => {
 
 exports.showAddForm = async (req, res) => {
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' }, include: { categories: true } });
-    res.render('bookmark-form', { title: 'Bookmark hinzufügen', boards, bookmark: null, selectedCategoryId: req.query.categoryId || null });
+    res.render('bookmark-form', { title: 'Lesezeichen hinzufügen', boards, bookmark: null, selectedCategoryId: req.query.categoryId || null });
 };
 
 exports.showEditForm = async (req, res) => {
     const bookmark = await prisma.bookmark.findUnique({ where: { id: parseInt(req.params.id, 10) }, include: { tags: true } });
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' }, include: { categories: true } });
-    res.render('bookmark-form', { title: 'Bookmark bearbeiten', boards, bookmark, selectedCategoryId: bookmark.categoryId });
+    res.render('bookmark-form', { title: 'Lesezeichen bearbeiten', boards, bookmark, selectedCategoryId: bookmark.categoryId });
 };
 
 exports.create = async (req, res) => {
