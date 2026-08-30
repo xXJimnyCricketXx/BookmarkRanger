@@ -20,6 +20,7 @@ const PRESETS = require('./config/themes');
 const prisma = require('./config/db');
 const { getSettings } = require('./utils/settings');
 const { timeAgo } = require('./utils/timeAgo');
+const { logoVariantFor } = require('./utils/color');
 
 const app = express();
 const PORT = process.env.PORT || 3099;
@@ -50,6 +51,18 @@ app.use(async (req, res, next) => {
     res.locals.user = null;
     res.locals.isDark = true;
     res.locals.settings = await getSettings();
+
+    const activePreset = PRESETS[res.locals.settings.themePreset] || PRESETS.bookmarkranger;
+    // Which logo file (light-text vs dark-text) reads best is derived from each area's
+    // actual color, not hardcoded per preset, so this also works for future custom themes.
+    res.locals.headerLogoVariant = {
+        light: logoVariantFor(activePreset.light.navbar),
+        dark: logoVariantFor(activePreset.dark.navbar)
+    };
+    res.locals.footerLogoVariant = {
+        light: logoVariantFor(activePreset.light.footer || activePreset.light.navbar),
+        dark: logoVariantFor(activePreset.dark.footer || activePreset.dark.navbar)
+    };
 
     if (req.session && req.session.userId) {
         const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
