@@ -32,18 +32,20 @@ const PRESETS = {
         light: {
             bg: '#f8fafc',
             card: '#ffffff',
-            navbar: '#f1f5f9',
+            navbar: '#10b981',
             text: '#0f172a',
             subtext: '#475569',
-            highlight: '#10b981'
+            highlight: '#10b981',
+            navText: '#052e1f'
         },
         dark: {
             bg: '#171717',
             card: '#262626',
-            navbar: '#0a0a0a',
+            navbar: '#10b981',
             text: '#ffffff',
             subtext: '#ffffff',
-            highlight: '#10b981'
+            highlight: '#10b981',
+            navText: '#052e1f'
         }
     },
 
