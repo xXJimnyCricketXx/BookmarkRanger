@@ -27,14 +27,15 @@ model Settings {
   hideSearchBar          Boolean @default(false)
   hideBookmarksSection   Boolean @default(false)
   hideSnippetsSection    Boolean @default(false)
+  fallbackSearchProvider   SearchProvider? @relation(fields: [fallbackSearchProviderId], references: [id])
+  fallbackSearchProviderId Int?
 }
 
-// Picked per-search from the dashboard search bar dropdown (see indexController) —
-// there's no single "default" provider on Settings anymore.
 model SearchProvider {
-  id            Int    @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   name          String
   queryTemplate String
+  settings      Settings[]
 }
 
 model CustomTheme {

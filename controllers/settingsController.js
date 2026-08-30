@@ -67,7 +67,8 @@ exports.deleteCustomTheme = async (req, res) => {
 
 exports.showGeneral = async (req, res) => {
     const settings = await getSettings();
-    res.render('settings-general', { title: 'Einstellungen — Allgemein', settings });
+    const searchProviders = await prisma.searchProvider.findMany({ orderBy: { id: 'asc' } });
+    res.render('settings-general', { title: 'Einstellungen — Allgemein', settings, searchProviders });
 };
 
 exports.saveGeneral = async (req, res) => {
@@ -79,7 +80,8 @@ exports.saveGeneral = async (req, res) => {
             pinCategoriesByDefault: req.body.pinCategoriesByDefault === 'true',
             pinBookmarksByDefault: req.body.pinBookmarksByDefault === 'true',
             pinSnippetsByDefault: req.body.pinSnippetsByDefault === 'true',
-            openLinksInNewTab: req.body.openLinksInNewTab === 'true'
+            openLinksInNewTab: req.body.openLinksInNewTab === 'true',
+            fallbackSearchProviderId: req.body.fallbackSearchProviderId ? parseInt(req.body.fallbackSearchProviderId, 10) : null
         }
     });
     res.redirect(`${res.locals.baseUrl}/settings/general`);
