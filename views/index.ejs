@@ -1,0 +1,57 @@
+<% locals.activeNav = 'home'; %>
+<%- include('partials/header') %>
+
+<% if (!settings.hideSearchBar) { %>
+<div class="mb-10">
+  <form action="<%= baseUrl %>/" method="GET">
+    <div class="relative max-w-2xl mx-auto">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 opacity-40"></i>
+      <input type="text" name="q" value="<%= q %>" id="search-input"
+        class="input-theme w-full pl-11 pr-4 py-3 rounded-2xl text-sm shadow-lg"
+        placeholder="<%= t('dashboard.search_placeholder') %>" autofocus>
+    </div>
+    <p class="text-center text-xs opacity-50 mt-2"><%= t('dashboard.search_help') %></p>
+  </form>
+</div>
+<script>
+  document.getElementById('search-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.target.value = ''; e.target.form.submit(); }
+  });
+</script>
+<% } %>
+
+<% if (isSearch) { %>
+<h2 class="text-lg font-black mb-6 opacity-80"><%= t('dashboard.search_results_for') %> "<%= q %>"</h2>
+<% } %>
+
+<% if (!settings.hideBookmarksSection) { %>
+<section class="mb-10">
+  <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_bookmarks') %></h2>
+  <% if (pinnedBookmarks.length === 0) { %>
+    <p class="opacity-50 text-sm"><%= t('dashboard.no_pinned_bookmarks') %></p>
+  <% } else { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <% pinnedBookmarks.forEach(bookmark => { %>
+        <%- include('partials/bookmark-pin-card', { bookmark }) %>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+<% } %>
+
+<% if (!settings.hideSnippetsSection) { %>
+<section>
+  <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_snippets') %></h2>
+  <% if (pinnedSnippets.length === 0) { %>
+    <p class="opacity-50 text-sm"><%= t('dashboard.no_pinned_snippets') %></p>
+  <% } else { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% pinnedSnippets.forEach(snippet => { %>
+        <%- include('partials/snippet-card', { snippet }) %>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

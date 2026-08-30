@@ -1,0 +1,31 @@
+<%
+  const langColors = {
+    python: 'bg-amber-500', javascript: 'bg-yellow-400 text-black', typescript: 'bg-blue-600',
+    sql: 'bg-teal-500', java: 'bg-red-500', html: 'bg-orange-500', css: 'bg-sky-500',
+    php: 'bg-indigo-500', bash: 'bg-slate-500', shell: 'bg-slate-500', go: 'bg-cyan-600',
+    rust: 'bg-orange-700', csharp: 'bg-purple-600', c: 'bg-gray-500', cpp: 'bg-gray-600'
+  };
+  const langClass = langColors[snippet.language] || 'bg-gray-500';
+%>
+<div class="card-theme rounded-3xl shadow-xl p-5 flex flex-col">
+  <div class="flex items-start justify-between mb-2">
+    <a href="<%= baseUrl %>/snippets/<%= snippet.id %>" class="font-black text-lg leading-tight hover:text-primary-theme transition-colors"><%= snippet.title %></a>
+    <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/pin" method="POST">
+      <button type="submit" title="<%= snippet.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>" class="shrink-0 ml-2">
+        <i class="fa-solid fa-thumbtack <%= snippet.isPinned ? 'text-primary-theme' : 'opacity-30 hover:opacity-70' %> transition"></i>
+      </button>
+    </form>
+  </div>
+
+  <span class="inline-block <%= langClass %> text-white text-[11px] font-bold px-2 py-0.5 rounded w-fit mb-3"><%= snippet.language %></span>
+
+  <p class="text-sm opacity-70 flex-grow mb-4"><%= snippet.shortDescription || t('snippets.no_description') %></p>
+
+  <p class="text-xs opacity-50 mb-3"><%= t('snippets.created') %> <%= timeAgo(snippet.createdAt) %></p>
+
+  <div class="flex gap-2 pt-3 border-t border-black/5 dark:border-white/10">
+    <a href="<%= baseUrl %>/snippets/<%= snippet.id %>" class="flex-1 text-center text-sm font-bold px-3 py-2 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><%= t('snippets.view') %></a>
+    <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn flex-1 text-sm font-bold px-3 py-2 rounded-xl bg-primary-theme hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
+  </div>
+  <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
+</div>
