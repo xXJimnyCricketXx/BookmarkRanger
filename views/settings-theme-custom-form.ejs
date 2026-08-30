@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+
+<div class="max-w-xl mx-auto">
+  <a href="<%= baseUrl %>/settings/theme" class="text-sm opacity-60 hover:opacity-100 inline-block mb-4">&larr; <%= t('settings.nav_theme') %></a>
+
+  <h1 class="text-2xl font-black mb-6"><%= theme ? t('settings.edit_theme') : t('settings.create_theme') %></h1>
+
+  <form action="<%= baseUrl %>/settings/theme/custom<%= theme ? '/' + theme.id : '' %>" method="POST" class="card-theme rounded-3xl shadow-xl p-6 space-y-6">
+    <div>
+      <label class="block text-sm font-bold mb-2"><%= t('settings.theme_name') %></label>
+      <input type="text" name="name" required value="<%= theme ? theme.name : '' %>" placeholder="my_theme" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.theme_bg') %></label>
+        <input type="color" name="bg" value="<%= theme ? theme.bg : '#1a1a1d' %>" class="w-full h-12 rounded-xl cursor-pointer bg-transparent border border-black/10 dark:border-white/10">
+      </div>
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.theme_text') %></label>
+        <input type="color" name="text" value="<%= theme ? theme.text : '#f2f2f4' %>" class="w-full h-12 rounded-xl cursor-pointer bg-transparent border border-black/10 dark:border-white/10">
+      </div>
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.theme_accent') %></label>
+        <input type="color" name="accent" value="<%= theme ? theme.accent : '#ff6f9c' %>" class="w-full h-12 rounded-xl cursor-pointer bg-transparent border border-black/10 dark:border-white/10">
+      </div>
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.theme_header') %></label>
+        <input type="color" name="header" value="<%= theme ? theme.header : '#ff6f9c' %>" class="w-full h-12 rounded-xl cursor-pointer bg-transparent border border-black/10 dark:border-white/10">
+      </div>
+    </div>
+
+    <button type="submit" class="w-full bg-primary-theme font-black py-3 rounded-xl hover:brightness-110 transition-all">
+      <%= theme ? t('settings.save_changes') : t('settings.add_theme') %>
+    </button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

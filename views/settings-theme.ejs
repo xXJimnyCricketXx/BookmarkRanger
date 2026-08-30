@@ -22,6 +22,51 @@
         </form>
       <% }) %>
     </div>
+
+    <div class="border-t border-black/5 dark:border-white/10 mt-10 pt-8">
+      <div class="flex items-center justify-between mb-6 max-w-4xl">
+        <h2 class="text-xl font-black"><%= t('settings.custom_themes_title') %></h2>
+        <a href="<%= baseUrl %>/settings/theme/custom/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
+          <i class="fa-solid fa-plus mr-1"></i> <%= t('settings.create_theme') %>
+        </a>
+      </div>
+
+      <% if (customThemes.length === 0) { %>
+        <p class="opacity-50 text-sm"><%= t('settings.no_custom_themes') %></p>
+      <% } else { %>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl">
+          <% customThemes.forEach(custom => {
+               const key = 'custom-' + custom.id; %>
+            <div class="relative group">
+              <form action="<%= baseUrl %>/settings/theme" method="POST">
+                <input type="hidden" name="preset" value="<%= key %>">
+                <button type="submit" class="w-full text-left card-theme rounded-2xl p-4 border-2 <%= settings.themePreset === key ? 'border-primary-theme' : 'border-transparent' %> hover:border-primary-theme/50 transition">
+                  <div class="flex h-10 rounded-lg overflow-hidden mb-3 gap-[2px] bg-black/20 dark:bg-white/10">
+                    <div class="flex-1" style="background:<%= custom.bg %>" title="Background"></div>
+                    <div class="flex-1" style="background:<%= custom.header %>" title="Header"></div>
+                    <div class="flex-1" style="background:<%= custom.accent %>" title="Accent"></div>
+                    <div class="flex-1" style="background:<%= custom.text %>" title="Text"></div>
+                  </div>
+                  <span class="text-sm font-bold"><%= custom.name %></span>
+                </button>
+              </form>
+              <div class="absolute top-2 right-2 hidden group-hover:flex items-center gap-1.5">
+                <a href="<%= baseUrl %>/settings/theme/custom/<%= custom.id %>/edit" title="<%= t('snippetDetail.edit') %>"
+                  class="w-6 h-6 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition">
+                  <i class="fa-solid fa-pen text-[10px] text-white"></i>
+                </a>
+                <form action="<%= baseUrl %>/settings/theme/custom/<%= custom.id %>/delete" method="POST" onsubmit="return confirm('<%= custom.name %>?')">
+                  <button type="submit" title="<%= t('snippetDetail.delete') %>"
+                    class="w-6 h-6 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition">
+                    <i class="fa-solid fa-trash text-[10px] text-white"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
   </div>
 </div>
 
