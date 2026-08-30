@@ -18,6 +18,7 @@ const settingsRoutes = require('./routes/settingsRoutes');
 const PRESETS = require('./config/themes');
 const prisma = require('./config/db');
 const { getSettings } = require('./utils/settings');
+const { timeAgo } = require('./utils/timeAgo');
 
 const app = express();
 const PORT = process.env.PORT || 3099;
@@ -43,6 +44,7 @@ app.use(async (req, res, next) => {
     res.locals.baseUrl = process.env.BASE_URL || '';
     res.locals.allThemes = PRESETS;
     res.locals.appVersion = '0.1.0';
+    res.locals.timeAgo = timeAgo;
     res.locals.user = null;
     res.locals.isDark = true;
     res.locals.settings = await getSettings();
