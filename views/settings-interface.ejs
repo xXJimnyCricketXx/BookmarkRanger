@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+
+<div class="flex flex-col md:flex-row gap-10">
+  <%- include('partials/settings-nav', { active: 'interface' }) %>
+
+  <div class="flex-grow max-w-xl">
+    <form action="<%= baseUrl %>/settings/interface" method="POST" class="space-y-6">
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_site_title') %></label>
+        <input type="text" name="siteName" value="<%= settings.siteName %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_search') %></label>
+        <select name="hideSearchBar" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
+          <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_bookmarks') %></label>
+        <select name="hideBookmarksSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <option value="true" <%= settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.true') %></option>
+          <option value="false" <%= !settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.false') %></option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_snippets') %></label>
+        <select name="hideSnippetsSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <option value="true" <%= settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.true') %></option>
+          <option value="false" <%= !settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.false') %></option>
+        </select>
+      </div>
+
+      <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

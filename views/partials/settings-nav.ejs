@@ -1,0 +1,11 @@
+<aside class="w-full md:w-48 shrink-0">
+  <h1 class="text-2xl font-black mb-1">Settings</h1>
+  <a href="<%= baseUrl %>/" class="text-xs opacity-50 hover:opacity-80"><%= t('settings.go_back') %></a>
+
+  <nav class="mt-6 space-y-1">
+    <a href="<%= baseUrl %>/settings/theme" class="block text-sm font-bold px-3 py-2 rounded-lg <%= active === 'theme' ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>"><%= t('settings.nav_theme') %></a>
+    <a href="<%= baseUrl %>/settings/general" class="block text-sm font-bold px-3 py-2 rounded-lg <%= active === 'general' ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>"><%= t('settings.nav_general') %></a>
+    <a href="<%= baseUrl %>/settings/interface" class="block text-sm font-bold px-3 py-2 rounded-lg <%= active === 'interface' ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>"><%= t('settings.nav_interface') %></a>
+    <a href="<%= baseUrl %>/settings/account" class="block text-sm font-bold px-3 py-2 rounded-lg <%= active === 'account' ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>"><%= t('settings.nav_account') %></a>
+  </nav>
+</aside>
