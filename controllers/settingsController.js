@@ -27,13 +27,15 @@ exports.saveTheme = async (req, res) => {
 };
 
 exports.showAddCustomTheme = (req, res) => {
-    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', theme: null });
+    // "customTheme", not "theme" — the latter is the resolved site-wide theme header.ejs
+    // renders its CSS variables from, and would get shadowed by this raw DB row otherwise.
+    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', customTheme: null });
 };
 
 exports.showEditCustomTheme = async (req, res) => {
-    const theme = await prisma.customTheme.findUnique({ where: { id: parseInt(req.params.id, 10) } });
-    if (!theme) return res.status(404).render('404', { title: '404' });
-    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', theme });
+    const customTheme = await prisma.customTheme.findUnique({ where: { id: parseInt(req.params.id, 10) } });
+    if (!customTheme) return res.status(404).render('404', { title: '404' });
+    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', customTheme });
 };
 
 exports.createCustomTheme = async (req, res) => {
