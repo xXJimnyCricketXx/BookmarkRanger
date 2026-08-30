@@ -72,6 +72,9 @@
     .sortable-chosen { cursor: grabbing; }
     .sortable-drag { opacity: 0.9; }
 
+    /* Hovering one pinned bookmark over another (not a box) mid-drag signals "merge these into a box". */
+    .merge-target { outline: 2px dashed var(--highlight) !important; outline-offset: 2px; background-color: color-mix(in srgb, var(--highlight) 12%, transparent) !important; }
+
     /* Fixed sidebar width/spacing, shared by every page that has one (Settings, Snippets, …). */
     .layout-with-sidebar { display: flex; flex-direction: column; gap: 3.5rem; }
     @media (min-width: 768px) { .layout-with-sidebar { flex-direction: row; } }

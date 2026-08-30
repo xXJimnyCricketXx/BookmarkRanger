@@ -1,0 +1,29 @@
+<div class="card-theme rounded-3xl p-5 shadow-lg <%= locals.draggable ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- locals.draggable ? `data-id="group-${group.id}"` : "" %>>
+  <div class="flex items-center justify-between mb-3 gap-2">
+    <form action="<%= baseUrl %>/dashboard-groups/<%= group.id %>/rename" method="POST" class="flex-grow min-w-0">
+      <input type="text" name="name" value="<%= group.name %>" onchange="this.form.submit()"
+        class="bg-transparent border-0 font-black text-primary-theme uppercase text-xs tracking-wide w-full focus:outline-none focus:underline p-0">
+    </form>
+    <form action="<%= baseUrl %>/dashboard-groups/<%= group.id %>/delete" method="POST" onsubmit="return confirm('<%= group.name %>?')">
+      <button type="submit" title="<%= t('dashboard.dissolve_group') %>" class="shrink-0"><i class="fa-solid fa-trash text-xs opacity-30 hover:opacity-70"></i></button>
+    </form>
+  </div>
+
+  <div class="group-members space-y-1 <%= locals.draggable ? 'bm-group-members' : '' %>" data-group-id="<%= group.id %>">
+    <% group.bookmarks.forEach(bookmark => { %>
+      <div class="group flex items-center justify-between gap-2 py-1 <%= locals.draggable ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- locals.draggable ? `data-id="${bookmark.id}"` : "" %>>
+        <a href="<%= bookmark.url %>" <%- settings.openLinksInNewTab ? 'target="_blank" rel="noopener"' : '' %> class="flex items-center gap-2 text-sm hover:text-primary-theme transition-colors truncate min-w-0">
+          <% if (bookmark.icon) { %>
+            <img src="<%= baseUrl %><%= bookmark.icon %>" class="w-4 h-4 rounded-sm shrink-0" alt="">
+          <% } else { %>
+            <i class="fa-solid fa-link text-xs opacity-50 w-4 text-center shrink-0"></i>
+          <% } %>
+          <span class="truncate"><%= bookmark.title %></span>
+        </a>
+        <form action="<%= baseUrl %>/dashboard-groups/bookmarks/<%= bookmark.id %>/remove" method="POST" class="hidden group-hover:block shrink-0">
+          <button type="submit" title="<%= t('dashboard.remove_from_group') %>"><i class="fa-solid fa-xmark text-xs opacity-40 hover:opacity-80"></i></button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</div>

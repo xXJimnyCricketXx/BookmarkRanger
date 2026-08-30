@@ -48,5 +48,99 @@
     });
   </script>
 
+  <script>
+    // Pinned bookmarks + dashboard groups share one Sortable "group" so cards can move
+    // between the standalone grid and any box's member list. Dropping card A onto the
+    // middle of standalone card B (not onto a box) creates a brand new box holding both.
+    (function () {
+      const mainGrid = document.getElementById('pinned-bookmarks-grid');
+      const bmLists = document.querySelectorAll('.bm-dragroot, .bm-group-members');
+      if (!bmLists.length) return;
+
+      function directItems(root) {
+        return [...root.children].filter((el) => el.classList.contains('draggable-item'));
+      }
+
+      function persist(url, body) {
+        return fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }).catch(() => {});
+      }
+
+      let mergeCandidate = null;
+      function clearMergeHighlight() {
+        if (mergeCandidate) mergeCandidate.classList.remove('merge-target');
+        mergeCandidate = null;
+      }
+
+      bmLists.forEach((root) => {
+        Sortable.create(root, {
+          animation: 150,
+          group: 'bm-shared',
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          onMove: (evt, originalEvent) => {
+            const related = evt.related;
+            const isPlainBookmarkInMainGrid = evt.to === mainGrid && related
+              && related.classList.contains('draggable-item')
+              && related !== evt.dragged
+              && !(related.dataset.id || '').startsWith('group-');
+
+            if (!isPlainBookmarkInMainGrid) { clearMergeHighlight(); return true; }
+
+            const rect = related.getBoundingClientRect();
+            const point = originalEvent.touches && originalEvent.touches[0] ? originalEvent.touches[0] : originalEvent;
+            const y = point.clientY;
+            const inMiddleBand = y > rect.top + rect.height * 0.25 && y < rect.top + rect.height * 0.75;
+
+            if (inMiddleBand) {
+              if (mergeCandidate !== related) { clearMergeHighlight(); mergeCandidate = related; mergeCandidate.classList.add('merge-target'); }
+              return false;
+            }
+            clearMergeHighlight();
+            return true;
+          },
+          onEnd: (evt) => {
+            const draggedId = evt.item.dataset.id;
+
+            if (mergeCandidate && mergeCandidate !== evt.item) {
+              const targetId = mergeCandidate.dataset.id;
+              clearMergeHighlight();
+              persist('<%= baseUrl %>/dashboard-groups', { bookmarkIds: [targetId, draggedId] })
+                .then(() => window.location.reload());
+              return;
+            }
+            clearMergeHighlight();
+
+            const fromGroupId = evt.from.dataset.groupId || null;
+            const toGroupId = evt.to.dataset.groupId || null;
+
+            if (fromGroupId === toGroupId) {
+              if (toGroupId) {
+                persist('<%= baseUrl %>/dashboard-groups/members/reorder', { ids: directItems(evt.to).map((el) => el.dataset.id) });
+              } else {
+                const items = directItems(evt.to);
+                const bookmarkIds = items.filter((el) => !(el.dataset.id || '').startsWith('group-')).map((el) => el.dataset.id);
+                const groupIds = items.filter((el) => (el.dataset.id || '').startsWith('group-')).map((el) => el.dataset.id.replace('group-', ''));
+                persist('<%= baseUrl %>/bookmarks/reorder', { ids: bookmarkIds });
+                if (groupIds.length) persist('<%= baseUrl %>/dashboard-groups/reorder', { ids: groupIds });
+              }
+              return;
+            }
+
+            if (toGroupId) {
+              persist(`<%= baseUrl %>/dashboard-groups/${toGroupId}/bookmarks`, { bookmarkId: draggedId }).then(() => window.location.reload());
+            } else {
+              persist(`<%= baseUrl %>/dashboard-groups/bookmarks/${draggedId}/remove`, {}).then(() => window.location.reload());
+            }
+          }
+        });
+      });
+    })();
+  </script>
+
 </body>
 </html>
