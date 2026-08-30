@@ -53,13 +53,13 @@ const PRESETS = {
     },
 
     midnight: {
-        // Dracula's official "Background Darker" + "Background" shades (draculatheme.com/spec),
-        // used the way real Dracula-themed editors do: darker page, lighter panel/header.
+        // Dark navy-black rather than Dracula's purple-tinted neutrals, so it reads
+        // distinctly from Catppuccin instead of like a darker version of it.
         label: 'Midnight',
-        bg: '#191a21',
-        text: '#f8f8f2',
-        accent: '#bd93f9',
-        header: '#282a36'
+        bg: '#0b0f19',
+        text: '#eef1ff',
+        accent: '#6c7fee',
+        header: '#141b2e'
     },
 
     coffee: {
@@ -111,16 +111,6 @@ const PRESETS = {
         header: '#8c2f1c'
     },
 
-    sunset: {
-        // Yellow-orange-red only, no purple/pink: near-black horizon, hot orange-red
-        // header, glowing yellow-gold sun as the accent.
-        label: 'Sunset',
-        bg: '#2b0f08',
-        text: '#fff5e0',
-        accent: '#ffc93c',
-        header: '#e8480d'
-    },
-
     nord: {
         // Official Nord palette (nordtheme.com): Polar Night bg/panel, Frost accent, Snow Storm text.
         label: 'Nord',
@@ -131,22 +121,12 @@ const PRESETS = {
     },
 
     catppuccin: {
-        // Official Catppuccin Mocha palette (catppuccin.com/palette). Peach instead of the
-        // more obvious Mauve accent, so it doesn't just read as "lighter Midnight".
+        // Official Catppuccin Mocha palette (catppuccin.com/palette).
         label: 'Catppuccin',
         bg: '#1e1e2e',
         text: '#cdd6f4',
-        accent: '#fab387',
+        accent: '#cba6f7',
         header: '#313244'
-    },
-
-    solarized: {
-        // Official Solarized Dark palette (ethanschoonover.com/solarized).
-        label: 'Solarized',
-        bg: '#002b36',
-        text: '#839496',
-        accent: '#268bd2',
-        header: '#073642'
     },
 
     gruvbox: {
