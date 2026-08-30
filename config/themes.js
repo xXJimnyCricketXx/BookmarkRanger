@@ -22,7 +22,7 @@ const PRESETS = {
             highlightText: '#1a1a1d',
             navText: '#1a1a2e',
             accentText: '#ff8fb3',
-            footer: '#000000',
+            footer: '#131316',
             footerText: '#f2f2f4'
         }
     },
