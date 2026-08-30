@@ -17,7 +17,7 @@ function dbFilePath() {
 exports.showTheme = async (req, res) => {
     const settings = await getSettings();
     const customThemes = await prisma.customTheme.findMany({ orderBy: { id: 'asc' } });
-    res.render('settings-theme', { title: 'Settings — Theme', settings, presets: PRESETS, customThemes });
+    res.render('settings-theme', { title: 'Einstellungen — Theme', settings, presets: PRESETS, customThemes });
 };
 
 exports.saveTheme = async (req, res) => {
@@ -27,13 +27,13 @@ exports.saveTheme = async (req, res) => {
 };
 
 exports.showAddCustomTheme = (req, res) => {
-    res.render('settings-theme-custom-form', { title: 'Settings — Theme', theme: null });
+    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', theme: null });
 };
 
 exports.showEditCustomTheme = async (req, res) => {
     const theme = await prisma.customTheme.findUnique({ where: { id: parseInt(req.params.id, 10) } });
     if (!theme) return res.status(404).render('404', { title: '404' });
-    res.render('settings-theme-custom-form', { title: 'Settings — Theme', theme });
+    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', theme });
 };
 
 exports.createCustomTheme = async (req, res) => {
@@ -65,7 +65,7 @@ exports.deleteCustomTheme = async (req, res) => {
 
 exports.showGeneral = async (req, res) => {
     const settings = await getSettings();
-    res.render('settings-general', { title: 'Settings — General', settings });
+    res.render('settings-general', { title: 'Einstellungen — Allgemein', settings });
 };
 
 exports.saveGeneral = async (req, res) => {
@@ -83,7 +83,7 @@ exports.saveGeneral = async (req, res) => {
 
 exports.showInterface = async (req, res) => {
     const settings = await getSettings();
-    res.render('settings-interface', { title: 'Settings — Interface', settings });
+    res.render('settings-interface', { title: 'Einstellungen — Oberfläche', settings });
 };
 
 exports.saveInterface = async (req, res) => {
@@ -107,7 +107,7 @@ exports.showAccount = async (req, res) => {
         .filter((f) => f.endsWith('.db'))
         .sort()
         .reverse();
-    res.render('settings-account', { title: 'Settings — Account', account, backups, error: null, success: null });
+    res.render('settings-account', { title: 'Einstellungen — Konto', account, backups, error: null, success: null });
 };
 
 exports.updateAccount = async (req, res) => {
@@ -116,14 +116,14 @@ exports.updateAccount = async (req, res) => {
 
     if (!(await bcrypt.compare(currentPassword, account.passwordHash))) {
         const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-        return res.render('settings-account', { title: 'Settings — Account', account, backups, error: 'account.wrong_password', success: null });
+        return res.render('settings-account', { title: 'Einstellungen — Konto', account, backups, error: 'account.wrong_password', success: null });
     }
 
     const data = { username: username || account.username };
     if (newPassword) {
         if (newPassword !== newPasswordConfirm || newPassword.length < 6) {
             const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-            return res.render('settings-account', { title: 'Settings — Account', account, backups, error: 'account.invalid_password', success: null });
+            return res.render('settings-account', { title: 'Einstellungen — Konto', account, backups, error: 'account.invalid_password', success: null });
         }
         data.passwordHash = await bcrypt.hash(newPassword, 10);
     }
@@ -132,7 +132,7 @@ exports.updateAccount = async (req, res) => {
     req.session.username = updated.username;
 
     const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-    res.render('settings-account', { title: 'Settings — Account', account: updated, backups, error: null, success: 'account.saved' });
+    res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, backups, error: null, success: 'account.saved' });
 };
 
 exports.createBackup = async (req, res) => {

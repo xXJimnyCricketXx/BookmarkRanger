@@ -41,12 +41,12 @@ exports.list = async (req, res) => {
 };
 
 exports.showAddForm = (req, res) => {
-    res.render('snippet-form', { title: 'Add new snippet', snippet: null });
+    res.render('snippet-form', { title: 'Neues Snippet', snippet: null });
 };
 
 exports.showEditForm = async (req, res) => {
     const snippet = await prisma.snippet.findUnique({ where: { id: parseInt(req.params.id, 10) }, include: { tags: true } });
-    res.render('snippet-form', { title: 'Edit snippet', snippet });
+    res.render('snippet-form', { title: 'Snippet bearbeiten', snippet });
 };
 
 exports.detail = async (req, res) => {

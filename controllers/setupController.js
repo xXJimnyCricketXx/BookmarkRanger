@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 
 exports.showSetup = (req, res) => {
-    res.render('setup', { title: 'Setup', error: null });
+    res.render('setup', { title: 'Einrichtung', error: null });
 };
 
 exports.setup = async (req, res) => {
@@ -12,7 +12,7 @@ exports.setup = async (req, res) => {
     const { username, password, passwordConfirm } = req.body;
 
     if (!username || !password || password.length < 6 || password !== passwordConfirm) {
-        return res.render('setup', { title: 'Setup', error: 'setup.invalid' });
+        return res.render('setup', { title: 'Einrichtung', error: 'setup.invalid' });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

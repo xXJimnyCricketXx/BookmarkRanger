@@ -3,7 +3,7 @@ const prisma = require('../config/db');
 
 exports.showLogin = (req, res) => {
     if (req.session.userId) return res.redirect(`${res.locals.baseUrl}/`);
-    res.render('login', { title: 'Login', error: null });
+    res.render('login', { title: 'Anmelden', error: null });
 };
 
 exports.login = async (req, res) => {
@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { username } });
 
     if (!account || !(await bcrypt.compare(password, account.passwordHash))) {
-        return res.render('login', { title: 'Login', error: 'auth.invalid' });
+        return res.render('login', { title: 'Anmelden', error: 'auth.invalid' });
     }
 
     req.session.userId = account.id;
