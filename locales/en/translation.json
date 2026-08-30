@@ -38,6 +38,7 @@
     "local_search": "Local search",
     "search_button": "Search",
     "no_local_results": "Nothing found.",
+    "opening_externally": "Opening external search in a new tab …",
     "drag_hint": "Tip: set sorting to \"Custom order\" in Settings to drag-and-drop reorder pinned items."
   },
   "bookmarks": {

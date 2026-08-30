@@ -82,8 +82,19 @@
 
 <% if (noResults) { %>
 <div class="card-theme rounded-3xl p-6 mb-10">
-  <p class="text-sm opacity-70"><%= t('dashboard.no_local_results') %></p>
+  <p class="text-sm opacity-70">
+    <%= t('dashboard.no_local_results') %>
+    <% if (fallbackSearchHref) { %> <%= t('dashboard.opening_externally') %><% } %>
+  </p>
 </div>
+<% if (fallbackSearchHref) { %>
+  <script>
+    // Runs as soon as this script tag is parsed (not deferred to load/DOMContentLoaded),
+    // so it stays inside the same user-gesture window as the search submit and isn't
+    // blocked as an unrelated popup by the browser.
+    window.open(<%- JSON.stringify(fallbackSearchHref) %>, '_blank');
+  </script>
+<% } %>
 <% } %>
 
 <% if (!noResults && !settings.hideBookmarksSection && pinnedCategories.length > 0) { %>

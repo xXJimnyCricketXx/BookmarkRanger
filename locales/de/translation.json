@@ -38,6 +38,7 @@
     "local_search": "Lokale Suche",
     "search_button": "Suchen",
     "no_local_results": "Nichts gefunden.",
+    "opening_externally": "Öffne externe Suche in neuem Tab …",
     "drag_hint": "Tipp: Stelle die Sortierung in den Einstellungen auf \"Manuelle Reihenfolge\", um Angepinntes per Drag & Drop neu anzuordnen."
   },
   "bookmarks": {
