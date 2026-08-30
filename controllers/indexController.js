@@ -15,12 +15,27 @@ exports.dashboard = async (req, res) => {
         ? await prisma.snippet.findMany({ where: snippetSearchWhere(parsed), include: { tags: true }, orderBy: { createdAt: 'desc' } })
         : await prisma.snippet.findMany({ where: { isPinned: true }, include: { tags: true }, orderBy: { createdAt: 'desc' } });
 
+    const isSearch = Boolean(q);
+    const noResults = isSearch && pinnedBookmarks.length === 0 && pinnedSnippets.length === 0;
+
+    let fallbackSearchHost = '';
+    if (noResults) {
+        try {
+            fallbackSearchHost = new URL(settings.fallbackSearchUrl).hostname;
+        } catch (err) {
+            fallbackSearchHost = settings.fallbackSearchUrl;
+        }
+    }
+
     res.render('index', {
         title: settings.siteName,
         settings,
         pinnedBookmarks,
         pinnedSnippets,
         q,
-        isSearch: Boolean(q)
+        isSearch,
+        noResults,
+        fallbackSearchHref: noResults ? settings.fallbackSearchUrl + encodeURIComponent(q) : null,
+        fallbackSearchHost
     });
 };

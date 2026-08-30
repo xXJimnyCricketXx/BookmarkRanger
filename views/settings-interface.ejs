@@ -19,6 +19,12 @@
       </div>
 
       <div>
+        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_fallback_search_url') %></label>
+        <input type="text" name="fallbackSearchUrl" value="<%= settings.fallbackSearchUrl %>" placeholder="https://duckduckgo.com/?q=" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        <p class="text-xs opacity-50 mt-1"><%= t('settings.interface_fallback_search_hint') %></p>
+      </div>
+
+      <div>
         <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_bookmarks') %></label>
         <select name="hideBookmarksSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
           <option value="true" <%= settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.true') %></option>

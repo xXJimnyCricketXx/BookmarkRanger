@@ -26,6 +26,7 @@ model Settings {
   hideSearchBar          Boolean @default(false)
   hideBookmarksSection   Boolean @default(false)
   hideSnippetsSection    Boolean @default(false)
+  fallbackSearchUrl      String  @default("https://duckduckgo.com/?q=")
 }
 
 model CustomTheme {

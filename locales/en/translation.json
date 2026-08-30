@@ -33,7 +33,9 @@
     "pinned_snippets": "Pinned snippets",
     "no_pinned_bookmarks": "No pinned bookmarks yet.",
     "no_pinned_snippets": "No pinned snippets yet.",
-    "search_results_for": "Search results for"
+    "search_results_for": "Search results for",
+    "no_local_results": "Nothing found.",
+    "search_externally": "Search externally on"
   },
   "bookmarks": {
     "title": "Bookmarks",
@@ -125,6 +127,8 @@
     "false": "False",
     "interface_site_title": "Custom page title",
     "interface_hide_search": "Hide search bar",
+    "interface_fallback_search_url": "Fallback search URL",
+    "interface_fallback_search_hint": "Used when local search finds nothing. The query is appended directly to the URL, e.g. https://duckduckgo.com/?q=",
     "interface_hide_bookmarks": "Hide pinned bookmarks on dashboard",
     "interface_hide_snippets": "Hide pinned snippets on dashboard",
     "account_username": "Username",

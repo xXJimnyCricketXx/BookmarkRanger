@@ -24,7 +24,17 @@
 <h2 class="text-lg font-black mb-6 opacity-80"><%= t('dashboard.search_results_for') %> "<%= q %>"</h2>
 <% } %>
 
-<% if (!settings.hideBookmarksSection) { %>
+<% if (noResults) { %>
+<div class="card-theme rounded-3xl p-6 mb-10 flex items-center justify-between gap-4 flex-wrap">
+  <p class="text-sm opacity-70"><%= t('dashboard.no_local_results') %></p>
+  <a href="<%= fallbackSearchHref %>" target="_blank" rel="noopener"
+    class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
+    <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> <%= t('dashboard.search_externally') %> <%= fallbackSearchHost %>
+  </a>
+</div>
+<% } %>
+
+<% if (!noResults && !settings.hideBookmarksSection) { %>
 <section class="mb-10">
   <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_bookmarks') %></h2>
   <% if (pinnedBookmarks.length === 0) { %>
@@ -39,7 +49,7 @@
 </section>
 <% } %>
 
-<% if (!settings.hideSnippetsSection) { %>
+<% if (!noResults && !settings.hideSnippetsSection) { %>
 <section>
   <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_snippets') %></h2>
   <% if (pinnedSnippets.length === 0) { %>

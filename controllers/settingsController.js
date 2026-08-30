@@ -96,6 +96,7 @@ exports.saveInterface = async (req, res) => {
         data: {
             siteName: req.body.siteName || 'BookmarkRanger',
             hideSearchBar: req.body.hideSearchBar === 'true',
+            fallbackSearchUrl: req.body.fallbackSearchUrl || 'https://duckduckgo.com/?q=',
             hideBookmarksSection: req.body.hideBookmarksSection === 'true',
             hideSnippetsSection: req.body.hideSnippetsSection === 'true'
         }

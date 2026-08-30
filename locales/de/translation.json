@@ -33,7 +33,9 @@
     "pinned_snippets": "Angepinnte Snippets",
     "no_pinned_bookmarks": "Noch keine angepinnten Lesezeichen.",
     "no_pinned_snippets": "Noch keine angepinnten Snippets.",
-    "search_results_for": "Suchergebnisse für"
+    "search_results_for": "Suchergebnisse für",
+    "no_local_results": "Nichts gefunden.",
+    "search_externally": "Extern suchen auf"
   },
   "bookmarks": {
     "title": "Lesezeichen",
@@ -125,6 +127,8 @@
     "false": "Nein",
     "interface_site_title": "Eigener Seitentitel",
     "interface_hide_search": "Suchleiste ausblenden",
+    "interface_fallback_search_url": "Fallback-Such-URL",
+    "interface_fallback_search_hint": "Wird genutzt, wenn die lokale Suche nichts findet. Die Suchanfrage wird direkt an die URL angehängt, z. B. https://duckduckgo.com/?q=",
     "interface_hide_bookmarks": "Angepinnte Lesezeichen im Dashboard ausblenden",
     "interface_hide_snippets": "Angepinnte Snippets im Dashboard ausblenden",
     "account_username": "Benutzername",
