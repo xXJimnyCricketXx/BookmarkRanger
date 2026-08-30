@@ -67,8 +67,7 @@ exports.deleteCustomTheme = async (req, res) => {
 
 exports.showGeneral = async (req, res) => {
     const settings = await getSettings();
-    const searchProviders = await prisma.searchProvider.findMany({ orderBy: { id: 'asc' } });
-    res.render('settings-general', { title: 'Einstellungen — Allgemein', settings, searchProviders });
+    res.render('settings-general', { title: 'Einstellungen — Allgemein', settings });
 };
 
 exports.saveGeneral = async (req, res) => {
@@ -80,32 +79,9 @@ exports.saveGeneral = async (req, res) => {
             pinCategoriesByDefault: req.body.pinCategoriesByDefault === 'true',
             pinBookmarksByDefault: req.body.pinBookmarksByDefault === 'true',
             pinSnippetsByDefault: req.body.pinSnippetsByDefault === 'true',
-            openLinksInNewTab: req.body.openLinksInNewTab === 'true',
-            fallbackSearchProviderId: req.body.fallbackSearchProviderId ? parseInt(req.body.fallbackSearchProviderId, 10) : null
+            openLinksInNewTab: req.body.openLinksInNewTab === 'true'
         }
     });
-    res.redirect(`${res.locals.baseUrl}/settings/general`);
-};
-
-exports.showAddSearchProvider = (req, res) => {
-    res.render('settings-search-provider-form', { title: 'Einstellungen — Allgemein' });
-};
-
-exports.createSearchProvider = async (req, res) => {
-    const { name, queryTemplate } = req.body;
-    if (name && name.trim() && queryTemplate && queryTemplate.trim()) {
-        await prisma.searchProvider.create({ data: { name: name.trim(), queryTemplate: queryTemplate.trim() } });
-    }
-    res.redirect(`${res.locals.baseUrl}/settings/general`);
-};
-
-exports.deleteSearchProvider = async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const settings = await getSettings();
-    if (settings.fallbackSearchProviderId === id) {
-        await prisma.settings.update({ where: { id: settings.id }, data: { fallbackSearchProviderId: null } });
-    }
-    await prisma.searchProvider.delete({ where: { id } });
     res.redirect(`${res.locals.baseUrl}/settings/general`);
 };
 

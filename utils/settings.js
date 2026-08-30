@@ -2,13 +2,9 @@ const prisma = require('../config/db');
 const PRESETS = require('../config/themes');
 
 async function getSettings() {
-    let settings = await prisma.settings.findFirst({ include: { fallbackSearchProvider: true } });
+    let settings = await prisma.settings.findFirst();
     if (!settings) {
-        const firstProvider = await prisma.searchProvider.findFirst();
-        settings = await prisma.settings.create({
-            data: { fallbackSearchProviderId: firstProvider ? firstProvider.id : null },
-            include: { fallbackSearchProvider: true }
-        });
+        settings = await prisma.settings.create({ data: {} });
     }
     return settings;
 }

@@ -57,6 +57,11 @@
     .input-theme { background-color: var(--bg-card) !important; border: 1px solid var(--border-color); color: var(--text-main) !important; }
     .input-theme::placeholder { color: var(--text-sub) !important; opacity: 0.7; }
 
+    /* The closed <select> inherits theme colors fine via .input-theme/bg-transparent, but the
+       native dropdown popup list ignores that unless the <option> elements are styled too —
+       otherwise it falls back to the browser's white default, unreadable in dark themes. */
+    select option { background-color: var(--bg-card); color: var(--text-main); }
+
     .tab-link { color: var(--text-sub); border-bottom: 2px solid transparent; }
     .tab-link.active { color: var(--accent-text); border-bottom: 2px solid var(--highlight); }
 

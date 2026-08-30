@@ -12,8 +12,7 @@ async function main() {
 
     const passwordHash = await bcrypt.hash('admin123', 10);
     await prisma.account.create({ data: { username: 'admin', passwordHash } });
-    const defaultProvider = await prisma.searchProvider.findFirst();
-    await prisma.settings.create({ data: { fallbackSearchProviderId: defaultProvider ? defaultProvider.id : null } });
+    await prisma.settings.create({ data: {} });
 
     const board = await prisma.board.create({ data: { name: 'Privat', order: 0 } });
 
