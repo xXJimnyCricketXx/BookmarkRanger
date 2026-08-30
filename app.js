@@ -20,7 +20,7 @@ const PRESETS = require('./config/themes');
 const prisma = require('./config/db');
 const { getSettings } = require('./utils/settings');
 const { timeAgo } = require('./utils/timeAgo');
-const { logoVariantFor } = require('./utils/color');
+const { logoVariantFor, resolveTheme } = require('./utils/color');
 
 const app = express();
 const PORT = process.env.PORT || 3099;
@@ -46,30 +46,24 @@ app.use(async (req, res, next) => {
     res.locals.currentLng = req.language || 'de';
     res.locals.baseUrl = process.env.BASE_URL || '';
     res.locals.allThemes = PRESETS;
+    res.locals.resolveTheme = resolveTheme;
     res.locals.appVersion = '0.1.0';
     res.locals.timeAgo = timeAgo;
     res.locals.user = null;
-    res.locals.isDark = true;
     res.locals.settings = await getSettings();
 
     const activePreset = PRESETS[res.locals.settings.themePreset] || PRESETS.bookmarkranger;
+    const theme = resolveTheme(activePreset);
+    res.locals.theme = theme;
+    res.locals.isDark = theme.isDarkBg;
     // Which logo file (light-text vs dark-text) reads best is derived from each area's
     // actual color, not hardcoded per preset, so this also works for future custom themes.
-    res.locals.headerLogoVariant = {
-        light: logoVariantFor(activePreset.light.navbar),
-        dark: logoVariantFor(activePreset.dark.navbar)
-    };
-    res.locals.footerLogoVariant = {
-        light: logoVariantFor(activePreset.light.footer || activePreset.light.navbar),
-        dark: logoVariantFor(activePreset.dark.footer || activePreset.dark.navbar)
-    };
+    res.locals.logoVariant = logoVariantFor(theme.navbar);
+    res.locals.footerLogoVariant = logoVariantFor(theme.footer);
 
     if (req.session && req.session.userId) {
         const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
-        if (account) {
-            res.locals.user = account;
-            res.locals.isDark = account.theme !== 'light';
-        }
+        if (account) res.locals.user = account;
     }
 
     next();

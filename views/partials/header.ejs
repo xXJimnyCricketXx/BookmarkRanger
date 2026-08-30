@@ -1,12 +1,11 @@
 <%
-  const activePresetKey = (typeof settings !== 'undefined' && settings && settings.themePreset) ? settings.themePreset : 'bookmarkranger';
-  const THEMES = (typeof locals.allThemes !== 'undefined') ? locals.allThemes : {};
-  const safeFallback = {
-      light: { bg: '#fdf1f6', card: '#ffffff', navbar: '#ff6f9c', text: '#2b1520', subtext: '#7a5568', highlight: '#ff5f8f' },
-      dark:  { bg: '#180d13', card: '#26141d', navbar: '#ff6f9c', text: '#fdeef4', subtext: '#c98aa3', highlight: '#ff6f9c' }
-  };
-  const activeTheme = THEMES[activePresetKey] || THEMES['bookmarkranger'] || safeFallback;
-  const isDark = typeof locals.isDark !== 'undefined' ? locals.isDark : true;
+  const theme = locals.theme || (locals.resolveTheme && locals.allThemes ? locals.resolveTheme(locals.allThemes.bookmarkranger) : {
+      bg: '#1a1a1d', card: '#232327', navbar: '#ff6f9c', footer: '#131316',
+      text: '#f2f2f4', subtext: '#a3a3a8', highlight: '#ff6f9c', highlightText: '#1a1a1d',
+      navText: '#1a1a2e', accentText: '#ff8fb3', footerText: '#f2f2f4', isDarkBg: true
+  });
+  const isDark = typeof locals.isDark !== 'undefined' ? locals.isDark : theme.isDarkBg;
+  const logoVariant = locals.logoVariant || 'light';
   const siteName = (typeof settings !== 'undefined' && settings && settings.siteName) ? settings.siteName : 'BookmarkRanger';
 %>
 <!DOCTYPE html>
@@ -27,33 +26,18 @@
 
   <style>
     :root {
-        --bg-page: <%= activeTheme.light.bg %>;
-        --bg-card: <%= activeTheme.light.card %>;
-        --bg-nav: <%= activeTheme.light.navbar %>;
-        --text-main: <%= activeTheme.light.text %>;
-        --text-sub: <%= activeTheme.light.subtext %>;
-        --highlight: <%= activeTheme.light.highlight %>;
-        --highlight-text: <%= activeTheme.light.highlightText || '#fff' %>;
-        --nav-text: <%= activeTheme.light.navText || activeTheme.light.subtext %>;
-        --accent-text: <%= activeTheme.light.accentText || activeTheme.light.highlight %>;
-        --bg-footer: <%= activeTheme.light.footer || activeTheme.light.navbar %>;
-        --footer-text: <%= activeTheme.light.footerText || activeTheme.light.navText || activeTheme.light.subtext %>;
-        --border-color: rgba(0,0,0,0.1);
-    }
-
-    html.dark {
-        --bg-page: <%= activeTheme.dark.bg %>;
-        --bg-card: <%= activeTheme.dark.card %>;
-        --bg-nav: <%= activeTheme.dark.navbar %>;
-        --text-main: <%= activeTheme.dark.text %>;
-        --text-sub: <%= activeTheme.dark.subtext %>;
-        --highlight: <%= activeTheme.dark.highlight %>;
-        --highlight-text: <%= activeTheme.dark.highlightText || '#fff' %>;
-        --nav-text: <%= activeTheme.dark.navText || activeTheme.dark.subtext %>;
-        --accent-text: <%= activeTheme.dark.accentText || activeTheme.dark.highlight %>;
-        --bg-footer: <%= activeTheme.dark.footer || activeTheme.dark.navbar %>;
-        --footer-text: <%= activeTheme.dark.footerText || activeTheme.dark.navText || activeTheme.dark.subtext %>;
-        --border-color: rgba(255,255,255,0.1);
+        --bg-page: <%= theme.bg %>;
+        --bg-card: <%= theme.card %>;
+        --bg-nav: <%= theme.navbar %>;
+        --text-main: <%= theme.text %>;
+        --text-sub: <%= theme.subtext %>;
+        --highlight: <%= theme.highlight %>;
+        --highlight-text: <%= theme.highlightText %>;
+        --nav-text: <%= theme.navText %>;
+        --accent-text: <%= theme.accentText %>;
+        --bg-footer: <%= theme.footer %>;
+        --footer-text: <%= theme.footerText %>;
+        --border-color: <%= theme.isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' %>;
     }
 
     html, body { margin: 0; padding: 0; }
@@ -83,12 +67,9 @@
   <nav class="nav-custom transition-colors duration-300">
     <div class="w-full flex flex-wrap items-center justify-between px-6 py-4 gap-4">
       <a href="<%= baseUrl || '/' %>" class="flex items-center">
-        <%# Logo variant is derived from the navbar's actual color per mode (see headerLogoVariant),
-            not hardcoded, since some themes keep the same navbar color in both modes and others don't. %>
-        <img class="brand-logo w-44 h-auto"
-          data-light-src="<%= baseUrl %>/ressources/bookmarkranger-logo-<%= headerLogoVariant.light %>.png"
-          data-dark-src="<%= baseUrl %>/ressources/bookmarkranger-logo-<%= headerLogoVariant.dark %>.png"
-          src="<%= baseUrl %>/ressources/bookmarkranger-logo-<%= isDark ? headerLogoVariant.dark : headerLogoVariant.light %>.png" alt="BookmarkRanger!">
+        <%# Logo variant (light/dark text) is derived from the navbar's actual color, not
+            hardcoded — a theme is a single fixed look now, so this never needs to swap live. %>
+        <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-<%= logoVariant %>.png" alt="BookmarkRanger!" class="w-44 h-auto">
       </a>
 
       <ul class="flex items-center gap-6 order-3 md:order-2 w-full md:w-auto justify-center md:justify-start">
@@ -98,9 +79,6 @@
       </ul>
 
       <div class="flex items-center gap-3 order-2 md:order-3">
-        <button type="button" id="theme-toggle" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition" title="Theme">
-          <i id="theme-icon" class="fa-solid <%= isDark ? 'fa-sun' : 'fa-moon' %> nav-link"></i>
-        </button>
         <a href="<%= baseUrl %>/settings" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition" title="<%= t('nav.settings') %>">
           <i class="fa-solid fa-gear nav-link"></i>
         </a>
@@ -112,29 +90,5 @@
       </div>
     </div>
   </nav>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const toggleBtn = document.getElementById('theme-toggle');
-      const icon = document.getElementById('theme-icon');
-      const html = document.documentElement;
-
-      toggleBtn.addEventListener('click', async () => {
-        html.classList.toggle('dark');
-        const isDark = html.classList.contains('dark');
-        icon.className = 'fa-solid ' + (isDark ? 'fa-sun' : 'fa-moon') + ' nav-link';
-        document.querySelectorAll('.brand-logo').forEach((img) => {
-          img.src = isDark ? img.dataset.darkSrc : img.dataset.lightSrc;
-        });
-        try {
-          await fetch('<%= baseUrl %>/settings/update-theme', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ theme: isDark ? 'dark' : 'light' })
-          });
-        } catch (e) { /* ignore */ }
-      });
-    });
-  </script>
 
   <main class="p-6 flex-grow w-full max-w-7xl mx-auto">
