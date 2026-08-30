@@ -36,6 +36,7 @@
     "no_pinned_snippets": "No pinned snippets yet.",
     "search_results_for": "Search results for",
     "no_local_results": "Nothing found.",
+    "drag_hint": "Tip: set sorting to \"Custom order\" in Settings to drag-and-drop reorder pinned items.",
     "search_externally": "Search externally on"
   },
   "bookmarks": {

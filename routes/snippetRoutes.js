@@ -5,6 +5,7 @@ const snippetController = require('../controllers/snippetController');
 router.get('/', snippetController.list);
 router.get('/add', snippetController.showAddForm);
 router.post('/', snippetController.create);
+router.post('/reorder', snippetController.reorder);
 
 router.get('/:id', snippetController.detail);
 router.get('/:id/edit', snippetController.showEditForm);

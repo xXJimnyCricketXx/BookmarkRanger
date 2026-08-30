@@ -149,3 +149,15 @@ exports.togglePin = async (req, res) => {
     await prisma.bookmark.update({ where: { id }, data: { isPinned: !bookmark.isPinned } });
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
 };
+
+exports.reorder = async (req, res) => {
+    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    await prisma.$transaction(ids.map((id, index) => prisma.bookmark.update({ where: { id }, data: { order: index } })));
+    res.json({ ok: true });
+};
+
+exports.reorderCategories = async (req, res) => {
+    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    await prisma.$transaction(ids.map((id, index) => prisma.category.update({ where: { id }, data: { order: index } })));
+    res.json({ ok: true });
+};

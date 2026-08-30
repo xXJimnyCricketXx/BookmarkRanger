@@ -111,3 +111,9 @@ exports.togglePin = async (req, res) => {
     await prisma.snippet.update({ where: { id }, data: { isPinned: !snippet.isPinned } });
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/snippets`);
 };
+
+exports.reorder = async (req, res) => {
+    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    await prisma.$transaction(ids.map((id, index) => prisma.snippet.update({ where: { id }, data: { order: index } })));
+    res.json({ ok: true });
+};

@@ -36,6 +36,7 @@
     "no_pinned_snippets": "Noch keine angepinnten Snippets.",
     "search_results_for": "Suchergebnisse für",
     "no_local_results": "Nichts gefunden.",
+    "drag_hint": "Tipp: Stelle die Sortierung in den Einstellungen auf \"Manuelle Reihenfolge\", um Angepinntes per Drag & Drop neu anzuordnen.",
     "search_externally": "Extern suchen auf"
   },
   "bookmarks": {

@@ -1,4 +1,5 @@
 <% locals.activeNav = 'home'; %>
+<% const canDrag = settings.sortingType === 'custom'; %>
 <%- include('partials/header') %>
 
 <% if (!settings.hideSearchBar) { %>
@@ -37,9 +38,9 @@
 <% if (!noResults && !settings.hideBookmarksSection && pinnedCategories.length > 0) { %>
 <section class="mb-10">
   <h2 class="text-xl font-black mb-4"><%= t('dashboard.pinned_categories') %></h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/bookmarks/categories/reorder"` : "" %>>
     <% pinnedCategories.forEach(category => { %>
-      <%- include('partials/category-column', { category }) %>
+      <%- include('partials/category-column', { category, draggable: canDrag }) %>
     <% }) %>
   </div>
 </section>
@@ -51,9 +52,9 @@
   <% if (pinnedBookmarks.length === 0) { %>
     <p class="opacity-50 text-sm"><%= t('dashboard.no_pinned_bookmarks') %></p>
   <% } else { %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/bookmarks/reorder"` : "" %>>
       <% pinnedBookmarks.forEach(bookmark => { %>
-        <%- include('partials/bookmark-pin-card', { bookmark }) %>
+        <%- include('partials/bookmark-pin-card', { bookmark, draggable: canDrag }) %>
       <% }) %>
     </div>
   <% } %>
@@ -66,11 +67,14 @@
   <% if (pinnedSnippets.length === 0) { %>
     <p class="opacity-50 text-sm"><%= t('dashboard.no_pinned_snippets') %></p>
   <% } else { %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/snippets/reorder"` : "" %>>
       <% pinnedSnippets.forEach(snippet => { %>
-        <%- include('partials/snippet-card', { snippet }) %>
+        <%- include('partials/snippet-card', { snippet, draggable: canDrag }) %>
       <% }) %>
     </div>
+  <% } %>
+  <% if (!isSearch && !canDrag && (pinnedBookmarks.length > 0 || pinnedSnippets.length > 0)) { %>
+    <p class="text-xs opacity-40 mt-4"><%= t('dashboard.drag_hint') %></p>
   <% } %>
 </section>
 <% } %>

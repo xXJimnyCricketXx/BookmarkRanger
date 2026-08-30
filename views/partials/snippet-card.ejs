@@ -7,7 +7,7 @@
   };
   const langClass = langColors[snippet.language] || 'bg-gray-500';
 %>
-<div class="card-theme rounded-3xl shadow-xl p-5 flex flex-col">
+<div class="card-theme rounded-3xl shadow-xl p-5 flex flex-col <%= locals.draggable ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- locals.draggable ? `draggable="true" data-id="${snippet.id}"` : "" %>>
   <div class="flex items-start justify-between mb-2">
     <a href="<%= baseUrl %>/snippets/<%= snippet.id %>" class="font-black text-lg leading-tight hover:text-primary-theme transition-colors"><%= snippet.title %></a>
     <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/pin" method="POST">
