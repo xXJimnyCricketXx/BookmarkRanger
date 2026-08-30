@@ -45,7 +45,9 @@ const PRESETS = {
             text: '#ffffff',
             subtext: '#ffffff',
             highlight: '#10b981',
-            navText: '#052e1f'
+            navText: '#052e1f',
+            footer: '#101010',
+            footerText: '#ffffff'
         }
     },
 
