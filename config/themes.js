@@ -112,12 +112,13 @@ const PRESETS = {
     },
 
     sunset: {
-        // Dusk: deep plum sky, magenta sunset band, glowing orange sun.
+        // Yellow-orange-red only, no purple/pink: near-black horizon, hot orange-red
+        // header, glowing yellow-gold sun as the accent.
         label: 'Sunset',
-        bg: '#2b1e3d',
-        text: '#fdece0',
-        accent: '#ff8c42',
-        header: '#d1477a'
+        bg: '#2b0f08',
+        text: '#fff5e0',
+        accent: '#ffc93c',
+        header: '#e8480d'
     },
 
     nord: {
@@ -130,11 +131,12 @@ const PRESETS = {
     },
 
     catppuccin: {
-        // Official Catppuccin Mocha palette (catppuccin.com/palette).
+        // Official Catppuccin Mocha palette (catppuccin.com/palette). Peach instead of the
+        // more obvious Mauve accent, so it doesn't just read as "lighter Midnight".
         label: 'Catppuccin',
         bg: '#1e1e2e',
         text: '#cdd6f4',
-        accent: '#cba6f7',
+        accent: '#fab387',
         header: '#313244'
     },
 
