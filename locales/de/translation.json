@@ -39,7 +39,9 @@
     "search_button": "Suchen",
     "no_local_results": "Nichts gefunden.",
     "opening_externally": "Öffne externe Suche in neuem Tab …",
-    "drag_hint": "Tipp: Stelle die Sortierung in den Einstellungen auf \"Manuelle Reihenfolge\", um Angepinntes per Drag & Drop neu anzuordnen."
+    "drag_hint": "Tipp: Stelle die Sortierung in den Einstellungen auf \"Manuelle Reihenfolge\", um Angepinntes per Drag & Drop neu anzuordnen.",
+    "dissolve_group": "Box auflösen",
+    "remove_from_group": "Aus Box entfernen"
   },
   "bookmarks": {
     "title": "Lesezeichen",

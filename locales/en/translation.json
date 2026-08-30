@@ -39,7 +39,9 @@
     "search_button": "Search",
     "no_local_results": "Nothing found.",
     "opening_externally": "Opening external search in a new tab …",
-    "drag_hint": "Tip: set sorting to \"Custom order\" in Settings to drag-and-drop reorder pinned items."
+    "drag_hint": "Tip: set sorting to \"Custom order\" in Settings to drag-and-drop reorder pinned items.",
+    "dissolve_group": "Dissolve box",
+    "remove_from_group": "Remove from box"
   },
   "bookmarks": {
     "title": "Bookmarks",
