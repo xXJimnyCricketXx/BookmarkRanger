@@ -27,8 +27,8 @@ const PRESETS = {
         }
     },
 
-    emerald: {
-        label: 'Emerald',
+    mint: {
+        label: 'Mint',
         light: {
             bg: '#f8fafc',
             card: '#ffffff',
