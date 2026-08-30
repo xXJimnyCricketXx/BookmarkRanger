@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
   <link rel="apple-touch-icon" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
+  <script src="<%= baseUrl %>/vendor/sortable.min.js"></script>
 
   <style>
     :root {
@@ -64,6 +65,12 @@
 
     .tab-link { color: var(--text-sub); border-bottom: 2px solid transparent; }
     .tab-link.active { color: var(--accent-text); border-bottom: 2px solid var(--highlight); }
+
+    /* SortableJS drag placeholder: a dashed "drop here" box, like WordPress dashboard widgets. */
+    .sortable-ghost { background: transparent !important; border: 2px dashed var(--highlight) !important; box-shadow: none !important; }
+    .sortable-ghost > * { visibility: hidden; }
+    .sortable-chosen { cursor: grabbing; }
+    .sortable-drag { opacity: 0.9; }
 
     /* Fixed sidebar width/spacing, shared by every page that has one (Settings, Snippets, …). */
     .layout-with-sidebar { display: flex; flex-direction: column; gap: 3.5rem; }
