@@ -18,7 +18,7 @@ const settingsRoutes = require('./routes/settingsRoutes');
 
 const PRESETS = require('./config/themes');
 const prisma = require('./config/db');
-const { getSettings } = require('./utils/settings');
+const { getSettings, getThemeBase } = require('./utils/settings');
 const { timeAgo } = require('./utils/timeAgo');
 const { logoVariantFor, resolveTheme } = require('./utils/color');
 
@@ -52,7 +52,7 @@ app.use(async (req, res, next) => {
     res.locals.user = null;
     res.locals.settings = await getSettings();
 
-    const activePreset = PRESETS[res.locals.settings.themePreset] || PRESETS.bookmarkranger;
+    const activePreset = await getThemeBase(res.locals.settings.themePreset);
     const theme = resolveTheme(activePreset);
     res.locals.theme = theme;
     res.locals.isDark = theme.isDarkBg;

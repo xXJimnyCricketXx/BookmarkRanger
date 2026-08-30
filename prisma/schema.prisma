@@ -27,6 +27,16 @@ model Settings {
   hideSnippetsSection    Boolean @default(false)
 }
 
+model CustomTheme {
+  id        Int      @id @default(autoincrement())
+  name      String
+  bg        String
+  text      String
+  accent    String
+  header    String
+  createdAt DateTime @default(now())
+}
+
 model Board {
   id         Int        @id @default(autoincrement())
   name       String

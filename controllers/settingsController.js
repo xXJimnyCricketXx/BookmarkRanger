@@ -16,12 +16,50 @@ function dbFilePath() {
 
 exports.showTheme = async (req, res) => {
     const settings = await getSettings();
-    res.render('settings-theme', { title: 'Settings — Theme', settings, presets: PRESETS });
+    const customThemes = await prisma.customTheme.findMany({ orderBy: { id: 'asc' } });
+    res.render('settings-theme', { title: 'Settings — Theme', settings, presets: PRESETS, customThemes });
 };
 
 exports.saveTheme = async (req, res) => {
     const settings = await getSettings();
     await prisma.settings.update({ where: { id: settings.id }, data: { themePreset: req.body.preset } });
+    res.redirect(`${res.locals.baseUrl}/settings/theme`);
+};
+
+exports.showAddCustomTheme = (req, res) => {
+    res.render('settings-theme-custom-form', { title: 'Settings — Theme', theme: null });
+};
+
+exports.showEditCustomTheme = async (req, res) => {
+    const theme = await prisma.customTheme.findUnique({ where: { id: parseInt(req.params.id, 10) } });
+    if (!theme) return res.status(404).render('404', { title: '404' });
+    res.render('settings-theme-custom-form', { title: 'Settings — Theme', theme });
+};
+
+exports.createCustomTheme = async (req, res) => {
+    const { name, bg, text, accent, header } = req.body;
+    await prisma.customTheme.create({ data: { name, bg, text, accent, header } });
+    res.redirect(`${res.locals.baseUrl}/settings/theme`);
+};
+
+exports.updateCustomTheme = async (req, res) => {
+    const { name, bg, text, accent, header } = req.body;
+    await prisma.customTheme.update({
+        where: { id: parseInt(req.params.id, 10) },
+        data: { name, bg, text, accent, header }
+    });
+    res.redirect(`${res.locals.baseUrl}/settings/theme`);
+};
+
+exports.deleteCustomTheme = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const settings = await getSettings();
+
+    if (settings.themePreset === `custom-${id}`) {
+        await prisma.settings.update({ where: { id: settings.id }, data: { themePreset: 'bookmarkranger' } });
+    }
+
+    await prisma.customTheme.delete({ where: { id } });
     res.redirect(`${res.locals.baseUrl}/settings/theme`);
 };
 

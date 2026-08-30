@@ -7,6 +7,12 @@ router.get('/', (req, res) => res.redirect(`${res.locals.baseUrl}/settings/theme
 router.get('/theme', settingsController.showTheme);
 router.post('/theme', settingsController.saveTheme);
 
+router.get('/theme/custom/add', settingsController.showAddCustomTheme);
+router.post('/theme/custom', settingsController.createCustomTheme);
+router.get('/theme/custom/:id/edit', settingsController.showEditCustomTheme);
+router.post('/theme/custom/:id', settingsController.updateCustomTheme);
+router.post('/theme/custom/:id/delete', settingsController.deleteCustomTheme);
+
 router.get('/general', settingsController.showGeneral);
 router.post('/general', settingsController.saveGeneral);
 
