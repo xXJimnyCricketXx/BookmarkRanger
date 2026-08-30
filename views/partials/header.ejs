@@ -1,0 +1,132 @@
+<%
+  const activePresetKey = (typeof settings !== 'undefined' && settings && settings.themePreset) ? settings.themePreset : 'bookmarkranger';
+  const THEMES = (typeof locals.allThemes !== 'undefined') ? locals.allThemes : {};
+  const safeFallback = {
+      light: { bg: '#fdf1f6', card: '#ffffff', navbar: '#ff6f9c', text: '#2b1520', subtext: '#7a5568', highlight: '#ff5f8f' },
+      dark:  { bg: '#180d13', card: '#26141d', navbar: '#ff6f9c', text: '#fdeef4', subtext: '#c98aa3', highlight: '#ff6f9c' }
+  };
+  const activeTheme = THEMES[activePresetKey] || THEMES['bookmarkranger'] || safeFallback;
+  const isDark = typeof locals.isDark !== 'undefined' ? locals.isDark : true;
+  const siteName = (typeof settings !== 'undefined' && settings && settings.siteName) ? settings.siteName : 'BookmarkRanger';
+%>
+<!DOCTYPE html>
+<html lang="<%= currentLng %>" class="<%= isDark ? 'dark' : '' %>">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= typeof title !== 'undefined' ? title + ' — ' + siteName : siteName %></title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
+  <link rel="apple-touch-icon" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
+
+  <style>
+    :root {
+        --bg-page: <%= activeTheme.light.bg %>;
+        --bg-card: <%= activeTheme.light.card %>;
+        --bg-nav: <%= activeTheme.light.navbar %>;
+        --text-main: <%= activeTheme.light.text %>;
+        --text-sub: <%= activeTheme.light.subtext %>;
+        --highlight: <%= activeTheme.light.highlight %>;
+        --highlight-text: <%= activeTheme.light.highlightText || '#fff' %>;
+        --nav-text: <%= activeTheme.light.navText || activeTheme.light.subtext %>;
+        --accent-text: <%= activeTheme.light.accentText || activeTheme.light.highlight %>;
+        --bg-footer: <%= activeTheme.light.footer || activeTheme.light.navbar %>;
+        --footer-text: <%= activeTheme.light.footerText || activeTheme.light.navText || activeTheme.light.subtext %>;
+        --border-color: rgba(0,0,0,0.1);
+    }
+
+    html.dark {
+        --bg-page: <%= activeTheme.dark.bg %>;
+        --bg-card: <%= activeTheme.dark.card %>;
+        --bg-nav: <%= activeTheme.dark.navbar %>;
+        --text-main: <%= activeTheme.dark.text %>;
+        --text-sub: <%= activeTheme.dark.subtext %>;
+        --highlight: <%= activeTheme.dark.highlight %>;
+        --highlight-text: <%= activeTheme.dark.highlightText || '#fff' %>;
+        --nav-text: <%= activeTheme.dark.navText || activeTheme.dark.subtext %>;
+        --accent-text: <%= activeTheme.dark.accentText || activeTheme.dark.highlight %>;
+        --bg-footer: <%= activeTheme.dark.footer || activeTheme.dark.navbar %>;
+        --footer-text: <%= activeTheme.dark.footerText || activeTheme.dark.navText || activeTheme.dark.subtext %>;
+        --border-color: rgba(255,255,255,0.1);
+    }
+
+    html, body { margin: 0; padding: 0; }
+    body { background-color: var(--bg-page) !important; color: var(--text-main) !important; }
+
+    .nav-custom { background-color: var(--bg-nav) !important; border-bottom: 1px solid var(--border-color); color: var(--nav-text) !important; }
+    .footer-custom { background-color: var(--bg-footer) !important; border-top: 1px solid var(--border-color); color: var(--footer-text) !important; }
+    .nav-link { color: var(--nav-text) !important; }
+    .nav-link.active { font-weight: 800; border-bottom: 2px solid var(--nav-text); }
+
+    .text-primary-theme { color: var(--accent-text) !important; }
+    .bg-primary-theme { background-color: var(--highlight) !important; color: var(--highlight-text) !important; }
+    .border-primary-theme { border-color: var(--highlight) !important; }
+    .hover\:bg-primary-theme:hover { background-color: var(--highlight) !important; color: var(--highlight-text) !important; }
+
+    .card-theme { background-color: var(--bg-card) !important; border: 1px solid var(--border-color); color: var(--text-main) !important; }
+    .input-theme { background-color: var(--bg-card) !important; border: 1px solid var(--border-color); color: var(--text-main) !important; }
+    .input-theme::placeholder { color: var(--text-sub) !important; opacity: 0.7; }
+
+    .tab-link { color: var(--text-sub); border-bottom: 2px solid transparent; }
+    .tab-link.active { color: var(--accent-text); border-bottom: 2px solid var(--highlight); }
+  </style>
+</head>
+
+<body class="font-sans transition-colors duration-300 min-h-screen flex flex-col">
+
+  <nav class="nav-custom transition-colors duration-300">
+    <div class="w-full flex flex-wrap items-center justify-between px-6 py-4 gap-4">
+      <a href="<%= baseUrl || '/' %>" class="flex items-center">
+        <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-<%= isDark ? 'dark' : 'light' %>.png" alt="BookmarkRanger!" class="w-44 h-auto">
+      </a>
+
+      <ul class="flex items-center gap-6 order-3 md:order-2 w-full md:w-auto justify-center md:justify-start">
+        <li><a href="<%= baseUrl %>/" class="nav-link font-semibold text-sm <%= locals.activeNav === 'home' ? 'active' : '' %>"><%= t('nav.home') %></a></li>
+        <li><a href="<%= baseUrl %>/bookmarks" class="nav-link font-semibold text-sm <%= locals.activeNav === 'bookmarks' ? 'active' : '' %>"><%= t('nav.bookmarks') %></a></li>
+        <li><a href="<%= baseUrl %>/snippets" class="nav-link font-semibold text-sm <%= locals.activeNav === 'snippets' ? 'active' : '' %>"><%= t('nav.snippets') %></a></li>
+      </ul>
+
+      <div class="flex items-center gap-3 order-2 md:order-3">
+        <button type="button" id="theme-toggle" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition" title="Theme">
+          <i id="theme-icon" class="fa-solid <%= isDark ? 'fa-sun' : 'fa-moon' %> nav-link"></i>
+        </button>
+        <a href="<%= baseUrl %>/settings" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition" title="<%= t('nav.settings') %>">
+          <i class="fa-solid fa-gear nav-link"></i>
+        </a>
+        <form action="<%= baseUrl %>/logout" method="POST">
+          <button type="submit" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition" title="<%= t('nav.logout') %>">
+            <i class="fa-solid fa-arrow-right-from-bracket nav-link"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('theme-toggle');
+      const icon = document.getElementById('theme-icon');
+      const html = document.documentElement;
+
+      toggleBtn.addEventListener('click', async () => {
+        html.classList.toggle('dark');
+        const isDark = html.classList.contains('dark');
+        icon.className = 'fa-solid ' + (isDark ? 'fa-sun' : 'fa-moon') + ' nav-link';
+        try {
+          await fetch('<%= baseUrl %>/settings/update-theme', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ theme: isDark ? 'dark' : 'light' })
+          });
+        } catch (e) { /* ignore */ }
+      });
+    });
+  </script>
+
+  <main class="p-6 flex-grow w-full max-w-7xl mx-auto">
