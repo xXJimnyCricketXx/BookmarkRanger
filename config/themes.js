@@ -33,7 +33,7 @@ const PRESETS = {
         bg: '#061d27',
         text: '#ecfeff',
         accent: '#22d3ee',
-        header: '#164e63'
+        header: '#22d3ee'
     },
 
     slate: {
@@ -41,7 +41,7 @@ const PRESETS = {
         bg: '#0f172a',
         text: '#f8fafc',
         accent: '#94a3b8',
-        header: '#020617'
+        header: '#94a3b8'
     },
 
     forest: {
@@ -54,18 +54,58 @@ const PRESETS = {
 
     midnight: {
         label: 'Midnight',
-        bg: '#050510',
-        text: '#e8eaff',
-        accent: '#7c73f5',
-        header: '#07071a'
+        bg: '#282a36',
+        text: '#f8f8f2',
+        accent: '#bd93f9',
+        header: '#44475a'
     },
 
-    sand: {
-        label: 'Sand',
+    coffee: {
+        label: 'Coffee',
         bg: '#231a10',
         text: '#fdf8f0',
         accent: '#d4aa6a',
         header: '#1a1008'
+    },
+
+    gazette: {
+        label: 'Gazette',
+        bg: '#f2f7ff',
+        text: '#000000',
+        accent: '#5c5c5c',
+        header: '#5c5c5c'
+    },
+
+    espresso: {
+        label: 'Espresso',
+        bg: '#21211f',
+        text: '#d1b59a',
+        accent: '#4e4e4e',
+        header: '#4e4e4e'
+    },
+
+    sky: {
+        label: 'Sky',
+        bg: '#f1f2f0',
+        text: '#35342f',
+        accent: '#37bbe4',
+        header: '#37bbe4'
+    },
+
+    lime: {
+        label: 'Lime',
+        bg: '#263238',
+        text: '#aabbc3',
+        accent: '#aeea00',
+        header: '#aeea00'
+    },
+
+    autumn: {
+        label: 'Autumn',
+        bg: '#2b2b2b',
+        text: '#f2e9dc',
+        accent: '#f0b44c',
+        header: '#704f33'
     }
 };
 
