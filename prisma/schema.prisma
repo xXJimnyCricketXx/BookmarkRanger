@@ -83,6 +83,21 @@ model Bookmark {
   tags          Tag[]     @relation("BookmarkTags")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  // Dashboard-only grouping (see DashboardGroup) — separate from category/board
+  // organization, and from `order` which is the position within its category.
+  dashboardGroup      DashboardGroup? @relation(fields: [dashboardGroupId], references: [id])
+  dashboardGroupId    Int?
+  dashboardGroupOrder Int             @default(0)
+}
+
+// A dashboard-only "box" a user creates by dragging one pinned bookmark onto another,
+// grouping several pinned bookmarks together (like a Kanban column) without touching
+// their actual Board/Category on the Bookmarks page.
+model DashboardGroup {
+  id        Int        @id @default(autoincrement())
+  name      String
+  order     Int        @default(0)
+  bookmarks Bookmark[]
 }
 
 model Snippet {

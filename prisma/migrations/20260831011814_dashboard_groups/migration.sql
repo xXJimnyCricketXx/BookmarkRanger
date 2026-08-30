@@ -1,0 +1,8 @@
+CREATE TABLE "DashboardGroup" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 0
+);
+
+ALTER TABLE "Bookmark" ADD COLUMN "dashboardGroupId" INTEGER REFERENCES "DashboardGroup" ("id");
+ALTER TABLE "Bookmark" ADD COLUMN "dashboardGroupOrder" INTEGER NOT NULL DEFAULT 0;
