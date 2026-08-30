@@ -3,6 +3,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const middleware = require('i18next-http-middleware');
 
 const i18next = require('./config/i18n');
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
+    store: new FileStore({ path: path.join(__dirname, 'data', 'sessions'), retries: 0, logFn: () => {} }),
     secret: process.env.SESSION_SECRET || 'dev-secret',
     resave: false,
     saveUninitialized: false,
