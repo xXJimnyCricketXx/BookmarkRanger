@@ -67,9 +67,10 @@
   <nav class="nav-custom transition-colors duration-300">
     <div class="w-full flex flex-wrap items-center justify-between px-6 py-4 gap-4">
       <a href="<%= baseUrl || '/' %>" class="flex items-center">
-        <%# Logo variant (light/dark text) is derived from the navbar's actual color, not
-            hardcoded — a theme is a single fixed look now, so this never needs to swap live. %>
-        <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-<%= logoVariant %>.png" alt="BookmarkRanger!" class="w-44 h-auto">
+        <%# Mono variant, not the two-tone one: the "Ranger!" script is a fixed brand pink in the
+            regular logo, which clashes on non-pink headers (e.g. Lime). Variant (light/dark text)
+            is still derived from the navbar's actual color. %>
+        <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-mono-<%= logoVariant %>.png" alt="BookmarkRanger!" class="w-44 h-auto">
       </a>
 
       <ul class="flex items-center gap-6 order-3 md:order-2 w-full md:w-auto justify-center md:justify-start">
