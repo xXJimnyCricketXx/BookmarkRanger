@@ -1,0 +1,10 @@
+node_modules/
+.env
+data/
+backups/*.db
+backups/*.zip
+public/uploads/*
+!public/uploads/.gitkeep
+public/styles/tailwind.css
+*.log
+.DS_Store
