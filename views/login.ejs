@@ -1,7 +1,5 @@
 <%
-  const THEMES = (typeof locals.allThemes !== 'undefined') ? locals.allThemes : {};
-  const activePresetKey = (typeof settings !== 'undefined' && settings && settings.themePreset) ? settings.themePreset : 'bookmarkranger';
-  const activeDarkTheme = (THEMES[activePresetKey] && THEMES[activePresetKey].dark) || THEMES['bookmarkranger'].dark;
+  const theme = locals.resolveTheme(locals.allThemes.bookmarkranger);
 %>
 <!DOCTYPE html>
 <html lang="<%= currentLng %>">
@@ -16,12 +14,12 @@
   <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
 
   <style>
-    body { background: <%= activeDarkTheme.bg %>; color: <%= activeDarkTheme.text %>; }
-    .form-bg { background: <%= activeDarkTheme.card %>; border: 1px solid rgba(255,255,255,0.1); }
-    input { background: rgba(255,255,255,0.05); color: <%= activeDarkTheme.text %>; border: 1px solid rgba(255,255,255,0.1); }
-    input::placeholder { color: <%= activeDarkTheme.subtext %>; }
-    input:focus { outline: none; box-shadow: 0 0 0 2px <%= activeDarkTheme.highlight %>; border-color: <%= activeDarkTheme.highlight %>; }
-    .btn-login { background: <%= activeDarkTheme.highlight %>; color: <%= activeDarkTheme.highlightText || '#fff' %>; }
+    body { background: <%= theme.bg %>; color: <%= theme.text %>; }
+    .form-bg { background: <%= theme.card %>; border: 1px solid rgba(255,255,255,0.1); }
+    input { background: rgba(255,255,255,0.05); color: <%= theme.text %>; border: 1px solid rgba(255,255,255,0.1); }
+    input::placeholder { color: <%= theme.subtext %>; }
+    input:focus { outline: none; box-shadow: 0 0 0 2px <%= theme.highlight %>; border-color: <%= theme.highlight %>; }
+    .btn-login { background: <%= theme.highlight %>; color: <%= theme.highlightText %>; }
     .btn-login:hover { filter: brightness(1.1); }
     .error { color: #f87171; }
   </style>

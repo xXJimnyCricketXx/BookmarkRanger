@@ -7,14 +7,15 @@
     <h2 class="text-xl font-black mb-6"><%= t('settings.theme_title') %></h2>
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl">
-      <% Object.entries(presets).forEach(([key, preset]) => { %>
+      <% Object.entries(presets).forEach(([key, base]) => {
+           const preset = resolveTheme(base); %>
         <form action="<%= baseUrl %>/settings/theme" method="POST">
           <input type="hidden" name="preset" value="<%= key %>">
           <button type="submit" class="w-full text-left card-theme rounded-2xl p-4 border-2 <%= settings.themePreset === key ? 'border-primary-theme' : 'border-transparent' %> hover:border-primary-theme/50 transition">
             <div class="flex h-10 rounded-lg overflow-hidden mb-3">
-              <div class="flex-1" style="background:<%= preset.dark.bg %>"></div>
-              <div class="flex-1" style="background:<%= preset.dark.card %>"></div>
-              <div class="flex-1" style="background:<%= preset.dark.highlight %>"></div>
+              <div class="flex-1" style="background:<%= preset.bg %>"></div>
+              <div class="flex-1" style="background:<%= preset.card %>"></div>
+              <div class="flex-1" style="background:<%= preset.highlight %>"></div>
             </div>
             <span class="text-sm font-bold"><%= preset.label %></span>
           </button>
