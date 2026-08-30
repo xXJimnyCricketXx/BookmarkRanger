@@ -53,11 +53,13 @@ const PRESETS = {
     },
 
     midnight: {
+        // Dracula's official "Background Darker" + "Background" shades (draculatheme.com/spec),
+        // used the way real Dracula-themed editors do: darker page, lighter panel/header.
         label: 'Midnight',
-        bg: '#282a36',
+        bg: '#191a21',
         text: '#f8f8f2',
         accent: '#bd93f9',
-        header: '#44475a'
+        header: '#282a36'
     },
 
     coffee: {
@@ -81,7 +83,7 @@ const PRESETS = {
         bg: '#21211f',
         text: '#d1b59a',
         accent: '#4e4e4e',
-        header: '#4e4e4e'
+        header: '#d1b59a'
     },
 
     sky: {
