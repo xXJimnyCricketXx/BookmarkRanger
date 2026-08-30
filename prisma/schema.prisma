@@ -27,7 +27,15 @@ model Settings {
   hideSearchBar          Boolean @default(false)
   hideBookmarksSection   Boolean @default(false)
   hideSnippetsSection    Boolean @default(false)
-  fallbackSearchUrl      String  @default("https://duckduckgo.com/?q=")
+  fallbackSearchProvider   SearchProvider? @relation(fields: [fallbackSearchProviderId], references: [id])
+  fallbackSearchProviderId Int?
+}
+
+model SearchProvider {
+  id            Int        @id @default(autoincrement())
+  name          String
+  queryTemplate String
+  settings      Settings[]
 }
 
 model CustomTheme {

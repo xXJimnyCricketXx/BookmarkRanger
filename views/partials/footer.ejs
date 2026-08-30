@@ -30,35 +30,34 @@
   <script>
     // Native HTML5 drag-and-drop reordering for any ".dragroot[data-reorder-url]"
     // container of ".draggable-item[data-id]" children (dashboard pinned sections).
-    function getDragAfterElement(container, y) {
-      const items = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
-      return items.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) return { offset, element: child };
-        return closest;
-      }, { offset: Number.NEGATIVE_INFINITY }).element;
-    }
-
+    // Uses elementFromPoint + horizontal midpoint (not just container Y) because these
+    // are multi-column CSS grids, not vertical lists — pure Y-offset comparison can't
+    // tell two items in the same row apart, so dragging sideways did nothing.
     document.querySelectorAll('.dragroot').forEach((root) => {
       let dragEl = null;
 
       root.querySelectorAll('.draggable-item').forEach((item) => {
         item.addEventListener('dragstart', () => {
           dragEl = item;
-          item.classList.add('dragging', 'opacity-40');
+          setTimeout(() => item.classList.add('opacity-40'), 0);
         });
         item.addEventListener('dragend', () => {
-          item.classList.remove('dragging', 'opacity-40');
+          item.classList.remove('opacity-40');
+          dragEl = null;
         });
       });
 
       root.addEventListener('dragover', (e) => {
         e.preventDefault();
         if (!dragEl) return;
-        const after = getDragAfterElement(root, e.clientY);
-        if (after == null) root.appendChild(dragEl);
-        else root.insertBefore(dragEl, after);
+
+        const target = document.elementFromPoint(e.clientX, e.clientY);
+        const overItem = target && target.closest('.draggable-item');
+        if (!overItem || overItem === dragEl || overItem.parentElement !== root) return;
+
+        const box = overItem.getBoundingClientRect();
+        const before = (e.clientX - box.left) < box.width / 2;
+        root.insertBefore(dragEl, before ? overItem : overItem.nextSibling);
       });
 
       root.addEventListener('drop', async (e) => {

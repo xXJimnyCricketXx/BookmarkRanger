@@ -26,15 +26,7 @@ exports.dashboard = async (req, res) => {
         });
 
     const noResults = isSearch && pinnedBookmarks.length === 0 && pinnedSnippets.length === 0;
-
-    let fallbackSearchHost = '';
-    if (noResults) {
-        try {
-            fallbackSearchHost = new URL(settings.fallbackSearchUrl).hostname;
-        } catch (err) {
-            fallbackSearchHost = settings.fallbackSearchUrl;
-        }
-    }
+    const provider = settings.fallbackSearchProvider;
 
     res.render('index', {
         title: settings.siteName,
@@ -45,7 +37,7 @@ exports.dashboard = async (req, res) => {
         q,
         isSearch,
         noResults,
-        fallbackSearchHref: noResults ? settings.fallbackSearchUrl + encodeURIComponent(q) : null,
-        fallbackSearchHost
+        fallbackSearchHref: noResults && provider ? provider.queryTemplate + encodeURIComponent(q) : null,
+        fallbackSearchName: provider ? provider.name : ''
     });
 };

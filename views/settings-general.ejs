@@ -7,13 +7,32 @@
     <form action="<%= baseUrl %>/settings/general" method="POST" class="space-y-8">
       <div>
         <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.general_section') %></h2>
-        <div>
-          <label class="block text-sm font-bold mb-2"><%= t('settings.general_sorting_type') %></label>
-          <select name="sortingType" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-            <option value="createdAt" <%= settings.sortingType === 'createdAt' ? 'selected' : '' %>><%= t('settings.sort_created') %></option>
-            <option value="name" <%= settings.sortingType === 'name' ? 'selected' : '' %>><%= t('settings.sort_name') %></option>
-            <option value="custom" <%= settings.sortingType === 'custom' ? 'selected' : '' %>><%= t('settings.sort_custom') %></option>
-          </select>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.general_sorting_type') %></label>
+            <select name="sortingType" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="createdAt" <%= settings.sortingType === 'createdAt' ? 'selected' : '' %>><%= t('settings.sort_created') %></option>
+              <option value="name" <%= settings.sortingType === 'name' ? 'selected' : '' %>><%= t('settings.sort_name') %></option>
+              <option value="custom" <%= settings.sortingType === 'custom' ? 'selected' : '' %>><%= t('settings.sort_custom') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.fallback_search_provider') %></label>
+            <div class="flex gap-2">
+              <select name="fallbackSearchProviderId" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+                <option value=""><%= t('settings.no_fallback_search') %></option>
+                <% searchProviders.forEach(provider => { %>
+                  <option value="<%= provider.id %>" <%= settings.fallbackSearchProviderId === provider.id ? 'selected' : '' %>><%= provider.name %></option>
+                <% }) %>
+              </select>
+              <a href="<%= baseUrl %>/settings/search-providers/add" title="<%= t('settings.add_search_provider') %>"
+                class="input-theme shrink-0 w-12 flex items-center justify-center rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition">
+                <i class="fa-solid fa-plus"></i>
+              </a>
+            </div>
+            <p class="text-xs opacity-50 mt-1"><%= t('settings.fallback_search_hint') %></p>
+          </div>
         </div>
       </div>
 
