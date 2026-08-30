@@ -103,11 +103,12 @@ const PRESETS = {
     },
 
     autumn: {
+        // Fall foliage: chestnut bark, rust-red header, burnt-orange accent.
         label: 'Autumn',
-        bg: '#704f33',
-        text: '#f2e9dc',
-        accent: '#f0b44c',
-        header: '#f0b44c'
+        bg: '#2c1810',
+        text: '#f5e6d3',
+        accent: '#d9822b',
+        header: '#8c2f1c'
     }
 };
 
