@@ -15,6 +15,7 @@ const indexRoutes = require('./routes/indexRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const snippetRoutes = require('./routes/snippetRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+const dashboardGroupRoutes = require('./routes/dashboardGroupRoutes');
 
 const PRESETS = require('./config/themes');
 const prisma = require('./config/db');
@@ -77,6 +78,7 @@ app.use('/', requireAuth, indexRoutes);
 app.use('/bookmarks', requireAuth, bookmarkRoutes);
 app.use('/snippets', requireAuth, snippetRoutes);
 app.use('/settings', requireAuth, settingsRoutes);
+app.use('/dashboard-groups', requireAuth, dashboardGroupRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
