@@ -8,8 +8,10 @@ const { getSettings } = require('../utils/settings');
 const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
 
 function dbFilePath() {
+    // Prisma resolves a relative sqlite "file:" path relative to prisma/schema.prisma,
+    // not the project root, so the backup source path must match that.
     const raw = (process.env.DATABASE_URL || '').replace(/^file:/, '');
-    return path.join(__dirname, '..', raw);
+    return path.join(__dirname, '..', 'prisma', raw);
 }
 
 exports.updateDarkMode = async (req, res) => {
