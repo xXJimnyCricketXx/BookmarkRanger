@@ -13,17 +13,17 @@ const PRESETS = {
             accentText: '#e8447a'
         },
         dark: {
-            bg: '#180d13',
-            card: '#26141d',
+            bg: '#1a1a1d',
+            card: '#232327',
             navbar: '#ff6f9c',
-            text: '#fdeef4',
-            subtext: '#c98aa3',
+            text: '#f2f2f4',
+            subtext: '#a3a3a8',
             highlight: '#ff6f9c',
-            highlightText: '#180d13',
+            highlightText: '#1a1a1d',
             navText: '#1a1a2e',
             accentText: '#ff8fb3',
-            footer: '#0f0810',
-            footerText: '#fdeef4'
+            footer: '#000000',
+            footerText: '#f2f2f4'
         }
     },
 
