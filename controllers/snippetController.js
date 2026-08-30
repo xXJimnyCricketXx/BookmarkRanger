@@ -1,7 +1,10 @@
 const prisma = require('../config/db');
 const { resolveTags } = require('../utils/tags');
+const { orderByFor } = require('../utils/sorting');
+const { getSettings } = require('../utils/settings');
 
 exports.list = async (req, res) => {
+    const settings = await getSettings();
     const activeTags = (req.query.tags || '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
     const q = req.query.q || '';
 
@@ -19,7 +22,7 @@ exports.list = async (req, res) => {
     }
     if (AND.length) where.AND = AND;
 
-    const snippets = await prisma.snippet.findMany({ where, include: { tags: true }, orderBy: { createdAt: 'desc' } });
+    const snippets = await prisma.snippet.findMany({ where, include: { tags: true }, orderBy: orderByFor(settings.sortingType) });
 
     const allSnippetsForTags = await prisma.snippet.findMany({ include: { tags: true } });
     const tagCounts = {};
@@ -58,6 +61,8 @@ exports.detail = async (req, res) => {
 exports.create = async (req, res) => {
     const { title, shortDescription, language, code, documentation, tags } = req.body;
     const allTags = `${tags || ''},${language || ''}`;
+    const settings = await getSettings();
+    const count = await prisma.snippet.count();
 
     await prisma.snippet.create({
         data: {
@@ -66,6 +71,8 @@ exports.create = async (req, res) => {
             language: (language || '').toLowerCase(),
             code,
             documentation: documentation || null,
+            order: count,
+            isPinned: settings.pinSnippetsByDefault,
             tags: { connect: await resolveTags(allTags) }
         }
     });

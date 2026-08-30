@@ -4,29 +4,49 @@
   <%- include('partials/settings-nav', { active: 'general' }) %>
 
   <div class="flex-grow max-w-xl">
-    <form action="<%= baseUrl %>/settings/general" method="POST" class="space-y-6">
+    <form action="<%= baseUrl %>/settings/general" method="POST" class="space-y-8">
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.general_sorting_type') %></label>
-        <select name="sortingType" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-          <option value="createdAt" <%= settings.sortingType === 'createdAt' ? 'selected' : '' %>><%= t('settings.sort_created') %></option>
-          <option value="name" <%= settings.sortingType === 'name' ? 'selected' : '' %>><%= t('settings.sort_name') %></option>
-        </select>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.general_section') %></h2>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.general_sorting_type') %></label>
+          <select name="sortingType" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <option value="createdAt" <%= settings.sortingType === 'createdAt' ? 'selected' : '' %>><%= t('settings.sort_created') %></option>
+            <option value="name" <%= settings.sortingType === 'name' ? 'selected' : '' %>><%= t('settings.sort_name') %></option>
+            <option value="custom" <%= settings.sortingType === 'custom' ? 'selected' : '' %>><%= t('settings.sort_custom') %></option>
+          </select>
+        </div>
       </div>
 
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.general_pin_categories') %></label>
-        <select name="pinCategoriesByDefault" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-          <option value="true" <%= settings.pinCategoriesByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
-          <option value="false" <%= !settings.pinCategoriesByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
-        </select>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.bookmarks_section') %></h2>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.general_pin_bookmarks') %></label>
+            <select name="pinBookmarksByDefault" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.pinBookmarksByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.pinBookmarksByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.general_open_new_tab') %></label>
+            <select name="openLinksInNewTab" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.general_open_new_tab') %></label>
-        <select name="openLinksInNewTab" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-          <option value="true" <%= settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.true') %></option>
-          <option value="false" <%= !settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.false') %></option>
-        </select>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.snippets_section') %></h2>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.general_pin_snippets') %></label>
+          <select name="pinSnippetsByDefault" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <option value="true" <%= settings.pinSnippetsByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
+            <option value="false" <%= !settings.pinSnippetsByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
+          </select>
+        </div>
       </div>
 
       <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>

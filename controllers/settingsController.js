@@ -76,7 +76,8 @@ exports.saveGeneral = async (req, res) => {
         where: { id: settings.id },
         data: {
             sortingType: req.body.sortingType,
-            pinCategoriesByDefault: req.body.pinCategoriesByDefault === 'true',
+            pinBookmarksByDefault: req.body.pinBookmarksByDefault === 'true',
+            pinSnippetsByDefault: req.body.pinSnippetsByDefault === 'true',
             openLinksInNewTab: req.body.openLinksInNewTab === 'true'
         }
     });

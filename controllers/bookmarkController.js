@@ -1,8 +1,11 @@
 const prisma = require('../config/db');
 const { resolveTags } = require('../utils/tags');
 const { fetchFavicon } = require('../utils/favicon');
+const { orderByFor } = require('../utils/sorting');
+const { getSettings } = require('../utils/settings');
 
 exports.list = async (req, res) => {
+    const settings = await getSettings();
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' } });
 
     let activeBoard = null;
@@ -16,7 +19,7 @@ exports.list = async (req, res) => {
         categories = await prisma.category.findMany({
             where: { boardId: activeBoard.id },
             orderBy: { order: 'asc' },
-            include: { bookmarks: { orderBy: { order: 'asc' }, include: { tags: true } } }
+            include: { bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } } }
         });
     }
 
@@ -74,6 +77,7 @@ exports.showEditForm = async (req, res) => {
 
 exports.create = async (req, res) => {
     const { title, url, description, categoryId, tags } = req.body;
+    const settings = await getSettings();
     const icon = await fetchFavicon(url);
     const count = await prisma.bookmark.count({ where: { categoryId: parseInt(categoryId, 10) } });
 
@@ -85,6 +89,7 @@ exports.create = async (req, res) => {
             icon,
             categoryId: parseInt(categoryId, 10),
             order: count,
+            isPinned: settings.pinBookmarksByDefault,
             tags: { connect: await resolveTags(tags) }
         },
         include: { category: true }
