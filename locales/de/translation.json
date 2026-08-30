@@ -20,6 +20,7 @@
   },
   "setup": {
     "title": "Willkommen bei BookmarkRanger!",
+    "card_title": "Admin-Konto anlegen",
     "subtitle": "Lege deinen Admin-Zugang an, um loszulegen.",
     "username_label": "Benutzername",
     "password_label": "Passwort",

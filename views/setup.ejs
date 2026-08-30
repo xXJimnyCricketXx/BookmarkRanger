@@ -28,13 +28,13 @@
 <body class="flex flex-col min-h-screen">
   <div class="flex-grow flex items-center justify-center p-4">
     <section class="w-full max-w-md">
-      <div class="text-center mb-8">
-        <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-dark.png" alt="BookmarkRanger!" class="mx-auto w-64 h-auto mb-4">
+      <div class="text-center mb-10">
+        <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-dark.png" alt="BookmarkRanger!" class="mx-auto w-96 h-auto mb-4">
         <p class="opacity-70 text-sm"><%= t('setup.subtitle') %></p>
       </div>
 
       <div class="form-bg rounded-2xl shadow-xl p-8">
-        <h1 class="text-xl font-black mb-6 text-center"><%= t('setup.title') %></h1>
+        <h1 class="text-xs font-bold uppercase tracking-widest opacity-50 mb-6 text-center"><%= t('setup.card_title') %></h1>
 
         <% if (error) { %>
           <p class="error text-sm text-center mb-4"><%= t(error) %></p>
