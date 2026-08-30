@@ -27,8 +27,8 @@ const PRESETS = {
         }
     },
 
-    default: {
-        label: 'Classic',
+    emerald: {
+        label: 'Emerald',
         light: {
             bg: '#f8fafc',
             card: '#ffffff',
