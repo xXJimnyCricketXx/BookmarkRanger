@@ -1,0 +1,49 @@
+<% locals.activeNav = 'snippets'; %>
+<%- include('partials/header') %>
+
+<div class="flex flex-col md:flex-row gap-8">
+  <aside class="w-full md:w-56 shrink-0">
+    <div class="mb-6">
+      <h2 class="font-black text-lg"><%= t('snippets.all_snippets') %></h2>
+      <p class="text-sm opacity-60"><%= t('snippets.total') %> <%= total %></p>
+    </div>
+
+    <h3 class="font-bold text-sm mb-3 opacity-80"><%= t('snippets.filter_by_tags') %></h3>
+    <form action="<%= baseUrl %>/snippets" method="GET" class="space-y-1 mb-4">
+      <% tags.forEach(([name, count]) => {
+        const checked = activeTags.includes(name);
+        const nextTags = checked ? activeTags.filter(t => t !== name) : [...activeTags, name];
+      %>
+        <a href="<%= baseUrl %>/snippets<%= nextTags.length ? '?tags=' + nextTags.join(',') : '' %>"
+          class="flex items-center justify-between text-sm py-1 px-2 rounded-lg transition <%= checked ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>">
+          <span><%= name %></span>
+          <span class="opacity-60"><%= count %></span>
+        </a>
+      <% }) %>
+    </form>
+
+    <% if (activeTags.length) { %>
+      <a href="<%= baseUrl %>/snippets" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
+    <% } %>
+  </aside>
+
+  <div class="flex-grow">
+    <div class="flex items-center justify-between mb-6 gap-4">
+      <form action="<%= baseUrl %>/snippets" method="GET" class="flex-grow max-w-md">
+        <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
+        <input type="text" name="q" value="<%= q %>" placeholder="<%= t('dashboard.search_placeholder') %>" class="input-theme w-full px-4 py-2.5 rounded-xl text-sm">
+      </form>
+      <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
+        <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+      <% snippets.forEach(snippet => { %>
+        <%- include('partials/snippet-card', { snippet }) %>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

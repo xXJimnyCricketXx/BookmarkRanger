@@ -1,0 +1,53 @@
+<% locals.activeNav = 'snippets'; %>
+<%- include('partials/header') %>
+
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-2xl font-black mb-6"><%= snippet ? t('snippetForm.title_edit') : t('snippetForm.title_add') %></h1>
+
+  <form action="<%= baseUrl %>/snippets<%= snippet ? '/' + snippet.id : '' %>" method="POST" class="card-theme rounded-3xl shadow-xl p-6 space-y-6">
+    <div>
+      <h2 class="font-black text-lg mb-4"><%= t('snippetForm.details') %></h2>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('snippetForm.title_field') %></label>
+          <input type="text" name="title" required value="<%= snippet ? snippet.title : '' %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('snippetForm.short_description') %></label>
+          <input type="text" name="shortDescription" value="<%= snippet && snippet.shortDescription ? snippet.shortDescription : '' %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('snippetForm.language') %></label>
+          <input type="text" name="language" required placeholder="python" value="<%= snippet ? snippet.language : '' %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('snippetForm.tags') %></label>
+          <input type="text" name="tags" placeholder="automation, files, loop"
+            value="<%= snippet ? snippet.tags.map(t => t.name).filter(n => n !== snippet.language).join(', ') : '' %>"
+            class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <p class="text-xs opacity-50 mt-1"><%= t('snippetForm.tags_hint') %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-black/5 dark:border-white/10 pt-6">
+      <h2 class="font-black text-lg mb-4"><%= t('snippetForm.code') %></h2>
+      <textarea name="code" required rows="10" class="input-theme w-full px-4 py-3 rounded-xl text-sm font-mono"><%= snippet ? snippet.code : '' %></textarea>
+    </div>
+
+    <div class="border-t border-black/5 dark:border-white/10 pt-6">
+      <h2 class="font-black text-lg mb-4"><%= t('snippetForm.documentation') %></h2>
+      <textarea name="documentation" rows="5" class="input-theme w-full px-4 py-3 rounded-xl text-sm"><%= snippet && snippet.documentation ? snippet.documentation : '' %></textarea>
+    </div>
+
+    <button type="submit" class="w-full bg-primary-theme font-black py-3 rounded-xl hover:brightness-110 transition-all">
+      <%= snippet ? t('snippetForm.submit_edit') : t('snippetForm.submit') %>
+    </button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

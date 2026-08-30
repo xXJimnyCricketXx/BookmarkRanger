@@ -1,0 +1,62 @@
+<%
+  locals.activeNav = 'snippets';
+  const langColors = {
+    python: 'bg-amber-500', javascript: 'bg-yellow-400 text-black', typescript: 'bg-blue-600',
+    sql: 'bg-teal-500', java: 'bg-red-500', html: 'bg-orange-500', css: 'bg-sky-500',
+    php: 'bg-indigo-500', bash: 'bg-slate-500', shell: 'bg-slate-500', go: 'bg-cyan-600',
+    rust: 'bg-orange-700', csharp: 'bg-purple-600', c: 'bg-gray-500', cpp: 'bg-gray-600'
+  };
+  const langClass = langColors[snippet.language] || 'bg-gray-500';
+%>
+<%- include('partials/header') %>
+
+<div class="max-w-3xl mx-auto">
+  <a href="<%= baseUrl %>/snippets" class="text-sm opacity-60 hover:opacity-100 inline-block mb-4">&larr; <%= t('snippetDetail.back') %></a>
+
+  <div class="card-theme rounded-3xl shadow-xl p-6">
+    <div class="flex items-start justify-between mb-2 gap-4">
+      <h1 class="text-2xl font-black"><%= snippet.title %></h1>
+      <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/pin" method="POST">
+        <button type="submit" title="<%= snippet.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>">
+          <i class="fa-solid fa-thumbtack <%= snippet.isPinned ? 'text-primary-theme' : 'opacity-30 hover:opacity-70' %> transition"></i>
+        </button>
+      </form>
+    </div>
+
+    <span class="inline-block <%= langClass %> text-white text-[11px] font-bold px-2 py-0.5 rounded w-fit mb-3"><%= snippet.language %></span>
+
+    <% if (snippet.shortDescription) { %>
+      <p class="opacity-70 mb-4"><%= snippet.shortDescription %></p>
+    <% } %>
+
+    <% if (snippet.tags.length) { %>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <% snippet.tags.forEach(tag => { %>
+          <span class="text-xs bg-black/5 dark:bg-white/10 px-2 py-1 rounded-full"><%= tag.name %></span>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <div class="relative mb-6">
+      <pre class="bg-black/80 text-green-100 text-sm rounded-xl p-4 overflow-x-auto"><code><%= snippet.code %></code></pre>
+      <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn absolute top-3 right-3 bg-primary-theme text-xs font-bold px-3 py-1.5 rounded-lg hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
+      <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
+    </div>
+
+    <% if (snippet.documentation) { %>
+      <div class="border-t border-black/5 dark:border-white/10 pt-4 mb-6">
+        <h2 class="font-bold text-sm mb-2 opacity-80"><%= t('snippetDetail.documentation_title') %></h2>
+        <p class="text-sm opacity-80 whitespace-pre-wrap"><%= snippet.documentation %></p>
+      </div>
+    <% } %>
+
+    <div class="flex gap-3 pt-2">
+      <a href="<%= baseUrl %>/snippets/<%= snippet.id %>/edit" class="flex-1 text-center text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><%= t('snippetDetail.edit') %></a>
+      <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/delete" method="POST" class="flex-1" onsubmit="return confirm('<%= snippet.title %>?')">
+        <button type="submit" class="w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition"><%= t('snippetDetail.delete') %></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
