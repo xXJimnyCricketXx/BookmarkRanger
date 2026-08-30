@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  theme        String   @default("dark")
+  language     String   @default("de")
+  createdAt    DateTime @default(now())
+}
+
+model Settings {
+  id                     Int     @id @default(autoincrement())
+  siteName               String  @default("BookmarkRanger")
+  themePreset            String  @default("bookmarkranger")
+  sortingType            String  @default("createdAt")
+  pinCategoriesByDefault Boolean @default(true)
+  openLinksInNewTab      Boolean @default(true)
+  hideSearchBar          Boolean @default(false)
+  hideBookmarksSection   Boolean @default(false)
+  hideSnippetsSection    Boolean @default(false)
+}
+
+model Board {
+  id         Int        @id @default(autoincrement())
+  name       String
+  order      Int        @default(0)
+  createdAt  DateTime   @default(now())
+  categories Category[]
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  icon      String?
+  color     String?
+  order     Int        @default(0)
+  board     Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId   Int
+  bookmarks Bookmark[]
+}
+
+model Bookmark {
+  id            Int       @id @default(autoincrement())
+  title         String
+  url           String
+  description   String?
+  icon          String?
+  order         Int       @default(0)
+  clicks        Int       @default(0)
+  lastVisitedAt DateTime?
+  isPinned      Boolean   @default(false)
+  category      Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    Int
+  tags          Tag[]     @relation("BookmarkTags")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Snippet {
+  id               Int      @id @default(autoincrement())
+  title            String
+  shortDescription String?
+  language         String
+  code             String
+  documentation    String?
+  isPinned         Boolean  @default(false)
+  tags             Tag[]    @relation("SnippetTags")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Tag {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  bookmarks Bookmark[] @relation("BookmarkTags")
+  snippets  Snippet[]  @relation("SnippetTags")
+}
