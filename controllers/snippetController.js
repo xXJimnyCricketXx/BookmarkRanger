@@ -1,3 +1,4 @@
+const hljs = require('highlight.js');
 const prisma = require('../config/db');
 const { resolveTags } = require('../utils/tags');
 const { orderByFor } = require('../utils/sorting');
@@ -55,7 +56,12 @@ exports.showEditForm = async (req, res) => {
 exports.detail = async (req, res) => {
     const snippet = await prisma.snippet.findUnique({ where: { id: parseInt(req.params.id, 10) }, include: { tags: true } });
     if (!snippet) return res.status(404).render('404', { title: '404' });
-    res.render('snippet-detail', { title: snippet.title, snippet });
+
+    const highlighted = hljs.getLanguage(snippet.language)
+        ? hljs.highlight(snippet.code, { language: snippet.language })
+        : hljs.highlightAuto(snippet.code);
+
+    res.render('snippet-detail', { title: snippet.title, snippet, highlightedCode: highlighted.value });
 };
 
 exports.raw = async (req, res) => {
