@@ -10,6 +10,10 @@
   "footer": {
     "powered_by_prefix": "Powered by"
   },
+  "common": {
+    "confirm_delete": "\"{{name}}\" wirklich löschen?",
+    "confirm_dissolve_group": "\"{{name}}\" wirklich auflösen?"
+  },
   "login": {
     "title": "Anmelden",
     "username_label": "Benutzername",

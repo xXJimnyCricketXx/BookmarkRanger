@@ -52,7 +52,7 @@
 
     <div class="flex gap-3 pt-2">
       <a href="<%= baseUrl %>/snippets/<%= snippet.id %>/edit" class="flex-1 text-center text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><%= t('snippetDetail.edit') %></a>
-      <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/delete" method="POST" class="flex-1" onsubmit="return confirm('<%= snippet.title %>?')">
+      <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/delete" method="POST" class="flex-1" onsubmit="return confirm('<%= t('common.confirm_delete', { name: snippet.title }) %>')">
         <button type="submit" class="w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition"><%= t('snippetDetail.delete') %></button>
       </form>
     </div>

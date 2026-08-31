@@ -55,7 +55,7 @@
                   class="w-6 h-6 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition">
                   <i class="fa-solid fa-pen text-[10px] text-white"></i>
                 </a>
-                <form action="<%= baseUrl %>/settings/theme/custom/<%= custom.id %>/delete" method="POST" onsubmit="return confirm('<%= custom.name %>?')">
+                <form action="<%= baseUrl %>/settings/theme/custom/<%= custom.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: custom.name }) %>')">
                   <button type="submit" title="<%= t('snippetDetail.delete') %>"
                     class="w-6 h-6 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition">
                     <i class="fa-solid fa-trash text-[10px] text-white"></i>
