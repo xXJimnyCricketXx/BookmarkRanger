@@ -17,6 +17,6 @@
     <p class="text-xs opacity-40">—</p>
   <% } %>
   <% category.bookmarks.forEach(bookmark => { %>
-    <%- include('bookmark-row', { bookmark }) %>
+    <%- include('bookmark-row', { bookmark, reorderable: locals.draggable }) %>
   <% }) %>
 </div>
