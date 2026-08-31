@@ -76,6 +76,20 @@
             <input type="text" name="customMonthNames" value="<%= settings.customMonthNames %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
             <p class="text-xs opacity-50 mt-1"><%= t('settings.interface_custom_names_hint') %></p>
           </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_weather') %></label>
+            <select name="hideWeather" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideWeather ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideWeather ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_weather_location') %></label>
+            <input type="text" name="weatherLocation" value="<%= settings.weatherLocation || '' %>" placeholder="Berlin" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <p class="text-xs opacity-50 mt-1"><%= t('settings.interface_weather_location_hint') %></p>
+          </div>
         </div>
       </div>
 
