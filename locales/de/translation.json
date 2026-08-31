@@ -163,7 +163,6 @@
     "weather_location_section": "Standort",
     "weather_latitude": "Breitengrad",
     "weather_longitude": "Längengrad",
-    "weather_no_api_key_hint": "Kein API-Key nötig — wir nutzen Open-Meteo, einen kostenlosen Wetterdienst ohne Account.",
     "weather_other_section": "Sonstiges",
     "weather_unit": "Temperatureinheit",
     "weather_unit_celsius": "Celsius",
