@@ -1,6 +1,6 @@
 const prisma = require('../config/db');
 const { resolveTags } = require('../utils/tags');
-const { fetchFavicon } = require('../utils/favicon');
+const { fetchFavicon, downloadIcon } = require('../utils/favicon');
 const { orderByFor } = require('../utils/sorting');
 const { getSettings } = require('../utils/settings');
 
@@ -85,9 +85,9 @@ exports.showEditForm = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-    const { title, url, description, categoryId, tags } = req.body;
+    const { title, url, description, categoryId, tags, iconUrl } = req.body;
     const settings = await getSettings();
-    const icon = await fetchFavicon(url);
+    const icon = iconUrl && iconUrl.trim() ? await downloadIcon(iconUrl.trim()) : await fetchFavicon(url);
     const count = await prisma.bookmark.count({ where: { categoryId: parseInt(categoryId, 10) } });
 
     const bookmark = await prisma.bookmark.create({
@@ -109,11 +109,13 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     const id = parseInt(req.params.id, 10);
-    const { title, url, description, categoryId, tags } = req.body;
+    const { title, url, description, categoryId, tags, iconUrl } = req.body;
     const existing = await prisma.bookmark.findUnique({ where: { id } });
 
     let icon = existing.icon;
-    if (url !== existing.url) {
+    if (iconUrl && iconUrl.trim()) {
+        icon = (await downloadIcon(iconUrl.trim())) || icon;
+    } else if (url !== existing.url) {
         icon = (await fetchFavicon(url)) || icon;
     }
 

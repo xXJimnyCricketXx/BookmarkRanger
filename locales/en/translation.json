@@ -65,6 +65,8 @@
     "category_label": "Category",
     "tags_label": "Tags",
     "tags_hint": "Comma separated",
+    "icon_label": "Custom icon",
+    "icon_hint": "Optional: URL to an image, in case no favicon was found automatically.",
     "submit_btn": "Save"
   },
   "snippets": {

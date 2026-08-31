@@ -34,6 +34,17 @@
     </div>
 
     <div>
+      <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.icon_label') %></label>
+      <div class="flex items-center gap-3">
+        <% if (bookmark && bookmark.icon) { %>
+          <img src="<%= baseUrl %><%= bookmark.icon %>" class="w-8 h-8 rounded-lg shrink-0" alt="">
+        <% } %>
+        <input type="url" name="iconUrl" placeholder="https://example.com/icon.png" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+      </div>
+      <p class="text-xs opacity-50 mt-1"><%= t('bookmarkForm.icon_hint') %></p>
+    </div>
+
+    <div>
       <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.tags_label') %></label>
       <input type="text" name="tags" placeholder="<%= t('bookmarkForm.tags_hint') %>"
         value="<%= bookmark ? bookmark.tags.map(t => t.name).join(', ') : '' %>"

@@ -65,6 +65,8 @@
     "category_label": "Kategorie",
     "tags_label": "Tags",
     "tags_hint": "Kommagetrennt",
+    "icon_label": "Eigenes Icon",
+    "icon_hint": "Optional: URL zu einem Bild, falls kein Favicon automatisch gefunden wurde.",
     "submit_btn": "Speichern"
   },
   "snippets": {
