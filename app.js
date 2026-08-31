@@ -57,10 +57,9 @@ app.use(async (req, res, next) => {
     const theme = resolveTheme(activePreset);
     res.locals.theme = theme;
     res.locals.isDark = theme.isDarkBg;
-    // Which logo file (light-text vs dark-text) reads best is derived from each area's
+    // Which logo file (light-text vs dark-text) reads best is derived from the navbar's
     // actual color, not hardcoded per preset, so this also works for future custom themes.
     res.locals.logoVariant = logoVariantFor(theme.navbar);
-    res.locals.footerLogoVariant = logoVariantFor(theme.footer);
 
     if (req.session && req.session.userId) {
         const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
