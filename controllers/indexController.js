@@ -3,6 +3,7 @@ const { getSettings } = require('../utils/settings');
 const { parseSearchQuery, bookmarkSearchWhere, snippetSearchWhere } = require('../utils/search');
 const { orderByFor } = require('../utils/sorting');
 const { greetingFor, formattedDateFor } = require('../utils/headline');
+const { getCurrentWeather } = require('../utils/weather');
 
 exports.dashboard = async (req, res) => {
     const settings = await getSettings();
@@ -37,11 +38,16 @@ exports.dashboard = async (req, res) => {
     const searchProviders = await prisma.searchProvider.findMany({ orderBy: { name: 'asc' } });
     const provider = settings.fallbackSearchProvider;
 
+    const weather = (!settings.hideWeather && settings.weatherLat != null && settings.weatherLon != null)
+        ? await getCurrentWeather(settings.weatherLat, settings.weatherLon)
+        : null;
+
     res.render('index', {
         title: settings.siteName,
         settings,
         greeting: greetingFor(settings),
         formattedDate: formattedDateFor(settings),
+        weather,
         pinnedBookmarks,
         pinnedSnippets,
         pinnedCategories,
