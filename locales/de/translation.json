@@ -8,7 +8,7 @@
     "login": "Anmelden"
   },
   "footer": {
-    "powered_by": "Powered by CricketCode Web Solutions"
+    "powered_by_prefix": "Powered by"
   },
   "login": {
     "title": "Anmelden",
