@@ -81,14 +81,15 @@
           dragClass: 'sortable-drag',
           onMove: (evt, originalEvent) => {
             const related = evt.related;
-            // Merging only makes sense between two plain bookmarks — a group being dragged
-            // (or dragged onto) must never trigger it, or "create group" gets called with a
-            // non-numeric "group-X" id, which silently leaves behind an empty orphaned group.
+            // Merging only makes sense between two plain bookmarks — a group or a pinned
+            // category being dragged (or dragged onto) must never trigger it, or "create
+            // group" gets called with a non-numeric id, leaving an empty orphaned group.
+            const isMergeable = (el) => !/^(group|category)-/.test(el.dataset.id || '');
             const isPlainBookmarkInMainGrid = evt.to === mainGrid && related
               && related.classList.contains('draggable-item')
               && related !== evt.dragged
-              && !(related.dataset.id || '').startsWith('group-')
-              && !(evt.dragged.dataset.id || '').startsWith('group-');
+              && isMergeable(related)
+              && isMergeable(evt.dragged);
 
             if (!isPlainBookmarkInMainGrid) { clearMergeHighlight(); return true; }
 
@@ -124,10 +125,17 @@
                 persist('<%= baseUrl %>/dashboard-groups/members/reorder', { ids: directItems(evt.to).map((el) => el.dataset.id) });
               } else {
                 const items = directItems(evt.to);
-                const bookmarkIds = items.filter((el) => !(el.dataset.id || '').startsWith('group-')).map((el) => el.dataset.id);
-                const groupIds = items.filter((el) => (el.dataset.id || '').startsWith('group-')).map((el) => el.dataset.id.replace('group-', ''));
+                const idsWithPrefix = (prefix) => items
+                  .filter((el) => (el.dataset.id || '').startsWith(prefix))
+                  .map((el) => el.dataset.id.replace(prefix, ''));
+                const bookmarkIds = items
+                  .filter((el) => !/^(group|category)-/.test(el.dataset.id || ''))
+                  .map((el) => el.dataset.id);
+                const groupIds = idsWithPrefix('group-');
+                const categoryIds = idsWithPrefix('category-');
                 persist('<%= baseUrl %>/bookmarks/reorder', { ids: bookmarkIds });
                 if (groupIds.length) persist('<%= baseUrl %>/dashboard-groups/reorder', { ids: groupIds });
+                if (categoryIds.length) persist('<%= baseUrl %>/bookmarks/categories/reorder', { ids: categoryIds });
               }
               return;
             }
