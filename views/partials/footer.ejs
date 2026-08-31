@@ -38,22 +38,29 @@
   <script>
     // SortableJS handles the dashed drop-placeholder and clean reordering (including
     // between rows) that the hand-rolled HTML5 drag-and-drop version couldn't do reliably.
-    document.querySelectorAll('.dragroot').forEach((root) => {
-      Sortable.create(root, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        chosenClass: 'sortable-chosen',
-        dragClass: 'sortable-drag',
-        onEnd: () => {
-          const ids = [...root.querySelectorAll('.draggable-item')].map((el) => el.dataset.id);
-          fetch(root.dataset.reorderUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids })
-          }).catch(() => {});
-        }
+    // Exposed globally so pages that swap in new .dragroot content via fetch() (e.g. the
+    // AJAX board switcher) can re-run this on just the replaced part of the DOM.
+    window.initDragroots = function (scope) {
+      (scope || document).querySelectorAll('.dragroot').forEach((root) => {
+        if (root.dataset.sortableInit) return;
+        root.dataset.sortableInit = 'true';
+        Sortable.create(root, {
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          onEnd: () => {
+            const ids = [...root.querySelectorAll('.draggable-item')].map((el) => el.dataset.id);
+            fetch(root.dataset.reorderUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ids })
+            }).catch(() => {});
+          }
+        });
       });
-    });
+    };
+    window.initDragroots();
   </script>
 
   <script>

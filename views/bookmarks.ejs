@@ -80,6 +80,7 @@
       if (!res.ok) throw new Error('bad response');
       const data = await res.json();
       boardPanel.innerHTML = data.html;
+      window.initDragroots(boardPanel);
 
       document.querySelectorAll('.tab-link[data-board-id]').forEach((tab) => {
         tab.classList.toggle('active', tab.dataset.boardId === String(boardId));
