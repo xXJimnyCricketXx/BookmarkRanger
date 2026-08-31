@@ -153,6 +153,7 @@
     "interface_site_title": "Custom page title",
     "interface_search_section": "Search",
     "interface_hide_search": "Hide search bar",
+    "interface_disable_autofocus": "Disable search bar autofocus",
     "interface_header_section": "Header",
     "interface_hide_headline": "Hide headline (greeting)",
     "interface_hide_date": "Hide date",

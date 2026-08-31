@@ -103,6 +103,7 @@ exports.saveInterface = async (req, res) => {
         data: {
             siteName: req.body.siteName || 'BookmarkRanger',
             hideSearchBar: req.body.hideSearchBar === 'true',
+            disableSearchAutofocus: req.body.disableSearchAutofocus === 'true',
             hideBookmarksSection: req.body.hideBookmarksSection === 'true',
             hideSnippetsSection: req.body.hideSnippetsSection === 'true',
             hideHeadline: req.body.hideHeadline === 'true',

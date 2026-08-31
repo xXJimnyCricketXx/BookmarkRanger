@@ -15,12 +15,22 @@
 
       <div>
         <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.interface_search_section') %></h2>
-        <div>
-          <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_search') %></label>
-          <select name="hideSearchBar" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-            <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
-            <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
-          </select>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_search') %></label>
+            <select name="hideSearchBar" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_disable_autofocus') %></label>
+            <select name="disableSearchAutofocus" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.disableSearchAutofocus ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.disableSearchAutofocus ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
         </div>
       </div>
 

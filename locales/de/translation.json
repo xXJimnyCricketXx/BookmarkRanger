@@ -153,6 +153,7 @@
     "interface_site_title": "Eigener Seitentitel",
     "interface_search_section": "Suche",
     "interface_hide_search": "Suchleiste ausblenden",
+    "interface_disable_autofocus": "Autofokus der Suchleiste deaktivieren",
     "interface_header_section": "Kopfbereich",
     "interface_hide_headline": "Begrüßung ausblenden",
     "interface_hide_date": "Datum ausblenden",
