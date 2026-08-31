@@ -13,22 +13,19 @@
 <a href="<%= baseUrl %>/snippets" class="text-sm opacity-60 hover:opacity-100 inline-block mb-4">&larr; <%= t('snippetDetail.back') %></a>
 
 <div class="flex flex-col lg:flex-row gap-6 items-start">
-  <div class="flex-grow w-full">
-    <div class="relative">
-      <pre class="bg-black/80 text-green-100 text-sm rounded-xl p-4 overflow-x-auto"><code><%= snippet.code %></code></pre>
-      <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn absolute top-3 right-3 bg-primary-theme text-xs font-bold px-3 py-1.5 rounded-lg hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
-      <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
-    </div>
+  <div class="flex-grow w-full max-w-[856px]">
+    <pre class="text-green-100 text-sm rounded-xl p-4 overflow-x-auto" style="background-color: #282C34;"><code><%= snippet.code %></code></pre>
+    <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
 
     <% if (snippet.documentation) { %>
-      <div class="card-theme rounded-3xl shadow-xl p-6 mt-6">
+      <div class="mt-6">
         <h2 class="font-bold text-sm mb-2 opacity-80"><%= t('snippetDetail.documentation_title') %></h2>
         <p class="text-sm opacity-80 whitespace-pre-wrap"><%= snippet.documentation %></p>
       </div>
     <% } %>
   </div>
 
-  <div class="card-theme rounded-3xl shadow-xl p-6 w-full lg:w-80 shrink-0">
+  <div class="card-theme rounded-3xl shadow-xl p-6 w-full lg:w-[416px] shrink-0">
     <div class="flex items-start justify-between gap-3 mb-1">
       <h1 class="text-xl font-black"><%= snippet.title %></h1>
       <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/pin" method="POST">
