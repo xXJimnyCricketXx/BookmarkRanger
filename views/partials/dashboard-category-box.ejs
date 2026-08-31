@@ -1,0 +1,20 @@
+<div class="<%= locals.draggable ? 'draggable-item' : '' %>" <%- locals.draggable ? `data-id="category-${category.id}"` : "" %>>
+  <div class="flex items-center mb-3 gap-2 pb-1 border-b border-current">
+    <% if (locals.draggable) { %>
+      <i class="fa-solid fa-grip-vertical drag-handle text-xs opacity-30 hover:opacity-70 cursor-grab active:cursor-grabbing shrink-0" title="<%= t('dashboard.drag_handle') %>"></i>
+    <% } %>
+    <h3 class="font-black text-primary-theme uppercase text-xs tracking-wide truncate flex-grow min-w-0"><%= category.name %></h3>
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="<%= baseUrl %>/bookmarks/add?categoryId=<%= category.id %>" title="<%= t('bookmarks.add_bookmark') %>"><i class="fa-solid fa-plus text-xs opacity-50 hover:opacity-90"></i></a>
+      <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/pin" method="POST">
+        <button type="submit" title="<%= t('bookmarks.unpin') %>"><i class="fa-solid fa-thumbtack text-primary-theme text-xs"></i></button>
+      </form>
+    </div>
+  </div>
+  <% if (category.bookmarks.length === 0) { %>
+    <p class="text-xs opacity-40">—</p>
+  <% } %>
+  <% category.bookmarks.forEach(bookmark => { %>
+    <%- include('bookmark-row', { bookmark }) %>
+  <% }) %>
+</div>
