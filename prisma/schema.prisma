@@ -25,6 +25,7 @@ model Settings {
   pinCategoriesByDefault Boolean @default(false)
   openLinksInNewTab      Boolean @default(true)
   hideSearchBar          Boolean @default(false)
+  disableSearchAutofocus Boolean @default(false)
   hideBookmarksSection   Boolean @default(false)
   hideSnippetsSection    Boolean @default(false)
   hideHeadline           Boolean @default(false)
