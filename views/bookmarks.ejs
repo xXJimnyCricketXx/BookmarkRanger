@@ -1,6 +1,13 @@
 <% locals.activeNav = 'bookmarks'; %>
 <%- include('partials/header') %>
 
+<% if (boards.length > 0) { %>
+<div class="flex items-center justify-end gap-4 mb-3 text-xs">
+  <button type="button" id="edit-boards-btn" class="opacity-60 hover:opacity-100 flex items-center gap-1"><i class="fa-solid fa-pen"></i> <%= t('bookmarks.edit_boards') %></button>
+  <button type="button" id="delete-boards-btn" class="opacity-60 hover:opacity-100 flex items-center gap-1"><i class="fa-solid fa-trash"></i> <%= t('bookmarks.delete') %></button>
+</div>
+<% } %>
+
 <div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3">
   <% boards.forEach(board => { %>
     <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" data-board-id="<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
@@ -17,6 +24,30 @@
   <%- include('partials/board-panel', { activeBoard, categories }) %>
 </div>
 
+<div id="manage-boards-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div id="manage-boards-backdrop" class="absolute inset-0 bg-black/60"></div>
+  <div class="card-theme relative rounded-3xl shadow-xl p-6 w-full max-w-md">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-black"><%= t('bookmarks.manage_boards') %></h2>
+      <button type="button" id="manage-boards-close" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="space-y-2">
+      <% boards.forEach(board => { %>
+        <div class="flex items-center gap-2">
+          <form action="<%= baseUrl %>/bookmarks/boards/<%= board.id %>/rename" method="POST" class="flex-grow min-w-0">
+            <input type="text" name="name" value="<%= board.name %>" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
+          </form>
+          <form action="<%= baseUrl %>/bookmarks/boards/<%= board.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: board.name }) %>')">
+            <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
 <script>
   document.getElementById('new-board-btn').addEventListener('click', () => {
     document.getElementById('new-board-form').classList.toggle('hidden');
@@ -28,19 +59,18 @@
   // switch, so listeners bound directly to them would go stale — bind on the stable
   // parent instead.
   boardPanel.addEventListener('click', (e) => {
-    if (e.target.closest('.rename-board-btn')) {
-      boardPanel.querySelector('.rename-board-form').classList.toggle('hidden');
-    }
     if (e.target.closest('.new-category-btn')) {
       boardPanel.querySelector('.new-category-form').classList.toggle('hidden');
     }
   });
-  boardPanel.addEventListener('submit', (e) => {
-    const form = e.target;
-    if (form.classList.contains('delete-board-form') && !confirm(form.dataset.confirm)) {
-      e.preventDefault();
-    }
-  });
+
+  const manageBoardsModal = document.getElementById('manage-boards-modal');
+  const editBoardsBtn = document.getElementById('edit-boards-btn');
+  const deleteBoardsBtn = document.getElementById('delete-boards-btn');
+  if (editBoardsBtn) editBoardsBtn.addEventListener('click', () => manageBoardsModal.classList.remove('hidden'));
+  if (deleteBoardsBtn) deleteBoardsBtn.addEventListener('click', () => manageBoardsModal.classList.remove('hidden'));
+  document.getElementById('manage-boards-close').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
+  document.getElementById('manage-boards-backdrop').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
 
   async function loadBoard(boardId, push) {
     try {

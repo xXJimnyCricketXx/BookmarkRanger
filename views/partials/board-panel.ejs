@@ -1,18 +1,6 @@
 <% if (!activeBoard) { %>
   <p class="opacity-50 text-sm"><%= t('bookmarks.no_boards') %></p>
 <% } else { %>
-  <div class="flex items-center gap-4 mb-8 text-xs">
-    <button type="button" class="rename-board-btn opacity-50 hover:opacity-90 flex items-center gap-1"><i class="fa-solid fa-pen"></i> <%= t('bookmarks.rename_board') %></button>
-    <form action="<%= baseUrl %>/bookmarks/boards/<%= activeBoard.id %>/delete" method="POST" class="delete-board-form" data-confirm="<%= t('common.confirm_delete', { name: activeBoard.name }) %>">
-      <button type="submit" title="<%= t('bookmarks.delete') %>" class="opacity-50 hover:opacity-90 flex items-center gap-1"><i class="fa-solid fa-trash"></i> <%= t('bookmarks.delete') %></button>
-    </form>
-  </div>
-
-  <form class="rename-board-form hidden mb-8 flex gap-2 max-w-sm" action="<%= baseUrl %>/bookmarks/boards/<%= activeBoard.id %>/rename" method="POST">
-    <input type="text" name="name" required value="<%= activeBoard.name %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm">
-    <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
-  </form>
-
   <% if (categories.length === 0) { %>
     <p class="opacity-50 text-sm mb-6"><%= t('bookmarks.no_categories') %></p>
   <% } else { %>

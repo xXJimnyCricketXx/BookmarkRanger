@@ -52,7 +52,8 @@
   "bookmarks": {
     "title": "Lesezeichen",
     "add_board": "Board",
-    "rename_board": "Board umbenennen",
+    "edit_boards": "Bearbeiten",
+    "manage_boards": "Boards verwalten",
     "add_category": "Kategorie hinzufügen",
     "add_bookmark": "Lesezeichen hinzufügen",
     "no_boards": "Noch kein Board angelegt. Lege über \"+\" dein erstes Board an.",

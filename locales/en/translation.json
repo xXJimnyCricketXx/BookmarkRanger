@@ -52,7 +52,8 @@
   "bookmarks": {
     "title": "Bookmarks",
     "add_board": "Board",
-    "rename_board": "Rename board",
+    "edit_boards": "Edit",
+    "manage_boards": "Manage boards",
     "add_category": "Add category",
     "add_bookmark": "Add bookmark",
     "no_boards": "No board yet. Use \"+\" to create your first board.",
