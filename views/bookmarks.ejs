@@ -1,10 +1,14 @@
 <% locals.activeNav = 'bookmarks'; %>
 <%- include('partials/header') %>
 
-<% if (boards.length > 0) { %>
+<% if (boards.length > 0 || activeBoard) { %>
 <div class="flex items-center justify-end gap-4 mb-3 text-xs">
-  <button type="button" id="edit-boards-btn" class="opacity-60 hover:opacity-100 flex items-center gap-1"><i class="fa-solid fa-pen"></i> <%= t('bookmarks.edit_boards') %></button>
-  <button type="button" id="delete-boards-btn" class="opacity-60 hover:opacity-100 flex items-center gap-1"><i class="fa-solid fa-trash"></i> <%= t('bookmarks.delete') %></button>
+  <% if (activeBoard) { %>
+    <button type="button" id="new-category-btn" class="opacity-60 hover:opacity-100 flex items-center gap-1"><i class="fa-solid fa-plus"></i> <%= t('bookmarks.add_category') %></button>
+  <% } %>
+  <% if (boards.length > 0) { %>
+    <button type="button" id="edit-boards-btn" class="opacity-60 hover:opacity-100 flex items-center gap-1"><i class="fa-solid fa-pen"></i> <%= t('bookmarks.edit_boards') %></button>
+  <% } %>
 </div>
 <% } %>
 
@@ -55,20 +59,18 @@
 
   const boardPanel = document.getElementById('board-panel');
 
-  // Event delegation: buttons/forms inside #board-panel get replaced on every board
-  // switch, so listeners bound directly to them would go stale — bind on the stable
-  // parent instead.
-  boardPanel.addEventListener('click', (e) => {
-    if (e.target.closest('.new-category-btn')) {
+  const newCategoryBtn = document.getElementById('new-category-btn');
+  if (newCategoryBtn) {
+    // The form lives inside #board-panel, which gets replaced on every board switch —
+    // look it up fresh on each click instead of caching a reference that'd go stale.
+    newCategoryBtn.addEventListener('click', () => {
       boardPanel.querySelector('.new-category-form').classList.toggle('hidden');
-    }
-  });
+    });
+  }
 
   const manageBoardsModal = document.getElementById('manage-boards-modal');
   const editBoardsBtn = document.getElementById('edit-boards-btn');
-  const deleteBoardsBtn = document.getElementById('delete-boards-btn');
   if (editBoardsBtn) editBoardsBtn.addEventListener('click', () => manageBoardsModal.classList.remove('hidden'));
-  if (deleteBoardsBtn) deleteBoardsBtn.addEventListener('click', () => manageBoardsModal.classList.remove('hidden'));
   document.getElementById('manage-boards-close').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
   document.getElementById('manage-boards-backdrop').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
 

@@ -11,10 +11,7 @@
     </div>
   <% } %>
 
-  <button type="button" class="new-category-btn text-sm font-bold flex items-center gap-2 opacity-70 hover:opacity-100">
-    <i class="fa-solid fa-plus"></i> <%= t('bookmarks.add_category') %>
-  </button>
-  <form class="new-category-form hidden mt-3 flex gap-2 max-w-sm" action="<%= baseUrl %>/bookmarks/categories" method="POST">
+  <form class="new-category-form hidden flex gap-2 max-w-sm" action="<%= baseUrl %>/bookmarks/categories" method="POST">
     <input type="hidden" name="boardId" value="<%= activeBoard.id %>">
     <input type="text" name="name" required placeholder="<%= t('bookmarks.add_category') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm">
     <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
