@@ -27,6 +27,13 @@ model Settings {
   hideSearchBar          Boolean @default(false)
   hideBookmarksSection   Boolean @default(false)
   hideSnippetsSection    Boolean @default(false)
+  hideHeadline           Boolean @default(false)
+  hideDate               Boolean @default(false)
+  hideTime               Boolean @default(true)
+  dateFormat             String  @default("day-first")
+  customGreetings        String  @default("Guten Abend!;Guten Tag!;Guten Morgen!;Gute Nacht!")
+  customWeekdayNames     String  @default("Sonntag;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Samstag")
+  customMonthNames       String  @default("Januar;Februar;März;April;Mai;Juni;Juli;August;September;Oktober;November;Dezember")
   fallbackSearchProvider   SearchProvider? @relation(fields: [fallbackSearchProviderId], references: [id])
   fallbackSearchProviderId Int?
 }
