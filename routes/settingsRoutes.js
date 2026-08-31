@@ -24,7 +24,10 @@ router.post('/weather', settingsController.saveWeather);
 
 router.get('/account', settingsController.showAccount);
 router.post('/account', settingsController.updateAccount);
-router.post('/account/backup', settingsController.createBackup);
-router.get('/account/backup/:file', settingsController.downloadBackup);
+router.get('/account/check-update', settingsController.checkUpdate);
+
+router.get('/backups', settingsController.showBackups);
+router.post('/backups', settingsController.createBackup);
+router.get('/backups/:file', settingsController.downloadBackup);
 
 module.exports = router;

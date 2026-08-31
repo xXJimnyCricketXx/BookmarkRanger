@@ -4,8 +4,10 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 const PRESETS = require('../config/themes');
 const { getSettings } = require('../utils/settings');
+const { checkForUpdate } = require('../utils/updateCheck');
 
 const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
+const REPO_URL = 'https://github.com/xXJimnyCricketXx/BookmarkRanger';
 
 function dbFilePath() {
     // Prisma resolves a relative sqlite "file:" path relative to prisma/schema.prisma,
@@ -146,12 +148,7 @@ function splitList(value) {
 
 exports.showAccount = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
-    if (!fs.existsSync(BACKUPS_DIR)) fs.mkdirSync(BACKUPS_DIR, { recursive: true });
-    const backups = fs.readdirSync(BACKUPS_DIR)
-        .filter((f) => f.endsWith('.db'))
-        .sort()
-        .reverse();
-    res.render('settings-account', { title: 'Einstellungen — Konto', account, backups, error: null, success: null });
+    res.render('settings-account', { title: 'Einstellungen — Konto', account, repoUrl: REPO_URL, error: null, success: null });
 };
 
 exports.updateAccount = async (req, res) => {
@@ -159,15 +156,13 @@ exports.updateAccount = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
 
     if (!(await bcrypt.compare(currentPassword, account.passwordHash))) {
-        const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-        return res.render('settings-account', { title: 'Einstellungen — Konto', account, backups, error: 'account.wrong_password', success: null });
+        return res.render('settings-account', { title: 'Einstellungen — Konto', account, repoUrl: REPO_URL, error: 'account.wrong_password', success: null });
     }
 
     const data = { username: username || account.username };
     if (newPassword) {
         if (newPassword !== newPasswordConfirm || newPassword.length < 6) {
-            const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-            return res.render('settings-account', { title: 'Einstellungen — Konto', account, backups, error: 'account.invalid_password', success: null });
+            return res.render('settings-account', { title: 'Einstellungen — Konto', account, repoUrl: REPO_URL, error: 'account.invalid_password', success: null });
         }
         data.passwordHash = await bcrypt.hash(newPassword, 10);
     }
@@ -175,8 +170,18 @@ exports.updateAccount = async (req, res) => {
     const updated = await prisma.account.update({ where: { id: account.id }, data });
     req.session.username = updated.username;
 
+    res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, repoUrl: REPO_URL, error: null, success: 'account.saved' });
+};
+
+exports.checkUpdate = async (req, res) => {
+    const result = await checkForUpdate(res.locals.appVersion);
+    res.json(result);
+};
+
+exports.showBackups = (req, res) => {
+    if (!fs.existsSync(BACKUPS_DIR)) fs.mkdirSync(BACKUPS_DIR, { recursive: true });
     const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-    res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, backups, error: null, success: 'account.saved' });
+    res.render('settings-backups', { title: 'Einstellungen — Backups', backups });
 };
 
 exports.createBackup = async (req, res) => {
@@ -184,7 +189,7 @@ exports.createBackup = async (req, res) => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const dest = path.join(BACKUPS_DIR, `bookmarkranger-${timestamp}.db`);
     fs.copyFileSync(dbFilePath(), dest);
-    res.redirect(`${res.locals.baseUrl}/settings/account`);
+    res.redirect(`${res.locals.baseUrl}/settings/backups`);
 };
 
 exports.downloadBackup = (req, res) => {
