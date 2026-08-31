@@ -45,7 +45,7 @@ exports.dashboard = async (req, res) => {
     res.render('index', {
         title: settings.siteName,
         settings,
-        greeting: greetingFor(settings),
+        greeting: greetingFor(settings, res.locals.user.username),
         formattedDate: formattedDateFor(settings),
         weather,
         pinnedBookmarks,
@@ -87,5 +87,5 @@ exports.createSearchProvider = async (req, res) => {
     if (name && name.trim() && queryTemplate && queryTemplate.trim()) {
         await prisma.searchProvider.create({ data: { name: name.trim(), queryTemplate: queryTemplate.trim() } });
     }
-    res.redirect(`${res.locals.baseUrl}/`);
+    res.redirect(`${res.locals.baseUrl}/settings/general`);
 };
