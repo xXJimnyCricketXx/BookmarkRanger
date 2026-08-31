@@ -183,16 +183,18 @@ exports.moveBookmark = async (req, res) => {
     const bookmark = await prisma.bookmark.findUnique({ where: { id }, include: { category: true } });
     if (!bookmark) return res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks`);
 
-    const siblings = await prisma.bookmark.findMany({ where: { categoryId: bookmark.categoryId }, orderBy: { order: 'asc' } });
+    // Ordered by (order, id) so ties — e.g. leftover duplicate order values from before
+    // bookmarks were deleted — still produce a stable, deterministic sequence.
+    const siblings = await prisma.bookmark.findMany({ where: { categoryId: bookmark.categoryId }, orderBy: [{ order: 'asc' }, { id: 'asc' }] });
     const index = siblings.findIndex((b) => b.id === id);
     const swapIndex = direction === 'up' ? index - 1 : index + 1;
 
     if (swapIndex >= 0 && swapIndex < siblings.length) {
-        const other = siblings[swapIndex];
-        await prisma.$transaction([
-            prisma.bookmark.update({ where: { id: bookmark.id }, data: { order: other.order } }),
-            prisma.bookmark.update({ where: { id: other.id }, data: { order: bookmark.order } })
-        ]);
+        [siblings[index], siblings[swapIndex]] = [siblings[swapIndex], siblings[index]];
+        // Re-sequence everyone (not just the swapped pair) so any pre-existing duplicate
+        // order values get straightened out at the same time, instead of swapping two
+        // ties into... the same ties.
+        await prisma.$transaction(siblings.map((sibling, i) => prisma.bookmark.update({ where: { id: sibling.id }, data: { order: i } })));
     }
 
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
