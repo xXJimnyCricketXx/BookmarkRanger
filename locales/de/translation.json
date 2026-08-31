@@ -35,7 +35,6 @@
   },
   "dashboard": {
     "search_placeholder": "Suchen …",
-    "pinned_categories": "Angepinnte Kategorien",
     "pinned_bookmarks": "Angepinnte Lesezeichen",
     "pinned_snippets": "Angepinnte Snippets",
     "no_pinned_bookmarks": "Noch keine angepinnten Lesezeichen.",

@@ -35,7 +35,6 @@
   },
   "dashboard": {
     "search_placeholder": "Search …",
-    "pinned_categories": "Pinned categories",
     "pinned_bookmarks": "Pinned bookmarks",
     "pinned_snippets": "Pinned snippets",
     "no_pinned_bookmarks": "No pinned bookmarks yet.",
