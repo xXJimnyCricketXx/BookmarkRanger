@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 const PRESETS = require('../config/themes');
 const { getSettings } = require('../utils/settings');
+const { geocodeLocation } = require('../utils/weather');
 
 const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
 
@@ -95,6 +96,25 @@ exports.showInterface = async (req, res) => {
 exports.saveInterface = async (req, res) => {
     const settings = await getSettings();
     const { customGreetings, customWeekdayNames, customMonthNames } = req.body;
+    const weatherLocation = (req.body.weatherLocation || '').trim();
+
+    const weatherData = {};
+    if (weatherLocation !== (settings.weatherLocation || '')) {
+        if (!weatherLocation) {
+            weatherData.weatherLocation = null;
+            weatherData.weatherLat = null;
+            weatherData.weatherLon = null;
+        } else {
+            const geocoded = await geocodeLocation(weatherLocation);
+            if (geocoded) {
+                weatherData.weatherLocation = geocoded.label;
+                weatherData.weatherLat = geocoded.lat;
+                weatherData.weatherLon = geocoded.lon;
+            }
+            // Geocoding failed (typo, unreachable API, …): leave the previous location/coords
+            // in place rather than saving an unresolved name that would show no weather at all.
+        }
+    }
 
     await prisma.settings.update({
         where: { id: settings.id },
@@ -106,12 +126,14 @@ exports.saveInterface = async (req, res) => {
             hideHeadline: req.body.hideHeadline === 'true',
             hideDate: req.body.hideDate === 'true',
             hideTime: req.body.hideTime === 'true',
+            hideWeather: req.body.hideWeather === 'true',
             dateFormat: req.body.dateFormat === 'month-first' ? 'month-first' : 'day-first',
             // Each list needs its exact expected count (4 greetings, 7 weekdays, 12 months) —
             // a malformed value would otherwise index out of bounds when the header renders.
             customGreetings: splitList(customGreetings).length === 4 ? customGreetings.trim() : settings.customGreetings,
             customWeekdayNames: splitList(customWeekdayNames).length === 7 ? customWeekdayNames.trim() : settings.customWeekdayNames,
-            customMonthNames: splitList(customMonthNames).length === 12 ? customMonthNames.trim() : settings.customMonthNames
+            customMonthNames: splitList(customMonthNames).length === 12 ? customMonthNames.trim() : settings.customMonthNames,
+            ...weatherData
         }
     });
     res.redirect(`${res.locals.baseUrl}/settings/interface`);
