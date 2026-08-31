@@ -108,7 +108,11 @@
     "edit": "Bearbeiten",
     "delete": "Löschen",
     "copy_code": "Code kopieren",
-    "documentation_title": "Dokumentation"
+    "copy_raw_url": "Raw-URL kopieren",
+    "documentation_title": "Dokumentation",
+    "language_label": "Sprache",
+    "created_label": "Erstellt",
+    "last_updated_label": "Zuletzt geändert"
   },
   "settings": {
     "nav_theme": "Theme",

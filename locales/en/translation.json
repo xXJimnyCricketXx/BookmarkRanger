@@ -108,7 +108,11 @@
     "edit": "Edit",
     "delete": "Delete",
     "copy_code": "Copy code",
-    "documentation_title": "Documentation"
+    "copy_raw_url": "Copy raw url",
+    "documentation_title": "Documentation",
+    "language_label": "Language",
+    "created_label": "Created",
+    "last_updated_label": "Last updated"
   },
   "settings": {
     "nav_theme": "Theme",

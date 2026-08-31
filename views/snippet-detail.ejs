@@ -10,26 +10,57 @@
 %>
 <%- include('partials/header') %>
 
-<div class="max-w-3xl mx-auto">
-  <a href="<%= baseUrl %>/snippets" class="text-sm opacity-60 hover:opacity-100 inline-block mb-4">&larr; <%= t('snippetDetail.back') %></a>
+<a href="<%= baseUrl %>/snippets" class="text-sm opacity-60 hover:opacity-100 inline-block mb-4">&larr; <%= t('snippetDetail.back') %></a>
 
-  <div class="card-theme rounded-3xl shadow-xl p-6">
-    <div class="flex items-start justify-between mb-2 gap-4">
-      <h1 class="text-2xl font-black"><%= snippet.title %></h1>
+<div class="flex flex-col lg:flex-row gap-6 items-start">
+  <div class="flex-grow w-full">
+    <div class="relative">
+      <pre class="bg-black/80 text-green-100 text-sm rounded-xl p-4 overflow-x-auto"><code><%= snippet.code %></code></pre>
+      <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn absolute top-3 right-3 bg-primary-theme text-xs font-bold px-3 py-1.5 rounded-lg hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
+      <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
+    </div>
+
+    <% if (snippet.documentation) { %>
+      <div class="card-theme rounded-3xl shadow-xl p-6 mt-6">
+        <h2 class="font-bold text-sm mb-2 opacity-80"><%= t('snippetDetail.documentation_title') %></h2>
+        <p class="text-sm opacity-80 whitespace-pre-wrap"><%= snippet.documentation %></p>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card-theme rounded-3xl shadow-xl p-6 w-full lg:w-80 shrink-0">
+    <div class="flex items-start justify-between gap-3 mb-1">
+      <h1 class="text-xl font-black"><%= snippet.title %></h1>
       <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/pin" method="POST">
-        <button type="submit" title="<%= snippet.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>">
+        <button type="submit" title="<%= snippet.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>" class="shrink-0">
           <i class="fa-solid fa-thumbtack <%= snippet.isPinned ? 'text-primary-theme' : 'opacity-30 hover:opacity-70' %> transition"></i>
         </button>
       </form>
     </div>
 
-    <span class="inline-block <%= langClass %> text-white text-[11px] font-bold px-2 py-0.5 rounded w-fit mb-3"><%= snippet.language %></span>
-
     <% if (snippet.shortDescription) { %>
-      <p class="opacity-70 mb-4"><%= snippet.shortDescription %></p>
+      <p class="text-sm opacity-70 mb-4"><%= snippet.shortDescription %></p>
     <% } %>
 
+    <hr class="border-black/10 dark:border-white/10 mb-4">
+
+    <div class="space-y-2 text-sm mb-4">
+      <div class="flex items-center justify-between">
+        <span class="opacity-60"><%= t('snippetDetail.language_label') %></span>
+        <span class="font-bold"><%= snippet.language %></span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="opacity-60"><%= t('snippetDetail.created_label') %></span>
+        <span><%= timeAgo(snippet.createdAt) %></span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="opacity-60"><%= t('snippetDetail.last_updated_label') %></span>
+        <span><%= timeAgo(snippet.updatedAt) %></span>
+      </div>
+    </div>
+
     <% if (snippet.tags.length) { %>
+      <hr class="border-black/10 dark:border-white/10 mb-4">
       <div class="flex flex-wrap gap-2 mb-4">
         <% snippet.tags.forEach(tag => { %>
           <span class="text-xs bg-black/5 dark:bg-white/10 px-2 py-1 rounded-full"><%= tag.name %></span>
@@ -37,24 +68,15 @@
       </div>
     <% } %>
 
-    <div class="relative mb-6">
-      <pre class="bg-black/80 text-green-100 text-sm rounded-xl p-4 overflow-x-auto"><code><%= snippet.code %></code></pre>
-      <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn absolute top-3 right-3 bg-primary-theme text-xs font-bold px-3 py-1.5 rounded-lg hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
-      <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
-    </div>
+    <hr class="border-black/10 dark:border-white/10 mb-4">
 
-    <% if (snippet.documentation) { %>
-      <div class="border-t border-black/5 dark:border-white/10 pt-4 mb-6">
-        <h2 class="font-bold text-sm mb-2 opacity-80"><%= t('snippetDetail.documentation_title') %></h2>
-        <p class="text-sm opacity-80 whitespace-pre-wrap"><%= snippet.documentation %></p>
-      </div>
-    <% } %>
-
-    <div class="flex gap-3 pt-2">
-      <a href="<%= baseUrl %>/snippets/<%= snippet.id %>/edit" class="flex-1 text-center text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><%= t('snippetDetail.edit') %></a>
-      <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/delete" method="POST" class="flex-1" onsubmit="return confirm('<%= t('common.confirm_delete', { name: snippet.title }) %>')">
+    <div class="space-y-2">
+      <form action="<%= baseUrl %>/snippets/<%= snippet.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: snippet.title }) %>')">
         <button type="submit" class="w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition"><%= t('snippetDetail.delete') %></button>
       </form>
+      <a href="<%= baseUrl %>/snippets/<%= snippet.id %>/edit" class="block text-center text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><%= t('snippetDetail.edit') %></a>
+      <button type="button" class="copy-raw-url-btn w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition" data-url="<%= baseUrl %>/snippets/<%= snippet.id %>/raw"><%= t('snippetDetail.copy_raw_url') %></button>
+      <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-primary-theme hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
     </div>
   </div>
 </div>
