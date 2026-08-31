@@ -19,7 +19,7 @@
 
   <span class="inline-block <%= langClass %> text-white text-[11px] font-bold px-2 py-0.5 rounded w-fit mb-3"><%= snippet.language %></span>
 
-  <p class="text-sm opacity-70 flex-grow mb-4"><%= snippet.shortDescription || t('snippets.no_description') %></p>
+  <p class="text-sm opacity-70 flex-grow mb-4 min-h-[4.5rem]"><%= snippet.shortDescription || t('snippets.no_description') %></p>
 
   <p class="text-xs opacity-50 mb-3"><%= t('snippets.created') %> <%= timeAgo(snippet.createdAt) %></p>
 
