@@ -81,10 +81,14 @@
           dragClass: 'sortable-drag',
           onMove: (evt, originalEvent) => {
             const related = evt.related;
+            // Merging only makes sense between two plain bookmarks — a group being dragged
+            // (or dragged onto) must never trigger it, or "create group" gets called with a
+            // non-numeric "group-X" id, which silently leaves behind an empty orphaned group.
             const isPlainBookmarkInMainGrid = evt.to === mainGrid && related
               && related.classList.contains('draggable-item')
               && related !== evt.dragged
-              && !(related.dataset.id || '').startsWith('group-');
+              && !(related.dataset.id || '').startsWith('group-')
+              && !(evt.dragged.dataset.id || '').startsWith('group-');
 
             if (!isPlainBookmarkInMainGrid) { clearMergeHighlight(); return true; }
 

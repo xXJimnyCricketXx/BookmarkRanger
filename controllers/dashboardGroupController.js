@@ -4,7 +4,11 @@ const prisma = require('../config/db');
 // dashboard-only box holding both, so they display stacked instead of side by side.
 exports.create = async (req, res) => {
     const ids = (req.body.bookmarkIds || []).map((id) => parseInt(id, 10));
-    if (ids.length < 2) return res.status(400).json({ error: 'need at least 2 bookmarks' });
+    // Reject before creating the group — otherwise a bad id fails the transaction below
+    // *after* the group already exists, leaving an empty orphaned group behind.
+    if (ids.length < 2 || ids.some((id) => !Number.isFinite(id))) {
+        return res.status(400).json({ error: 'need at least 2 valid bookmark ids' });
+    }
 
     const group = await prisma.dashboardGroup.create({
         data: { name: req.body.name || 'Neue Gruppe', order: 0 }
