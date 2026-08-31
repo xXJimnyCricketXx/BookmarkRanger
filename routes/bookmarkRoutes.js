@@ -5,6 +5,7 @@ const bookmarkController = require('../controllers/bookmarkController');
 router.get('/', bookmarkController.list);
 
 router.post('/boards', bookmarkController.createBoard);
+router.post('/boards/:id/rename', bookmarkController.renameBoard);
 router.post('/boards/:id/delete', bookmarkController.deleteBoard);
 
 router.post('/categories', bookmarkController.createCategory);

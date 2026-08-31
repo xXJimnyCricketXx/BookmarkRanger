@@ -36,6 +36,15 @@ exports.createBoard = async (req, res) => {
     res.redirect(`${res.locals.baseUrl}/bookmarks`);
 };
 
+exports.renameBoard = async (req, res) => {
+    const { name } = req.body;
+    const id = parseInt(req.params.id, 10);
+    if (name && name.trim()) {
+        await prisma.board.update({ where: { id }, data: { name: name.trim() } });
+    }
+    res.redirect(`${res.locals.baseUrl}/bookmarks?board=${id}`);
+};
+
 exports.deleteBoard = async (req, res) => {
     await prisma.board.delete({ where: { id: parseInt(req.params.id, 10) } });
     res.redirect(`${res.locals.baseUrl}/bookmarks`);
