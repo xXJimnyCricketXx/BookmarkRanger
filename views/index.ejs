@@ -2,12 +2,17 @@
 <% const canDrag = settings.sortingType === 'custom'; %>
 <%- include('partials/header') %>
 
-<% const showCorner = !settings.hideDate || !settings.hideTime || (!settings.hideWeather && weather); %>
-<% if (showCorner) { %>
-<div class="text-right text-xs opacity-60 mb-4 space-x-2">
-  <% if (!settings.hideWeather && weather) { %><span><i class="fa-solid <%= weather.icon %>"></i> <%= weather.temperature %>°C</span><% } %>
-  <% if (!settings.hideDate) { %><span><%= formattedDate %></span><% } %>
-  <% if (!settings.hideTime) { %><span id="dashboard-clock"></span><% } %>
+<% const showDateTime = !settings.hideDate || !settings.hideTime; %>
+<% const showWeather = !settings.hideWeather && weather; %>
+<% if (showDateTime || showWeather) { %>
+<div class="flex items-center justify-between text-xs opacity-60 mb-4">
+  <div class="space-x-2">
+    <% if (!settings.hideDate) { %><span><%= formattedDate %></span><% } %>
+    <% if (!settings.hideTime) { %><span id="dashboard-clock"></span><% } %>
+  </div>
+  <div>
+    <% if (showWeather) { %><span><i class="fa-solid <%= weather.icon %>"></i> <%= weather.temperature %>°C</span><% } %>
+  </div>
 </div>
 <% } %>
 <% if (!settings.hideTime) { %>
@@ -24,13 +29,13 @@
 <% } %>
 
 <% if (!settings.hideHeadline || !settings.hideSearchBar) { %>
-<div class="card-theme rounded-3xl shadow-xl p-8 mb-10 text-center">
+<section class="card-theme rounded-3xl p-6 md:p-12 shadow-2xl mb-10 text-center space-y-4 md:space-y-6">
   <% if (!settings.hideHeadline) { %>
-    <h1 class="text-3xl font-black"><%= greeting %></h1>
+    <h1 class="text-3xl md:text-6xl font-black tracking-tight"><%- greeting %></h1>
   <% } %>
 
   <% if (!settings.hideSearchBar) { %>
-  <form action="<%= baseUrl %>/" method="GET" id="search-form" class="<%= !settings.hideHeadline ? 'mt-6' : '' %>">
+  <form action="<%= baseUrl %>/" method="GET" id="search-form">
     <div class="flex items-stretch gap-2 max-w-2xl mx-auto">
       <div class="input-theme flex-grow flex items-stretch rounded-2xl shadow-lg overflow-hidden">
         <div class="relative flex-grow">
@@ -48,42 +53,13 @@
         </select>
         <button type="submit" class="bg-primary-theme px-5 text-sm font-bold hover:brightness-110 transition shrink-0"><%= t('dashboard.search_button') %></button>
       </div>
-      <button type="button" id="add-provider-open" title="<%= t('settings.add_search_provider') %>"
-        class="input-theme shrink-0 w-12 rounded-2xl shadow-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition">
-        <i class="fa-solid fa-plus"></i>
-      </button>
     </div>
-    <p class="text-center text-xs opacity-50 mt-2"><%= t('dashboard.search_help') %></p>
   </form>
   <% } %>
-</div>
+</section>
 <% } %>
 
 <% if (!settings.hideSearchBar) { %>
-<div id="add-provider-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div id="add-provider-backdrop" class="absolute inset-0 bg-black/60"></div>
-  <div class="card-theme relative rounded-3xl shadow-xl p-6 w-full max-w-md">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-lg font-black"><%= t('settings.add_search_provider') %></h2>
-      <button type="button" id="add-provider-close" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <form action="<%= baseUrl %>/search-providers" method="POST" class="space-y-4">
-      <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.search_provider_name') %></label>
-        <input type="text" name="name" required placeholder="Google" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-      </div>
-      <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.search_provider_query_template') %></label>
-        <input type="text" name="queryTemplate" required placeholder="https://www.google.com/search?q=" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-        <p class="text-xs opacity-50 mt-1"><%= t('settings.search_provider_hint') %></p>
-      </div>
-      <button type="submit" class="w-full bg-primary-theme font-black py-3 rounded-xl hover:brightness-110 transition-all"><%= t('settings.add_provider') %></button>
-    </form>
-  </div>
-</div>
-
 <script>
   document.getElementById('search-input').addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { e.target.value = ''; e.target.form.submit(); }
@@ -117,11 +93,6 @@
         window.location.href = '<%= baseUrl %>/?q=' + encodeURIComponent(query);
       });
   });
-
-  const providerModal = document.getElementById('add-provider-modal');
-  document.getElementById('add-provider-open').addEventListener('click', () => providerModal.classList.remove('hidden'));
-  document.getElementById('add-provider-close').addEventListener('click', () => providerModal.classList.add('hidden'));
-  document.getElementById('add-provider-backdrop').addEventListener('click', () => providerModal.classList.add('hidden'));
 </script>
 <% } %>
 
