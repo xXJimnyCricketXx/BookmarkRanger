@@ -1,0 +1,22 @@
+<%- include('partials/header') %>
+
+<div class="layout-with-sidebar">
+  <%- include('partials/settings-nav', { active: 'weather' }) %>
+
+  <div class="flex-grow max-w-xl">
+    <form action="<%= baseUrl %>/settings/weather" method="POST" class="space-y-8">
+      <div>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.weather_section') %></h2>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.weather_location') %></label>
+          <input type="text" name="weatherLocation" value="<%= settings.weatherLocation || '' %>" placeholder="Berlin" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <p class="text-xs opacity-50 mt-1"><%= t('settings.weather_location_hint') %></p>
+        </div>
+      </div>
+
+      <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -96,25 +96,6 @@ exports.showInterface = async (req, res) => {
 exports.saveInterface = async (req, res) => {
     const settings = await getSettings();
     const { customGreetings, customWeekdayNames, customMonthNames } = req.body;
-    const weatherLocation = (req.body.weatherLocation || '').trim();
-
-    const weatherData = {};
-    if (weatherLocation !== (settings.weatherLocation || '')) {
-        if (!weatherLocation) {
-            weatherData.weatherLocation = null;
-            weatherData.weatherLat = null;
-            weatherData.weatherLon = null;
-        } else {
-            const geocoded = await geocodeLocation(weatherLocation);
-            if (geocoded) {
-                weatherData.weatherLocation = geocoded.label;
-                weatherData.weatherLat = geocoded.lat;
-                weatherData.weatherLon = geocoded.lon;
-            }
-            // Geocoding failed (typo, unreachable API, …): leave the previous location/coords
-            // in place rather than saving an unresolved name that would show no weather at all.
-        }
-    }
 
     await prisma.settings.update({
         where: { id: settings.id },
@@ -132,11 +113,41 @@ exports.saveInterface = async (req, res) => {
             // a malformed value would otherwise index out of bounds when the header renders.
             customGreetings: splitList(customGreetings).length === 4 ? customGreetings.trim() : settings.customGreetings,
             customWeekdayNames: splitList(customWeekdayNames).length === 7 ? customWeekdayNames.trim() : settings.customWeekdayNames,
-            customMonthNames: splitList(customMonthNames).length === 12 ? customMonthNames.trim() : settings.customMonthNames,
-            ...weatherData
+            customMonthNames: splitList(customMonthNames).length === 12 ? customMonthNames.trim() : settings.customMonthNames
         }
     });
     res.redirect(`${res.locals.baseUrl}/settings/interface`);
+};
+
+exports.showWeather = async (req, res) => {
+    const settings = await getSettings();
+    res.render('settings-weather', { title: 'Einstellungen — Wetter', settings });
+};
+
+exports.saveWeather = async (req, res) => {
+    const settings = await getSettings();
+    const weatherLocation = (req.body.weatherLocation || '').trim();
+
+    const data = {};
+    if (weatherLocation !== (settings.weatherLocation || '')) {
+        if (!weatherLocation) {
+            data.weatherLocation = null;
+            data.weatherLat = null;
+            data.weatherLon = null;
+        } else {
+            const geocoded = await geocodeLocation(weatherLocation);
+            if (geocoded) {
+                data.weatherLocation = geocoded.label;
+                data.weatherLat = geocoded.lat;
+                data.weatherLon = geocoded.lon;
+            }
+            // Geocoding failed (typo, unreachable API, …): leave the previous location/coords
+            // in place rather than saving an unresolved name that would show no weather at all.
+        }
+    }
+
+    await prisma.settings.update({ where: { id: settings.id }, data });
+    res.redirect(`${res.locals.baseUrl}/settings/weather`);
 };
 
 function splitList(value) {

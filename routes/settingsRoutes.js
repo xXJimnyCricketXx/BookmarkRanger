@@ -19,6 +19,9 @@ router.post('/general', settingsController.saveGeneral);
 router.get('/interface', settingsController.showInterface);
 router.post('/interface', settingsController.saveInterface);
 
+router.get('/weather', settingsController.showWeather);
+router.post('/weather', settingsController.saveWeather);
+
 router.get('/account', settingsController.showAccount);
 router.post('/account', settingsController.updateAccount);
 router.post('/account/backup', settingsController.createBackup);
