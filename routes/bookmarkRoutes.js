@@ -3,6 +3,7 @@ const router = express.Router();
 const bookmarkController = require('../controllers/bookmarkController');
 
 router.get('/', bookmarkController.list);
+router.get('/boards/:id/panel', bookmarkController.boardPanel);
 
 router.post('/boards', bookmarkController.createBoard);
 router.post('/boards/:id/rename', bookmarkController.renameBoard);

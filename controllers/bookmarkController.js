@@ -4,6 +4,14 @@ const { fetchFavicon, downloadIcon } = require('../utils/favicon');
 const { orderByFor } = require('../utils/sorting');
 const { getSettings } = require('../utils/settings');
 
+async function categoriesFor(boardId, settings) {
+    return prisma.category.findMany({
+        where: { boardId },
+        orderBy: { order: 'asc' },
+        include: { bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } } }
+    });
+}
+
 exports.list = async (req, res) => {
     const settings = await getSettings();
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' } });
@@ -14,16 +22,24 @@ exports.list = async (req, res) => {
         activeBoard = boards.find((b) => b.id === requestedId) || boards[0];
     }
 
-    let categories = [];
-    if (activeBoard) {
-        categories = await prisma.category.findMany({
-            where: { boardId: activeBoard.id },
-            orderBy: { order: 'asc' },
-            include: { bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } } }
-        });
-    }
+    const categories = activeBoard ? await categoriesFor(activeBoard.id, settings) : [];
 
     res.render('bookmarks', { title: 'Lesezeichen', boards, activeBoard, categories });
+};
+
+// Renders just the board panel (toolbar + categories) so the board tabs can swap boards
+// via fetch() instead of a full page reload — the tab bar itself never gets touched.
+exports.boardPanel = async (req, res) => {
+    const settings = await getSettings();
+    const activeBoard = await prisma.board.findUnique({ where: { id: parseInt(req.params.id, 10) } });
+    if (!activeBoard) return res.status(404).send('Not found');
+
+    const categories = await categoriesFor(activeBoard.id, settings);
+
+    res.render('partials/board-panel', { activeBoard, categories }, (err, html) => {
+        if (err) return res.status(500).send('Render error');
+        res.json({ html, boardName: activeBoard.name });
+    });
 };
 
 exports.createBoard = async (req, res) => {
