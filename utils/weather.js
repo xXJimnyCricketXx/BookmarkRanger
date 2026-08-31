@@ -1,5 +1,4 @@
 // Open-Meteo: free, no API key — fits the self-hosted philosophy (no vendor account to sign up for).
-const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search';
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
 
 // WMO weather codes collapsed into a few Font Awesome icons — good enough for a small dashboard badge.
@@ -18,22 +17,10 @@ function iconFor(code) {
     return ICON_BY_CODE[code] || 'fa-cloud';
 }
 
-async function geocodeLocation(name) {
-    try {
-        const url = `${GEOCODE_URL}?name=${encodeURIComponent(name)}&count=1`;
-        const response = await fetch(url, { signal: AbortSignal.timeout(4000) });
-        if (!response.ok) return null;
-        const data = await response.json();
-        const match = data.results && data.results[0];
-        if (!match) return null;
-        return { lat: match.latitude, lon: match.longitude, label: [match.name, match.country].filter(Boolean).join(', ') };
-    } catch (err) {
-        return null;
-    }
-}
-
 // In-memory only — a single-user self-hosted dashboard doesn't need this surviving a restart,
-// and it keeps every dashboard page load from re-hitting the API.
+// and it keeps every dashboard page load from re-hitting the API. Always fetched in Celsius plus
+// both "extra" fields (humidity, cloud cover) — unit conversion and which extra to show are
+// display concerns, resolved by the caller from settings, so the cache stays unit-agnostic.
 const cache = new Map();
 const CACHE_TTL_MS = 20 * 60 * 1000;
 
@@ -43,13 +30,18 @@ async function getCurrentWeather(lat, lon) {
     if (cached && Date.now() - cached.at < CACHE_TTL_MS) return cached.data;
 
     try {
-        const url = `${FORECAST_URL}?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`;
+        const url = `${FORECAST_URL}?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,cloud_cover`;
         const response = await fetch(url, { signal: AbortSignal.timeout(4000) });
         if (!response.ok) return cached ? cached.data : null;
         const data = await response.json();
         if (!data.current) return cached ? cached.data : null;
 
-        const result = { temperature: Math.round(data.current.temperature_2m), icon: iconFor(data.current.weather_code) };
+        const result = {
+            temperatureC: data.current.temperature_2m,
+            icon: iconFor(data.current.weather_code),
+            humidity: Math.round(data.current.relative_humidity_2m),
+            cloudCover: Math.round(data.current.cloud_cover)
+        };
         cache.set(key, { at: Date.now(), data: result });
         return result;
     } catch (err) {
@@ -57,4 +49,4 @@ async function getCurrentWeather(lat, lon) {
     }
 }
 
-module.exports = { geocodeLocation, getCurrentWeather };
+module.exports = { getCurrentWeather };

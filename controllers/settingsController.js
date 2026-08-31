@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 const PRESETS = require('../config/themes');
 const { getSettings } = require('../utils/settings');
-const { geocodeLocation } = require('../utils/weather');
 
 const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
 
@@ -126,27 +125,18 @@ exports.showWeather = async (req, res) => {
 
 exports.saveWeather = async (req, res) => {
     const settings = await getSettings();
-    const weatherLocation = (req.body.weatherLocation || '').trim();
+    const lat = parseFloat(req.body.weatherLat);
+    const lon = parseFloat(req.body.weatherLon);
 
-    const data = {};
-    if (weatherLocation !== (settings.weatherLocation || '')) {
-        if (!weatherLocation) {
-            data.weatherLocation = null;
-            data.weatherLat = null;
-            data.weatherLon = null;
-        } else {
-            const geocoded = await geocodeLocation(weatherLocation);
-            if (geocoded) {
-                data.weatherLocation = geocoded.label;
-                data.weatherLat = geocoded.lat;
-                data.weatherLon = geocoded.lon;
-            }
-            // Geocoding failed (typo, unreachable API, …): leave the previous location/coords
-            // in place rather than saving an unresolved name that would show no weather at all.
+    await prisma.settings.update({
+        where: { id: settings.id },
+        data: {
+            weatherLat: Number.isFinite(lat) ? lat : null,
+            weatherLon: Number.isFinite(lon) ? lon : null,
+            weatherUnit: req.body.weatherUnit === 'fahrenheit' ? 'fahrenheit' : 'celsius',
+            weatherExtra: req.body.weatherExtra === 'cloud_coverage' ? 'cloud_coverage' : 'humidity'
         }
-    }
-
-    await prisma.settings.update({ where: { id: settings.id }, data });
+    });
     res.redirect(`${res.locals.baseUrl}/settings/weather`);
 };
 
