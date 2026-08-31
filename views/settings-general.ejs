@@ -73,6 +73,22 @@
 
       <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>
     </form>
+
+    <div class="mt-10">
+      <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.add_search_provider') %></h2>
+      <form action="<%= baseUrl %>/search-providers" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.search_provider_name') %></label>
+          <input type="text" name="name" required placeholder="Google" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.search_provider_query_template') %></label>
+          <input type="text" name="queryTemplate" required placeholder="https://www.google.com/search?q=" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <p class="text-xs opacity-50 mt-1"><%= t('settings.search_provider_hint') %></p>
+        </div>
+        <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.add_provider') %></button>
+      </form>
+    </div>
   </div>
 </div>
 
