@@ -22,5 +22,6 @@ router.get('/:id/edit', bookmarkController.showEditForm);
 router.post('/:id', bookmarkController.update);
 router.post('/:id/delete', bookmarkController.delete);
 router.post('/:id/pin', bookmarkController.togglePin);
+router.post('/:id/move/:direction', bookmarkController.moveBookmark);
 
 module.exports = router;

@@ -177,6 +177,27 @@ exports.togglePin = async (req, res) => {
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
 };
 
+exports.moveBookmark = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const direction = req.params.direction;
+    const bookmark = await prisma.bookmark.findUnique({ where: { id }, include: { category: true } });
+    if (!bookmark) return res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks`);
+
+    const siblings = await prisma.bookmark.findMany({ where: { categoryId: bookmark.categoryId }, orderBy: { order: 'asc' } });
+    const index = siblings.findIndex((b) => b.id === id);
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
+
+    if (swapIndex >= 0 && swapIndex < siblings.length) {
+        const other = siblings[swapIndex];
+        await prisma.$transaction([
+            prisma.bookmark.update({ where: { id: bookmark.id }, data: { order: other.order } }),
+            prisma.bookmark.update({ where: { id: other.id }, data: { order: bookmark.order } })
+        ]);
+    }
+
+    res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
+};
+
 exports.reorder = async (req, res) => {
     const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
     await prisma.$transaction(ids.map((id, index) => prisma.bookmark.update({ where: { id }, data: { order: index } })));

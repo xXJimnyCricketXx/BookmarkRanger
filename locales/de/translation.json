@@ -62,7 +62,9 @@
     "delete": "Löschen",
     "pin": "Anpinnen",
     "unpin": "Lösen",
-    "view": "Öffnen"
+    "view": "Öffnen",
+    "move_up": "Nach oben",
+    "move_down": "Nach unten"
   },
   "bookmarkForm": {
     "title_add": "Lesezeichen hinzufügen",

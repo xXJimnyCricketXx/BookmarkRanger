@@ -62,7 +62,9 @@
     "delete": "Delete",
     "pin": "Pin",
     "unpin": "Unpin",
-    "view": "Open"
+    "view": "Open",
+    "move_up": "Move up",
+    "move_down": "Move down"
   },
   "bookmarkForm": {
     "title_add": "Add bookmark",

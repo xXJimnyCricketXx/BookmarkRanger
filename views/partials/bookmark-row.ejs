@@ -8,6 +8,14 @@
     <span class="truncate"><%= bookmark.title %></span>
   </a>
   <div class="hidden group-hover:flex items-center gap-2 shrink-0">
+    <% if (locals.reorderable) { %>
+      <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/move/up" method="POST">
+        <button type="submit" title="<%= t('bookmarks.move_up') %>"><i class="fa-solid fa-chevron-up text-xs opacity-40 hover:opacity-80"></i></button>
+      </form>
+      <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/move/down" method="POST">
+        <button type="submit" title="<%= t('bookmarks.move_down') %>"><i class="fa-solid fa-chevron-down text-xs opacity-40 hover:opacity-80"></i></button>
+      </form>
+    <% } %>
     <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/pin" method="POST">
       <button type="submit" title="<%= bookmark.isPinned ? t('bookmarks.unpin') : t('bookmarks.pin') %>">
         <i class="fa-solid fa-thumbtack text-xs <%= bookmark.isPinned ? 'text-primary-theme' : 'opacity-40 hover:opacity-80' %>"></i>
