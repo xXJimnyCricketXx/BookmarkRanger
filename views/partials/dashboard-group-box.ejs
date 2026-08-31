@@ -1,5 +1,8 @@
-<div class="card-theme rounded-3xl p-5 shadow-lg <%= locals.draggable ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- locals.draggable ? `data-id="group-${group.id}"` : "" %>>
+<div class="card-theme rounded-3xl p-5 shadow-lg <%= locals.draggable ? 'draggable-item' : '' %>" <%- locals.draggable ? `data-id="group-${group.id}"` : "" %>>
   <div class="flex items-center justify-between mb-3 gap-2">
+    <% if (locals.draggable) { %>
+      <i class="fa-solid fa-grip-vertical drag-handle text-xs opacity-30 hover:opacity-70 cursor-grab active:cursor-grabbing shrink-0" title="<%= t('dashboard.drag_handle') %>"></i>
+    <% } %>
     <form action="<%= baseUrl %>/dashboard-groups/<%= group.id %>/rename" method="POST" class="flex-grow min-w-0">
       <input type="text" name="name" value="<%= group.name %>" onchange="this.form.submit()"
         class="bg-transparent border-0 font-black text-primary-theme uppercase text-xs tracking-wide w-full focus:outline-none focus:underline p-0">
@@ -11,8 +14,11 @@
 
   <div class="group-members space-y-1 <%= locals.draggable ? 'bm-group-members' : '' %>" data-group-id="<%= group.id %>">
     <% group.bookmarks.forEach(bookmark => { %>
-      <div class="group flex items-center justify-between gap-2 py-1 <%= locals.draggable ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- locals.draggable ? `data-id="${bookmark.id}"` : "" %>>
-        <a href="<%= bookmark.url %>" <%- settings.openLinksInNewTab ? 'target="_blank" rel="noopener"' : '' %> class="flex items-center gap-2 text-sm hover:text-primary-theme transition-colors truncate min-w-0">
+      <div class="group flex items-center gap-2 py-1 <%= locals.draggable ? 'draggable-item' : '' %>" <%- locals.draggable ? `data-id="${bookmark.id}"` : "" %>>
+        <% if (locals.draggable) { %>
+          <i class="fa-solid fa-grip-vertical drag-handle text-xs opacity-30 hover:opacity-70 cursor-grab active:cursor-grabbing shrink-0" title="<%= t('dashboard.drag_handle') %>"></i>
+        <% } %>
+        <a href="<%= bookmark.url %>" <%- settings.openLinksInNewTab ? 'target="_blank" rel="noopener"' : '' %> class="flex items-center gap-2 text-sm hover:text-primary-theme transition-colors truncate min-w-0 flex-grow">
           <% if (bookmark.icon) { %>
             <img src="<%= baseUrl %><%= bookmark.icon %>" class="w-4 h-4 rounded-sm shrink-0" alt="">
           <% } else { %>
