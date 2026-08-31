@@ -27,8 +27,7 @@
     "invalid": "Please fill in all fields. Password must be at least 6 characters and match."
   },
   "dashboard": {
-    "search_placeholder": "lang:python tags:automation …",
-    "search_help": "Search by pressing Enter. Clear with Esc.",
+    "search_placeholder": "Search …",
     "pinned_categories": "Pinned categories",
     "pinned_bookmarks": "Pinned bookmarks",
     "pinned_snippets": "Pinned snippets",
@@ -155,7 +154,7 @@
     "interface_date_format_day_first": "Friday, 22 October 2021",
     "interface_date_format_month_first": "Friday, October 22 2021",
     "interface_custom_greetings": "Custom greetings",
-    "interface_custom_greetings_hint": "Order: evening;afternoon;morning;night — separated with semicolon, all 4 must be filled.",
+    "interface_custom_greetings_hint": "Order: evening;afternoon;morning;night — separated with semicolon, all 4 must be filled. {username} is replaced with your account name.",
     "interface_custom_weekdays": "Custom weekday names",
     "interface_custom_months": "Custom month names",
     "interface_custom_names_hint": "Names must be separated with semicolon.",

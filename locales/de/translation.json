@@ -27,8 +27,7 @@
     "invalid": "Bitte alle Felder ausfüllen. Passwort mind. 6 Zeichen, beide Felder müssen übereinstimmen."
   },
   "dashboard": {
-    "search_placeholder": "lang:python tags:automation …",
-    "search_help": "Suche mit Enter starten, mit Esc leeren.",
+    "search_placeholder": "Suchen …",
     "pinned_categories": "Angepinnte Kategorien",
     "pinned_bookmarks": "Angepinnte Lesezeichen",
     "pinned_snippets": "Angepinnte Snippets",
@@ -155,7 +154,7 @@
     "interface_date_format_day_first": "Freitag, 22 Oktober 2021",
     "interface_date_format_month_first": "Freitag, Oktober 22 2021",
     "interface_custom_greetings": "Eigene Begrüßungen",
-    "interface_custom_greetings_hint": "Reihenfolge: Abend;Nachmittag;Morgen;Nacht — mit Semikolon getrennt, alle 4 müssen ausgefüllt sein.",
+    "interface_custom_greetings_hint": "Reihenfolge: Abend;Nachmittag;Morgen;Nacht — mit Semikolon getrennt, alle 4 müssen ausgefüllt sein. {username} wird durch deinen Benutzernamen ersetzt.",
     "interface_custom_weekdays": "Eigene Wochentagsnamen",
     "interface_custom_months": "Eigene Monatsnamen",
     "interface_custom_names_hint": "Mit Semikolon getrennt.",
