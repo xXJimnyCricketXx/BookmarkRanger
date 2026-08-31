@@ -31,9 +31,10 @@ model Settings {
   hideDate               Boolean @default(false)
   hideTime               Boolean @default(true)
   hideWeather            Boolean @default(false)
-  weatherLocation        String?
   weatherLat             Float?
   weatherLon             Float?
+  weatherUnit            String  @default("celsius")
+  weatherExtra           String  @default("humidity")
   dateFormat             String  @default("day-first")
   customGreetings        String  @default("Guten Abend!;Guten Tag!;Guten Morgen!;Gute Nacht!")
   customWeekdayNames     String  @default("Sonntag;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Samstag")
