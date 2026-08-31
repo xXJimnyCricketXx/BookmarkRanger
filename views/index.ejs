@@ -2,17 +2,31 @@
 <% const canDrag = settings.sortingType === 'custom'; %>
 <%- include('partials/header') %>
 
+<% const showCorner = !settings.hideDate || !settings.hideTime || (!settings.hideWeather && weather); %>
+<% if (showCorner) { %>
+<div class="text-right text-xs opacity-60 mb-4 space-x-2">
+  <% if (!settings.hideWeather && weather) { %><span><i class="fa-solid <%= weather.icon %>"></i> <%= weather.temperature %>°C</span><% } %>
+  <% if (!settings.hideDate) { %><span><%= formattedDate %></span><% } %>
+  <% if (!settings.hideTime) { %><span id="dashboard-clock"></span><% } %>
+</div>
+<% } %>
+<% if (!settings.hideTime) { %>
+<script>
+  (function () {
+    const el = document.getElementById('dashboard-clock');
+    function tick() {
+      el.textContent = new Date().toLocaleTimeString('<%= currentLng %>', { hour: '2-digit', minute: '2-digit' });
+    }
+    tick();
+    setInterval(tick, 1000 * 30);
+  })();
+</script>
+<% } %>
+
 <% if (!settings.hideHeadline || !settings.hideSearchBar) { %>
 <div class="card-theme rounded-3xl shadow-xl p-8 mb-10 text-center">
   <% if (!settings.hideHeadline) { %>
     <h1 class="text-3xl font-black"><%= greeting %></h1>
-    <% if (!settings.hideDate || !settings.hideTime) { %>
-      <p class="text-sm opacity-60 mt-1">
-        <% if (!settings.hideDate) { %><span><%= formattedDate %></span><% } %>
-        <% if (!settings.hideDate && !settings.hideTime) { %><span> · </span><% } %>
-        <% if (!settings.hideTime) { %><span id="dashboard-clock"></span><% } %>
-      </p>
-    <% } %>
   <% } %>
 
   <% if (!settings.hideSearchBar) { %>
@@ -43,18 +57,6 @@
   </form>
   <% } %>
 </div>
-<% if (!settings.hideHeadline && !settings.hideTime) { %>
-<script>
-  (function () {
-    const el = document.getElementById('dashboard-clock');
-    function tick() {
-      el.textContent = new Date().toLocaleTimeString('<%= currentLng %>', { hour: '2-digit', minute: '2-digit' });
-    }
-    tick();
-    setInterval(tick, 1000 * 30);
-  })();
-</script>
-<% } %>
 <% } %>
 
 <% if (!settings.hideSearchBar) { %>
