@@ -2,10 +2,12 @@
 <%- include('partials/header') %>
 
 <div class="flex items-center justify-end gap-3 mb-6">
-  <form action="<%= baseUrl %>/snippets" method="GET">
+  <form action="<%= baseUrl %>/snippets" method="GET" class="input-theme flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm">
     <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
     <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
-    <select name="sort" onchange="this.form.submit()" class="input-theme px-3 py-2.5 rounded-xl text-sm">
+    <i class="fa-solid fa-arrow-up-wide-short opacity-60"></i>
+    <span class="opacity-60 whitespace-nowrap"><%= t('snippets.sort_label') %>:</span>
+    <select name="sort" onchange="this.form.submit()" class="bg-transparent border-0 font-bold focus:outline-none focus:ring-0 cursor-pointer">
       <option value="created" <%= sort === 'created' ? 'selected' : '' %>><%= t('snippets.sort_created') %></option>
       <option value="updated" <%= sort === 'updated' ? 'selected' : '' %>><%= t('snippets.sort_updated') %></option>
       <option value="alphabetical" <%= sort === 'alphabetical' ? 'selected' : '' %>><%= t('snippets.sort_alphabetical') %></option>
