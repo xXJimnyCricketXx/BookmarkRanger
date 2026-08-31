@@ -4,34 +4,100 @@
   <%- include('partials/settings-nav', { active: 'interface' }) %>
 
   <div class="flex-grow max-w-xl">
-    <form action="<%= baseUrl %>/settings/interface" method="POST" class="space-y-6">
+    <form action="<%= baseUrl %>/settings/interface" method="POST" class="space-y-8">
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_site_title') %></label>
-        <input type="text" name="siteName" value="<%= settings.siteName %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.interface_misc_section') %></h2>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.interface_site_title') %></label>
+          <input type="text" name="siteName" value="<%= settings.siteName %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
       </div>
 
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_search') %></label>
-        <select name="hideSearchBar" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-          <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
-          <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
-        </select>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.interface_search_section') %></h2>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_search') %></label>
+          <select name="hideSearchBar" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
+            <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
+          </select>
+        </div>
       </div>
 
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_bookmarks') %></label>
-        <select name="hideBookmarksSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-          <option value="true" <%= settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.true') %></option>
-          <option value="false" <%= !settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.false') %></option>
-        </select>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.interface_header_section') %></h2>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_headline') %></label>
+            <select name="hideHeadline" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideHeadline ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideHeadline ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_date') %></label>
+            <select name="hideDate" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideDate ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideDate ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_time') %></label>
+            <select name="hideTime" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideTime ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideTime ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_date_format') %></label>
+            <select name="dateFormat" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="day-first" <%= settings.dateFormat === 'day-first' ? 'selected' : '' %>><%= t('settings.interface_date_format_day_first') %></option>
+              <option value="month-first" <%= settings.dateFormat === 'month-first' ? 'selected' : '' %>><%= t('settings.interface_date_format_month_first') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_custom_greetings') %></label>
+            <input type="text" name="customGreetings" value="<%= settings.customGreetings %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <p class="text-xs opacity-50 mt-1"><%= t('settings.interface_custom_greetings_hint') %></p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_custom_weekdays') %></label>
+            <input type="text" name="customWeekdayNames" value="<%= settings.customWeekdayNames %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <p class="text-xs opacity-50 mt-1"><%= t('settings.interface_custom_names_hint') %></p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_custom_months') %></label>
+            <input type="text" name="customMonthNames" value="<%= settings.customMonthNames %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+            <p class="text-xs opacity-50 mt-1"><%= t('settings.interface_custom_names_hint') %></p>
+          </div>
+        </div>
       </div>
 
       <div>
-        <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_snippets') %></label>
-        <select name="hideSnippetsSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-          <option value="true" <%= settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.true') %></option>
-          <option value="false" <%= !settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.false') %></option>
-        </select>
+        <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.interface_sections_section') %></h2>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_bookmarks') %></label>
+            <select name="hideBookmarksSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_snippets') %></label>
+            <select name="hideSnippetsSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+              <option value="true" <%= settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>

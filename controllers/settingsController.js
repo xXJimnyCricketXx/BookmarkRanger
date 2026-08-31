@@ -94,17 +94,32 @@ exports.showInterface = async (req, res) => {
 
 exports.saveInterface = async (req, res) => {
     const settings = await getSettings();
+    const { customGreetings, customWeekdayNames, customMonthNames } = req.body;
+
     await prisma.settings.update({
         where: { id: settings.id },
         data: {
             siteName: req.body.siteName || 'BookmarkRanger',
             hideSearchBar: req.body.hideSearchBar === 'true',
             hideBookmarksSection: req.body.hideBookmarksSection === 'true',
-            hideSnippetsSection: req.body.hideSnippetsSection === 'true'
+            hideSnippetsSection: req.body.hideSnippetsSection === 'true',
+            hideHeadline: req.body.hideHeadline === 'true',
+            hideDate: req.body.hideDate === 'true',
+            hideTime: req.body.hideTime === 'true',
+            dateFormat: req.body.dateFormat === 'month-first' ? 'month-first' : 'day-first',
+            // Each list needs its exact expected count (4 greetings, 7 weekdays, 12 months) —
+            // a malformed value would otherwise index out of bounds when the header renders.
+            customGreetings: splitList(customGreetings).length === 4 ? customGreetings.trim() : settings.customGreetings,
+            customWeekdayNames: splitList(customWeekdayNames).length === 7 ? customWeekdayNames.trim() : settings.customWeekdayNames,
+            customMonthNames: splitList(customMonthNames).length === 12 ? customMonthNames.trim() : settings.customMonthNames
         }
     });
     res.redirect(`${res.locals.baseUrl}/settings/interface`);
 };
+
+function splitList(value) {
+    return (value || '').split(';').map((s) => s.trim()).filter(Boolean);
+}
 
 exports.showAccount = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
