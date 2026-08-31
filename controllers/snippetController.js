@@ -8,8 +8,12 @@ const SORT_FIELDS = { created: 'createdAt', updated: 'updatedAt', name: 'title' 
 exports.list = async (req, res) => {
     const activeTags = (req.query.tags || '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
     const q = req.query.q || '';
-    const sort = SORT_FIELDS[req.query.sort] ? req.query.sort : 'created';
-    const dir = req.query.dir === 'asc' ? 'asc' : 'desc';
+
+    // Combined "field_direction" token (e.g. "created_desc"), matching VHSRanger's collection sort UX.
+    const [sortField, sortDir] = (req.query.sort || '').split('_');
+    const sort = SORT_FIELDS[sortField] ? sortField : 'created';
+    const dir = sortDir === 'asc' ? 'asc' : 'desc';
+    const currentSort = `${sort}_${dir}`;
 
     const where = {};
     const AND = [];
@@ -43,8 +47,7 @@ exports.list = async (req, res) => {
         activeTags,
         total: allSnippetsForTags.length,
         q,
-        sort,
-        dir
+        currentSort
     });
 };
 

@@ -2,26 +2,49 @@
 <%- include('partials/header') %>
 
 <div class="flex items-center justify-end gap-3 mb-6">
-  <form id="sort-form" action="<%= baseUrl %>/snippets" method="GET" class="input-theme flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm">
-    <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
-    <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
-    <input type="hidden" name="dir" id="sort-dir-input" value="<%= dir %>">
-    <i class="fa-solid fa-arrow-up-wide-short opacity-60"></i>
-    <span class="opacity-60 whitespace-nowrap"><%= t('snippets.sort_label') %>:</span>
-    <select name="sort" onchange="this.form.submit()" class="bg-transparent border-0 font-bold focus:outline-none focus:ring-0 cursor-pointer">
-      <option value="created" <%= sort === 'created' ? 'selected' : '' %>><%= t('snippets.sort_created') %></option>
-      <option value="updated" <%= sort === 'updated' ? 'selected' : '' %>><%= t('snippets.sort_updated') %></option>
-      <option value="name" <%= sort === 'name' ? 'selected' : '' %>><%= t('snippets.sort_name') %></option>
-    </select>
-    <button type="button" id="sort-dir-toggle" title="<%= dir === 'asc' ? t('snippets.sort_asc') : t('snippets.sort_desc') %>" class="opacity-60 hover:opacity-100 pl-1 border-l border-black/10 dark:border-white/10">
-      <i class="fa-solid <%= dir === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i>
+  <div class="relative">
+    <button type="button" onclick="toggleSortMenu(event)" id="sortSelectorBtn"
+      class="input-theme flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm group">
+      <i class="fa-solid fa-arrow-down-short-wide opacity-50 group-hover:opacity-100 transition-opacity"></i>
+      <span class="opacity-60 group-hover:opacity-100 transition-opacity"><%= t('snippets.sort_label') %></span>
     </button>
-  </form>
+    <div id="sort-menu"
+      class="hidden absolute right-0 left-auto top-full z-50 mt-2 w-48 card-theme rounded-xl p-2 shadow-2xl border border-black/5 dark:border-white/10">
+      <% const sortOptions = [
+        { key: 'created', label: t('snippets.sort_created'), descFirst: true },
+        { key: 'updated', label: t('snippets.sort_updated'), descFirst: true },
+        { key: 'name', label: t('snippets.sort_name'), descFirst: false }
+      ]; %>
+      <% sortOptions.forEach(opt => {
+        const isActive = currentSort.startsWith(opt.key);
+        const currentDir = isActive ? (currentSort.endsWith('_asc') ? 'asc' : 'desc') : (opt.descFirst ? 'desc' : 'asc');
+      %>
+        <button type="button" onclick="handleSort('<%= opt.key %>', '<%= currentDir %>', <%= opt.descFirst %>)"
+          class="w-full flex items-center justify-between gap-2 p-2.5 text-sm rounded-lg transition-all cursor-pointer <%= isActive ? 'bg-primary-theme/10 text-primary-theme font-semibold' : 'hover:bg-black/5 dark:hover:bg-white/5 opacity-70 hover:opacity-100' %>">
+          <span><%= opt.label %></span>
+          <% if (isActive) { %><i class="fa-solid fa-arrow-<%= currentDir === 'asc' ? 'up' : 'down' %> text-[11px]"></i><% } %>
+        </button>
+      <% }) %>
+    </div>
+  </div>
   <script>
-    document.getElementById('sort-dir-toggle').addEventListener('click', function () {
-      document.getElementById('sort-dir-input').value = '<%= dir === "asc" ? "desc" : "asc" %>';
-      document.getElementById('sort-form').submit();
+    function toggleSortMenu(e) {
+      e.stopPropagation();
+      document.getElementById('sort-menu').classList.toggle('hidden');
+    }
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('sort-menu');
+      if (!menu.classList.contains('hidden') && !menu.contains(e.target) && e.target.closest('#sortSelectorBtn') === null) {
+        menu.classList.add('hidden');
+      }
     });
+    function handleSort(key, currentDir, descFirst) {
+      const isAlreadyActive = '<%= currentSort %>'.startsWith(key);
+      const newSort = key + '_' + (isAlreadyActive ? (currentDir === 'asc' ? 'desc' : 'asc') : (descFirst ? 'desc' : 'asc'));
+      const url = new URL(window.location.href);
+      url.searchParams.set('sort', newSort);
+      window.location.href = url.toString();
+    }
   </script>
   <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
     <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
@@ -47,8 +70,7 @@
           const nextTags = checked ? activeTags.filter(t => t !== name) : [...activeTags, name];
           const params = new URLSearchParams();
           if (nextTags.length) params.set('tags', nextTags.join(','));
-          if (sort !== 'created') params.set('sort', sort);
-          if (dir !== 'desc') params.set('dir', dir);
+          if (currentSort !== 'created_desc') params.set('sort', currentSort);
           const qs = params.toString();
         %>
           <a href="<%= baseUrl %>/snippets<%= qs ? '?' + qs : '' %>"
@@ -59,13 +81,7 @@
         <% }) %>
       </form>
 
-      <%
-        const clearParams = new URLSearchParams();
-        if (sort !== 'created') clearParams.set('sort', sort);
-        if (dir !== 'desc') clearParams.set('dir', dir);
-        const clearQs = clearParams.toString();
-      %>
-      <a href="<%= baseUrl %>/snippets<%= clearQs ? '?' + clearQs : '' %>" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
+      <a href="<%= baseUrl %>/snippets<%= currentSort !== 'created_desc' ? '?sort=' + currentSort : '' %>" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
     </div>
   </aside>
 

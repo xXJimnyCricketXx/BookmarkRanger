@@ -94,9 +94,7 @@
     "sort_label": "Sort",
     "sort_created": "Created",
     "sort_updated": "Last updated",
-    "sort_name": "Name",
-    "sort_asc": "Ascending",
-    "sort_desc": "Descending"
+    "sort_name": "Name"
   },
   "snippetForm": {
     "title_add": "Add new snippet",
