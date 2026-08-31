@@ -1,8 +1,17 @@
 <% locals.activeNav = 'snippets'; %>
 <%- include('partials/header') %>
 
-<div class="flex items-center justify-end mb-6">
-  <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition">
+<div class="flex items-center justify-end gap-3 mb-6">
+  <form action="<%= baseUrl %>/snippets" method="GET">
+    <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
+    <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
+    <select name="sort" onchange="this.form.submit()" class="input-theme px-3 py-2.5 rounded-xl text-sm">
+      <option value="created" <%= sort === 'created' ? 'selected' : '' %>><%= t('snippets.sort_created') %></option>
+      <option value="updated" <%= sort === 'updated' ? 'selected' : '' %>><%= t('snippets.sort_updated') %></option>
+      <option value="alphabetical" <%= sort === 'alphabetical' ? 'selected' : '' %>><%= t('snippets.sort_alphabetical') %></option>
+    </select>
+  </form>
+  <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
     <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
   </a>
 </div>
@@ -24,8 +33,12 @@
         <% tags.forEach(([name, count]) => {
           const checked = activeTags.includes(name);
           const nextTags = checked ? activeTags.filter(t => t !== name) : [...activeTags, name];
+          const params = new URLSearchParams();
+          if (nextTags.length) params.set('tags', nextTags.join(','));
+          if (sort !== 'created') params.set('sort', sort);
+          const qs = params.toString();
         %>
-          <a href="<%= baseUrl %>/snippets<%= nextTags.length ? '?tags=' + nextTags.join(',') : '' %>"
+          <a href="<%= baseUrl %>/snippets<%= qs ? '?' + qs : '' %>"
             class="flex items-center justify-between text-sm py-1 px-2 rounded-lg transition <%= checked ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>">
             <span><%= name %></span>
             <span class="opacity-60"><%= count %></span>
@@ -33,7 +46,7 @@
         <% }) %>
       </form>
 
-      <a href="<%= baseUrl %>/snippets" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
+      <a href="<%= baseUrl %>/snippets<%= sort !== 'created' ? '?sort=' + sort : '' %>" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
     </div>
   </aside>
 

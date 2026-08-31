@@ -90,7 +90,10 @@
     "view": "View",
     "copy_code": "Copy code",
     "copied": "Copied!",
-    "add_new": "Add new snippet"
+    "add_new": "Add new snippet",
+    "sort_created": "Created",
+    "sort_updated": "Last updated",
+    "sort_alphabetical": "Alphabetical"
   },
   "snippetForm": {
     "title_add": "Add new snippet",
