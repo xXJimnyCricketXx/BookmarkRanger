@@ -3,6 +3,9 @@
 
 <div class="layout-with-sidebar">
   <aside class="sidebar">
+    <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition block text-center mb-3">
+      <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
+    </a>
     <div class="card-theme rounded-3xl shadow-lg p-5">
       <div class="mb-3">
         <h2 class="font-black text-lg"><%= t('snippets.all_snippets') %></h2>
@@ -32,14 +35,11 @@
   </aside>
 
   <div class="flex-grow">
-    <div class="flex items-center justify-end mb-6 gap-4">
-      <form action="<%= baseUrl %>/snippets" method="GET" class="w-full max-w-md">
+    <div class="mb-3">
+      <form action="<%= baseUrl %>/snippets" method="GET" class="max-w-md">
         <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
         <input type="text" name="q" value="<%= q %>" placeholder="<%= t('dashboard.search_placeholder') %>" class="input-theme w-full px-4 py-2.5 rounded-xl text-sm">
       </form>
-      <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap shrink-0">
-        <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
-      </a>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
