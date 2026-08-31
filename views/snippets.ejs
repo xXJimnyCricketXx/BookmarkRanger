@@ -28,12 +28,12 @@
   </aside>
 
   <div class="flex-grow">
-    <div class="flex items-center justify-between mb-6 gap-4">
-      <form action="<%= baseUrl %>/snippets" method="GET" class="flex-grow max-w-md">
+    <div class="flex items-center justify-end mb-6 gap-4">
+      <form action="<%= baseUrl %>/snippets" method="GET" class="w-full max-w-md">
         <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
         <input type="text" name="q" value="<%= q %>" placeholder="<%= t('dashboard.search_placeholder') %>" class="input-theme w-full px-4 py-2.5 rounded-xl text-sm">
       </form>
-      <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
+      <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap shrink-0">
         <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
       </a>
     </div>
