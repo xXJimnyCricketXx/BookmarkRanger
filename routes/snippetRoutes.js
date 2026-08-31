@@ -8,6 +8,7 @@ router.post('/', snippetController.create);
 router.post('/reorder', snippetController.reorder);
 
 router.get('/:id', snippetController.detail);
+router.get('/:id/raw', snippetController.raw);
 router.get('/:id/edit', snippetController.showEditForm);
 router.post('/:id', snippetController.update);
 router.post('/:id/delete', snippetController.delete);

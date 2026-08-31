@@ -9,17 +9,29 @@
 
   <script>
     document.addEventListener('click', async (e) => {
-      const btn = e.target.closest('.copy-code-btn');
-      if (!btn) return;
-      const id = btn.dataset.copy;
-      const source = document.getElementById('code-' + id);
-      if (!source) return;
-      try {
-        await navigator.clipboard.writeText(source.value);
-        const original = btn.textContent;
-        btn.textContent = '<%= t("snippets.copied") %>';
-        setTimeout(() => { btn.textContent = original; }, 1500);
-      } catch (err) { /* clipboard unavailable */ }
+      const copyBtn = e.target.closest('.copy-code-btn');
+      if (copyBtn) {
+        const id = copyBtn.dataset.copy;
+        const source = document.getElementById('code-' + id);
+        if (!source) return;
+        try {
+          await navigator.clipboard.writeText(source.value);
+          const original = copyBtn.textContent;
+          copyBtn.textContent = '<%= t("snippets.copied") %>';
+          setTimeout(() => { copyBtn.textContent = original; }, 1500);
+        } catch (err) { /* clipboard unavailable */ }
+        return;
+      }
+
+      const rawBtn = e.target.closest('.copy-raw-url-btn');
+      if (rawBtn) {
+        try {
+          await navigator.clipboard.writeText(new URL(rawBtn.dataset.url, window.location.origin).href);
+          const original = rawBtn.textContent;
+          rawBtn.textContent = '<%= t("snippets.copied") %>';
+          setTimeout(() => { rawBtn.textContent = original; }, 1500);
+        } catch (err) { /* clipboard unavailable */ }
+      }
     });
   </script>
 

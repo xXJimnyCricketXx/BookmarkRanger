@@ -58,6 +58,12 @@ exports.detail = async (req, res) => {
     res.render('snippet-detail', { title: snippet.title, snippet });
 };
 
+exports.raw = async (req, res) => {
+    const snippet = await prisma.snippet.findUnique({ where: { id: parseInt(req.params.id, 10) } });
+    if (!snippet) return res.status(404).send('Not found');
+    res.type('text/plain').send(snippet.code);
+};
+
 exports.create = async (req, res) => {
     const { title, shortDescription, language, code, documentation, tags } = req.body;
     const allTags = `${tags || ''},${language || ''}`;
