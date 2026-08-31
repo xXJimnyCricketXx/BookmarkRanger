@@ -5,7 +5,7 @@
 <% const showDateTime = !settings.hideDate || !settings.hideTime; %>
 <% const showWeather = !settings.hideWeather && weather; %>
 <% if (showDateTime || showWeather) { %>
-<div class="flex items-center justify-between text-xs opacity-60 mb-4">
+<div class="flex items-center justify-between text-xs opacity-60 mb-8">
   <div class="space-x-2">
     <% if (!settings.hideDate) { %><span><%= formattedDate %></span><% } %>
     <% if (!settings.hideTime) { %><span id="dashboard-clock"></span><% } %>
