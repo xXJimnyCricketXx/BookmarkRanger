@@ -2,6 +2,7 @@ const prisma = require('../config/db');
 const { getSettings } = require('../utils/settings');
 const { parseSearchQuery, bookmarkSearchWhere, snippetSearchWhere } = require('../utils/search');
 const { orderByFor } = require('../utils/sorting');
+const { greetingFor, formattedDateFor } = require('../utils/headline');
 
 exports.dashboard = async (req, res) => {
     const settings = await getSettings();
@@ -39,6 +40,8 @@ exports.dashboard = async (req, res) => {
     res.render('index', {
         title: settings.siteName,
         settings,
+        greeting: greetingFor(settings),
+        formattedDate: formattedDateFor(settings),
         pinnedBookmarks,
         pinnedSnippets,
         pinnedCategories,
