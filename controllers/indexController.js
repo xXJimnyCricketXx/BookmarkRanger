@@ -38,9 +38,18 @@ exports.dashboard = async (req, res) => {
     const searchProviders = await prisma.searchProvider.findMany({ orderBy: { name: 'asc' } });
     const provider = settings.fallbackSearchProvider;
 
-    const weather = (!settings.hideWeather && settings.weatherLat != null && settings.weatherLon != null)
+    const rawWeather = (!settings.hideWeather && settings.weatherLat != null && settings.weatherLon != null)
         ? await getCurrentWeather(settings.weatherLat, settings.weatherLon)
         : null;
+
+    const weather = rawWeather && {
+        icon: rawWeather.icon,
+        temp: settings.weatherUnit === 'fahrenheit'
+            ? Math.round(rawWeather.temperatureC * 9 / 5 + 32)
+            : Math.round(rawWeather.temperatureC),
+        unit: settings.weatherUnit === 'fahrenheit' ? '°F' : '°C',
+        extra: settings.weatherExtra === 'cloud_coverage' ? rawWeather.cloudCover : rawWeather.humidity
+    };
 
     res.render('index', {
         title: settings.siteName,

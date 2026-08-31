@@ -11,7 +11,15 @@
     <% if (!settings.hideTime) { %><span id="dashboard-clock"></span><% } %>
   </div>
   <div>
-    <% if (showWeather) { %><span><i class="fa-solid <%= weather.icon %>"></i> <%= weather.temperature %>°C</span><% } %>
+    <% if (showWeather) { %>
+    <div class="card-theme rounded-xl px-3 py-1.5 flex items-center gap-2">
+      <i class="fa-solid <%= weather.icon %> text-xl text-primary-theme"></i>
+      <div class="leading-tight">
+        <div class="font-bold"><%= weather.temp %><%= weather.unit %></div>
+        <div class="border-t border-black/10 dark:border-white/10 pt-0.5 mt-0.5 opacity-70"><%= weather.extra %>%</div>
+      </div>
+    </div>
+    <% } %>
   </div>
 </div>
 <% } %>
