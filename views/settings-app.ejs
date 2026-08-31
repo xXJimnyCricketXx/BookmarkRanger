@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<div class="layout-with-sidebar">
+  <%- include('partials/settings-nav', { active: 'app' }) %>
+
+  <div class="flex-grow max-w-xl">
+    <h2 class="text-xl font-black mb-4"><%= t('settings.app_version_title') %></h2>
+
+    <div class="card-theme rounded-xl p-5 space-y-3 text-sm">
+      <div>
+        <a href="<%= repoUrl %>" target="_blank" rel="noopener" class="font-bold text-primary-theme hover:underline">BookmarkRanger!</a>
+        <span class="opacity-60">v<%= appVersion %></span>
+      </div>
+      <div>
+        <%= t('settings.see_changelog_prefix') %> <a href="<%= repoUrl %>/blob/main/CHANGELOG.md" target="_blank" rel="noopener" class="text-primary-theme hover:underline"><%= t('settings.here') %></a>.
+      </div>
+      <div class="pt-2">
+        <button type="button" id="check-update-btn" class="input-theme px-4 py-2 rounded-xl text-sm font-bold hover:bg-black/5 dark:hover:bg-white/10 transition"><%= t('settings.check_for_updates') %></button>
+        <p id="check-update-result" class="text-xs opacity-70 mt-2"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('check-update-btn').addEventListener('click', async (e) => {
+    const btn = e.target;
+    const result = document.getElementById('check-update-result');
+    btn.disabled = true;
+    result.textContent = '<%= t("settings.checking_for_updates") %>';
+    try {
+      const res = await fetch('<%= baseUrl %>/settings/app/check-update');
+      const data = await res.json();
+      if (!data.checked) {
+        result.textContent = '<%= t("settings.update_check_failed") %>';
+      } else if (data.updateAvailable) {
+        result.textContent = '<%= t("settings.update_available") %> v' + data.latest;
+      } else {
+        result.textContent = '<%= t("settings.up_to_date") %>';
+      }
+    } catch (err) {
+      result.textContent = '<%= t("settings.update_check_failed") %>';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

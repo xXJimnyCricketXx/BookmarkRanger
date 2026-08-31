@@ -148,7 +148,7 @@ function splitList(value) {
 
 exports.showAccount = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
-    res.render('settings-account', { title: 'Einstellungen — Konto', account, repoUrl: REPO_URL, error: null, success: null });
+    res.render('settings-account', { title: 'Einstellungen — Konto', account, error: null, success: null });
 };
 
 exports.updateAccount = async (req, res) => {
@@ -156,13 +156,13 @@ exports.updateAccount = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
 
     if (!(await bcrypt.compare(currentPassword, account.passwordHash))) {
-        return res.render('settings-account', { title: 'Einstellungen — Konto', account, repoUrl: REPO_URL, error: 'account.wrong_password', success: null });
+        return res.render('settings-account', { title: 'Einstellungen — Konto', account, error: 'account.wrong_password', success: null });
     }
 
     const data = { username: username || account.username };
     if (newPassword) {
         if (newPassword !== newPasswordConfirm || newPassword.length < 6) {
-            return res.render('settings-account', { title: 'Einstellungen — Konto', account, repoUrl: REPO_URL, error: 'account.invalid_password', success: null });
+            return res.render('settings-account', { title: 'Einstellungen — Konto', account, error: 'account.invalid_password', success: null });
         }
         data.passwordHash = await bcrypt.hash(newPassword, 10);
     }
@@ -170,7 +170,11 @@ exports.updateAccount = async (req, res) => {
     const updated = await prisma.account.update({ where: { id: account.id }, data });
     req.session.username = updated.username;
 
-    res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, repoUrl: REPO_URL, error: null, success: 'account.saved' });
+    res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, error: null, success: 'account.saved' });
+};
+
+exports.showApp = (req, res) => {
+    res.render('settings-app', { title: 'Einstellungen — App', repoUrl: REPO_URL });
 };
 
 exports.checkUpdate = async (req, res) => {
