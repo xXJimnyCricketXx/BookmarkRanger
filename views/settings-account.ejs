@@ -36,26 +36,47 @@
     </div>
 
     <div class="border-t border-black/5 dark:border-white/10 pt-8">
-      <h2 class="text-xl font-black mb-4"><%= t('settings.backups_title') %></h2>
+      <h2 class="text-xl font-black mb-4"><%= t('settings.app_info_title') %></h2>
 
-      <form action="<%= baseUrl %>/settings/account/backup" method="POST" class="mb-5">
-        <button type="submit" class="bg-primary-theme font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition"><%= t('settings.create_backup') %></button>
-      </form>
-
-      <% if (backups.length === 0) { %>
-        <p class="opacity-50 text-sm"><%= t('settings.no_backups') %></p>
-      <% } else { %>
-        <ul class="space-y-2">
-          <% backups.forEach(file => { %>
-            <li class="card-theme rounded-xl px-4 py-2.5 flex items-center justify-between text-sm">
-              <span class="truncate"><%= file %></span>
-              <a href="<%= baseUrl %>/settings/account/backup/<%= file %>" class="text-primary-theme font-bold shrink-0 ml-3"><%= t('settings.download') %></a>
-            </li>
-          <% }) %>
-        </ul>
-      <% } %>
+      <div class="card-theme rounded-xl p-5 space-y-3 text-sm">
+        <div>
+          <a href="<%= repoUrl %>" target="_blank" rel="noopener" class="font-bold text-primary-theme hover:underline">BookmarkRanger</a>
+          <span class="opacity-60">v<%= appVersion %></span>
+        </div>
+        <div>
+          <a href="<%= repoUrl %>/blob/main/CHANGELOG.md" target="_blank" rel="noopener" class="text-primary-theme hover:underline"><%= t('settings.see_changelog') %></a>
+        </div>
+        <div class="pt-2">
+          <button type="button" id="check-update-btn" class="input-theme px-4 py-2 rounded-xl text-sm font-bold hover:bg-black/5 dark:hover:bg-white/10 transition"><%= t('settings.check_for_updates') %></button>
+          <p id="check-update-result" class="text-xs opacity-70 mt-2"></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('check-update-btn').addEventListener('click', async (e) => {
+    const btn = e.target;
+    const result = document.getElementById('check-update-result');
+    btn.disabled = true;
+    result.textContent = '<%= t("settings.checking_for_updates") %>';
+    try {
+      const res = await fetch('<%= baseUrl %>/settings/account/check-update');
+      const data = await res.json();
+      if (!data.checked) {
+        result.textContent = '<%= t("settings.update_check_failed") %>';
+      } else if (data.updateAvailable) {
+        result.textContent = '<%= t("settings.update_available") %> v' + data.latest;
+      } else {
+        result.textContent = '<%= t("settings.up_to_date") %>';
+      }
+    } catch (err) {
+      result.textContent = '<%= t("settings.update_check_failed") %>';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
 
 <%- include('partials/footer') %>

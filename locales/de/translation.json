@@ -108,6 +108,7 @@
     "nav_interface": "Oberfläche",
     "nav_weather": "Wetter",
     "nav_account": "Konto",
+    "nav_backups": "Backups",
     "save_changes": "Änderungen speichern",
     "go_back": "Zurück",
     "theme_title": "App-Themes",
@@ -183,6 +184,13 @@
     "backups_title": "Backups",
     "create_backup": "Backup jetzt erstellen",
     "download": "Herunterladen",
-    "no_backups": "Noch keine Backups vorhanden."
+    "no_backups": "Noch keine Backups vorhanden.",
+    "app_info_title": "App",
+    "see_changelog": "Changelog ansehen",
+    "check_for_updates": "Nach Updates suchen",
+    "checking_for_updates": "Suche nach Updates …",
+    "update_check_failed": "Konnte nicht geprüft werden.",
+    "update_available": "Update verfügbar:",
+    "up_to_date": "Du nutzt die aktuelle Version."
   }
 }
