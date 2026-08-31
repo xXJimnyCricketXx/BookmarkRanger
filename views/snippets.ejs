@@ -3,28 +3,32 @@
 
 <div class="layout-with-sidebar">
   <aside class="sidebar">
-    <div class="mb-6">
-      <h2 class="font-black text-lg"><%= t('snippets.all_snippets') %></h2>
-      <p class="text-sm opacity-60"><%= t('snippets.total') %> <%= total %></p>
-    </div>
+    <div class="card-theme rounded-3xl shadow-lg p-5">
+      <div class="mb-3">
+        <h2 class="font-black text-lg"><%= t('snippets.all_snippets') %></h2>
+        <div class="flex items-center justify-between text-sm opacity-60 mt-1">
+          <span><%= t('snippets.total') %></span>
+          <span><%= total %></span>
+        </div>
+      </div>
+      <hr class="border-black/10 dark:border-white/10 mb-4">
 
-    <h3 class="font-bold text-sm mb-3 opacity-80"><%= t('snippets.filter_by_tags') %></h3>
-    <form action="<%= baseUrl %>/snippets" method="GET" class="space-y-1 mb-4">
-      <% tags.forEach(([name, count]) => {
-        const checked = activeTags.includes(name);
-        const nextTags = checked ? activeTags.filter(t => t !== name) : [...activeTags, name];
-      %>
-        <a href="<%= baseUrl %>/snippets<%= nextTags.length ? '?tags=' + nextTags.join(',') : '' %>"
-          class="flex items-center justify-between text-sm py-1 px-2 rounded-lg transition <%= checked ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>">
-          <span><%= name %></span>
-          <span class="opacity-60"><%= count %></span>
-        </a>
-      <% }) %>
-    </form>
+      <h3 class="font-black text-lg mb-3"><%= t('snippets.filter_by_tags') %></h3>
+      <form action="<%= baseUrl %>/snippets" method="GET" class="space-y-1 mb-4">
+        <% tags.forEach(([name, count]) => {
+          const checked = activeTags.includes(name);
+          const nextTags = checked ? activeTags.filter(t => t !== name) : [...activeTags, name];
+        %>
+          <a href="<%= baseUrl %>/snippets<%= nextTags.length ? '?tags=' + nextTags.join(',') : '' %>"
+            class="flex items-center justify-between text-sm py-1 px-2 rounded-lg transition <%= checked ? 'bg-primary-theme' : 'hover:bg-black/5 dark:hover:bg-white/10 opacity-80' %>">
+            <span><%= name %></span>
+            <span class="opacity-60"><%= count %></span>
+          </a>
+        <% }) %>
+      </form>
 
-    <% if (activeTags.length) { %>
       <a href="<%= baseUrl %>/snippets" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
-    <% } %>
+    </div>
   </aside>
 
   <div class="flex-grow">
