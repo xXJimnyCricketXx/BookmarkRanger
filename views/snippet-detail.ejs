@@ -14,7 +14,7 @@
 
 <div class="flex flex-col lg:flex-row gap-6 items-start">
   <div class="flex-grow w-full max-w-[856px]">
-    <pre class="text-green-100 text-sm rounded-xl p-4 overflow-x-auto" style="background-color: #282C34;"><code><%= snippet.code %></code></pre>
+    <pre class="text-green-100 text-sm rounded-xl p-4" style="background-color: #282C34; white-space: pre-wrap; word-break: break-word;"><code><%= snippet.code %></code></pre>
     <textarea class="hidden" id="code-<%= snippet.id %>"><%= snippet.code %></textarea>
 
     <% if (snippet.documentation) { %>
