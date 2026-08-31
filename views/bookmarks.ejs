@@ -1,20 +1,21 @@
 <% locals.activeNav = 'bookmarks'; %>
 <%- include('partials/header') %>
 
-<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-8">
+<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3">
   <% boards.forEach(board => { %>
-    <div class="flex items-center">
-      <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
-      <% if (activeBoard && activeBoard.id === board.id) { %>
-        <button type="button" id="rename-board-btn" title="<%= t('bookmarks.rename_board') %>" class="opacity-40 hover:opacity-80 shrink-0"><i class="fa-solid fa-pen text-xs"></i></button>
-        <form action="<%= baseUrl %>/bookmarks/boards/<%= board.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: board.name }) %>')" class="ml-2">
-          <button type="submit" title="<%= t('bookmarks.delete') %>" class="opacity-40 hover:opacity-80 shrink-0"><i class="fa-solid fa-trash text-xs"></i></button>
-        </form>
-      <% } %>
-    </div>
+    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
   <% }) %>
   <button type="button" id="new-board-btn" class="tab-link px-4 py-3 text-lg font-bold">+</button>
 </div>
+
+<% if (activeBoard) { %>
+<div class="flex items-center gap-4 mb-8 text-xs">
+  <button type="button" id="rename-board-btn" title="<%= t('bookmarks.rename_board') %>" class="opacity-50 hover:opacity-90 flex items-center gap-1"><i class="fa-solid fa-pen"></i> <%= t('bookmarks.rename_board') %></button>
+  <form action="<%= baseUrl %>/bookmarks/boards/<%= activeBoard.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: activeBoard.name }) %>')">
+    <button type="submit" title="<%= t('bookmarks.delete') %>" class="opacity-50 hover:opacity-90 flex items-center gap-1"><i class="fa-solid fa-trash"></i> <%= t('bookmarks.delete') %></button>
+  </form>
+</div>
+<% } %>
 
 <form id="new-board-form" action="<%= baseUrl %>/bookmarks/boards" method="POST" class="hidden mb-8 flex gap-2 max-w-sm">
   <input type="text" name="name" required placeholder="<%= t('bookmarks.add_board') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm" autofocus>
