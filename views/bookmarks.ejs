@@ -3,71 +3,76 @@
 
 <div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3">
   <% boards.forEach(board => { %>
-    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
+    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" data-board-id="<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
   <% }) %>
   <button type="button" id="new-board-btn" class="tab-link px-4 py-3 text-lg font-bold">+</button>
 </div>
-
-<% if (activeBoard) { %>
-<div class="flex items-center gap-4 mb-8 text-xs">
-  <button type="button" id="rename-board-btn" title="<%= t('bookmarks.rename_board') %>" class="opacity-50 hover:opacity-90 flex items-center gap-1"><i class="fa-solid fa-pen"></i> <%= t('bookmarks.rename_board') %></button>
-  <form action="<%= baseUrl %>/bookmarks/boards/<%= activeBoard.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: activeBoard.name }) %>')">
-    <button type="submit" title="<%= t('bookmarks.delete') %>" class="opacity-50 hover:opacity-90 flex items-center gap-1"><i class="fa-solid fa-trash"></i> <%= t('bookmarks.delete') %></button>
-  </form>
-</div>
-<% } %>
 
 <form id="new-board-form" action="<%= baseUrl %>/bookmarks/boards" method="POST" class="hidden mb-8 flex gap-2 max-w-sm">
   <input type="text" name="name" required placeholder="<%= t('bookmarks.add_board') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm" autofocus>
   <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
 </form>
 
-<% if (activeBoard) { %>
-<form id="rename-board-form" action="<%= baseUrl %>/bookmarks/boards/<%= activeBoard.id %>/rename" method="POST" class="hidden mb-8 flex gap-2 max-w-sm">
-  <input type="text" name="name" required value="<%= activeBoard.name %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm" autofocus>
-  <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
-</form>
-<% } %>
-
-<% if (!activeBoard) { %>
-  <p class="opacity-50 text-sm"><%= t('bookmarks.no_boards') %></p>
-<% } else { %>
-  <% if (categories.length === 0) { %>
-    <p class="opacity-50 text-sm mb-6"><%= t('bookmarks.no_categories') %></p>
-  <% } else { %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-      <% categories.forEach(category => { %>
-        <%- include('partials/category-column', { category }) %>
-      <% }) %>
-    </div>
-  <% } %>
-
-  <button type="button" id="new-category-btn" class="text-sm font-bold flex items-center gap-2 opacity-70 hover:opacity-100">
-    <i class="fa-solid fa-plus"></i> <%= t('bookmarks.add_category') %>
-  </button>
-  <form id="new-category-form" action="<%= baseUrl %>/bookmarks/categories" method="POST" class="hidden mt-3 flex gap-2 max-w-sm">
-    <input type="hidden" name="boardId" value="<%= activeBoard.id %>">
-    <input type="text" name="name" required placeholder="<%= t('bookmarks.add_category') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm">
-    <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold">OK</button>
-  </form>
-<% } %>
+<div id="board-panel">
+  <%- include('partials/board-panel', { activeBoard, categories }) %>
+</div>
 
 <script>
   document.getElementById('new-board-btn').addEventListener('click', () => {
     document.getElementById('new-board-form').classList.toggle('hidden');
   });
-  const renameBoardBtn = document.getElementById('rename-board-btn');
-  if (renameBoardBtn) {
-    renameBoardBtn.addEventListener('click', () => {
-      document.getElementById('rename-board-form').classList.toggle('hidden');
-    });
+
+  const boardPanel = document.getElementById('board-panel');
+
+  // Event delegation: buttons/forms inside #board-panel get replaced on every board
+  // switch, so listeners bound directly to them would go stale — bind on the stable
+  // parent instead.
+  boardPanel.addEventListener('click', (e) => {
+    if (e.target.closest('.rename-board-btn')) {
+      boardPanel.querySelector('.rename-board-form').classList.toggle('hidden');
+    }
+    if (e.target.closest('.new-category-btn')) {
+      boardPanel.querySelector('.new-category-form').classList.toggle('hidden');
+    }
+  });
+  boardPanel.addEventListener('submit', (e) => {
+    const form = e.target;
+    if (form.classList.contains('delete-board-form') && !confirm(form.dataset.confirm)) {
+      e.preventDefault();
+    }
+  });
+
+  async function loadBoard(boardId, push) {
+    try {
+      const res = await fetch('<%= baseUrl %>/bookmarks/boards/' + boardId + '/panel');
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+      boardPanel.innerHTML = data.html;
+
+      document.querySelectorAll('.tab-link[data-board-id]').forEach((tab) => {
+        tab.classList.toggle('active', tab.dataset.boardId === String(boardId));
+      });
+
+      if (push) history.pushState({ boardId }, '', '<%= baseUrl %>/bookmarks?board=' + boardId);
+    } catch (err) {
+      // Fragment fetch failed (offline, server error, …) — fall back to a real navigation
+      // instead of leaving the click looking like it did nothing.
+      window.location.href = '<%= baseUrl %>/bookmarks?board=' + boardId;
+    }
   }
-  const newCategoryBtn = document.getElementById('new-category-btn');
-  if (newCategoryBtn) {
-    newCategoryBtn.addEventListener('click', () => {
-      document.getElementById('new-category-form').classList.toggle('hidden');
+
+  document.querySelectorAll('.tab-link[data-board-id]').forEach((tab) => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadBoard(tab.dataset.boardId, true);
     });
-  }
+  });
+
+  window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    const boardId = params.get('board');
+    if (boardId) loadBoard(boardId, false);
+  });
 </script>
 
 <%- include('partials/footer') %>
