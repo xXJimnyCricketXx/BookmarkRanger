@@ -2,17 +2,27 @@
 <%- include('partials/header') %>
 
 <div class="flex items-center justify-end gap-3 mb-6">
-  <form action="<%= baseUrl %>/snippets" method="GET" class="input-theme flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm">
+  <form id="sort-form" action="<%= baseUrl %>/snippets" method="GET" class="input-theme flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm">
     <% if (activeTags.length) { %><input type="hidden" name="tags" value="<%= activeTags.join(',') %>"><% } %>
     <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
+    <input type="hidden" name="dir" id="sort-dir-input" value="<%= dir %>">
     <i class="fa-solid fa-arrow-up-wide-short opacity-60"></i>
     <span class="opacity-60 whitespace-nowrap"><%= t('snippets.sort_label') %>:</span>
     <select name="sort" onchange="this.form.submit()" class="bg-transparent border-0 font-bold focus:outline-none focus:ring-0 cursor-pointer">
       <option value="created" <%= sort === 'created' ? 'selected' : '' %>><%= t('snippets.sort_created') %></option>
       <option value="updated" <%= sort === 'updated' ? 'selected' : '' %>><%= t('snippets.sort_updated') %></option>
-      <option value="alphabetical" <%= sort === 'alphabetical' ? 'selected' : '' %>><%= t('snippets.sort_alphabetical') %></option>
+      <option value="name" <%= sort === 'name' ? 'selected' : '' %>><%= t('snippets.sort_name') %></option>
     </select>
+    <button type="button" id="sort-dir-toggle" title="<%= dir === 'asc' ? t('snippets.sort_asc') : t('snippets.sort_desc') %>" class="opacity-60 hover:opacity-100 pl-1 border-l border-black/10 dark:border-white/10">
+      <i class="fa-solid <%= dir === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i>
+    </button>
   </form>
+  <script>
+    document.getElementById('sort-dir-toggle').addEventListener('click', function () {
+      document.getElementById('sort-dir-input').value = '<%= dir === "asc" ? "desc" : "asc" %>';
+      document.getElementById('sort-form').submit();
+    });
+  </script>
   <a href="<%= baseUrl %>/snippets/add" class="bg-primary-theme font-bold px-4 py-2.5 rounded-xl text-sm hover:brightness-110 transition whitespace-nowrap">
     <i class="fa-solid fa-plus mr-1"></i> <%= t('snippets.add_new') %>
   </a>
@@ -38,6 +48,7 @@
           const params = new URLSearchParams();
           if (nextTags.length) params.set('tags', nextTags.join(','));
           if (sort !== 'created') params.set('sort', sort);
+          if (dir !== 'desc') params.set('dir', dir);
           const qs = params.toString();
         %>
           <a href="<%= baseUrl %>/snippets<%= qs ? '?' + qs : '' %>"
@@ -48,7 +59,13 @@
         <% }) %>
       </form>
 
-      <a href="<%= baseUrl %>/snippets<%= sort !== 'created' ? '?sort=' + sort : '' %>" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
+      <%
+        const clearParams = new URLSearchParams();
+        if (sort !== 'created') clearParams.set('sort', sort);
+        if (dir !== 'desc') clearParams.set('dir', dir);
+        const clearQs = clearParams.toString();
+      %>
+      <a href="<%= baseUrl %>/snippets<%= clearQs ? '?' + clearQs : '' %>" class="input-theme block text-center text-sm font-bold px-3 py-2 rounded-xl"><%= t('snippets.clear_filters') %></a>
     </div>
   </aside>
 

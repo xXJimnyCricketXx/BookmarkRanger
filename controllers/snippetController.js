@@ -3,16 +3,13 @@ const prisma = require('../config/db');
 const { resolveTags } = require('../utils/tags');
 const { getSettings } = require('../utils/settings');
 
-const SNIPPET_SORTS = {
-    created: { createdAt: 'desc' },
-    updated: { updatedAt: 'desc' },
-    alphabetical: { title: 'asc' }
-};
+const SORT_FIELDS = { created: 'createdAt', updated: 'updatedAt', name: 'title' };
 
 exports.list = async (req, res) => {
     const activeTags = (req.query.tags || '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
     const q = req.query.q || '';
-    const sort = SNIPPET_SORTS[req.query.sort] ? req.query.sort : 'created';
+    const sort = SORT_FIELDS[req.query.sort] ? req.query.sort : 'created';
+    const dir = req.query.dir === 'asc' ? 'asc' : 'desc';
 
     const where = {};
     const AND = [];
@@ -28,7 +25,7 @@ exports.list = async (req, res) => {
     }
     if (AND.length) where.AND = AND;
 
-    const snippets = await prisma.snippet.findMany({ where, include: { tags: true }, orderBy: SNIPPET_SORTS[sort] });
+    const snippets = await prisma.snippet.findMany({ where, include: { tags: true }, orderBy: { [SORT_FIELDS[sort]]: dir } });
 
     const allSnippetsForTags = await prisma.snippet.findMany({ include: { tags: true } });
     const tagCounts = {};
@@ -46,7 +43,8 @@ exports.list = async (req, res) => {
         activeTags,
         total: allSnippetsForTags.length,
         q,
-        sort
+        sort,
+        dir
     });
 };
 
