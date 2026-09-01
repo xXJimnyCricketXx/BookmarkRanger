@@ -64,6 +64,15 @@
        otherwise it falls back to the browser's white default, unreadable in dark themes. */
     select option { background-color: var(--bg-card); color: var(--text-main); }
 
+    /* Native <select> arrows are drawn by the browser flush against the edge, in a fixed-width
+       area padding can't move — hide it and place a real, more subdued chevron on top instead. */
+    select.select-theme {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 2.75rem !important;
+    }
+
     .tab-link { color: var(--text-sub); border-bottom: 2px solid transparent; }
     .tab-link.active { color: var(--accent-text); border-bottom: 2px solid var(--highlight); }
 

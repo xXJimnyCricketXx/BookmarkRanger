@@ -9,11 +9,14 @@
         <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.general_section') %></h2>
         <div>
           <label class="block text-sm font-bold mb-2"><%= t('settings.general_sorting_type') %></label>
-          <select name="sortingType" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-            <option value="createdAt" <%= settings.sortingType === 'createdAt' ? 'selected' : '' %>><%= t('settings.sort_created') %></option>
-            <option value="name" <%= settings.sortingType === 'name' ? 'selected' : '' %>><%= t('settings.sort_name') %></option>
-            <option value="custom" <%= settings.sortingType === 'custom' ? 'selected' : '' %>><%= t('settings.sort_custom') %></option>
-          </select>
+          <div class="relative group">
+            <select name="sortingType" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+              <option value="createdAt" <%= settings.sortingType === 'createdAt' ? 'selected' : '' %>><%= t('settings.sort_created') %></option>
+              <option value="name" <%= settings.sortingType === 'name' ? 'selected' : '' %>><%= t('settings.sort_name') %></option>
+              <option value="custom" <%= settings.sortingType === 'custom' ? 'selected' : '' %>><%= t('settings.sort_custom') %></option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
         </div>
       </div>
 
@@ -22,26 +25,35 @@
         <div class="space-y-6">
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.general_pin_categories') %></label>
-            <select name="pinCategoriesByDefault" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.pinCategoriesByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.pinCategoriesByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="pinCategoriesByDefault" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.pinCategoriesByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.pinCategoriesByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.general_pin_bookmarks') %></label>
-            <select name="pinBookmarksByDefault" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.pinBookmarksByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.pinBookmarksByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="pinBookmarksByDefault" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.pinBookmarksByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.pinBookmarksByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.general_open_new_tab') %></label>
-            <select name="openLinksInNewTab" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="openLinksInNewTab" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.openLinksInNewTab ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -50,10 +62,13 @@
         <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.snippets_section') %></h2>
         <div>
           <label class="block text-sm font-bold mb-2"><%= t('settings.general_pin_snippets') %></label>
-          <select name="pinSnippetsByDefault" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-            <option value="true" <%= settings.pinSnippetsByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
-            <option value="false" <%= !settings.pinSnippetsByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
-          </select>
+          <div class="relative group">
+            <select name="pinSnippetsByDefault" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+              <option value="true" <%= settings.pinSnippetsByDefault ? 'selected' : '' %>><%= t('settings.true') %></option>
+              <option value="false" <%= !settings.pinSnippetsByDefault ? 'selected' : '' %>><%= t('settings.false') %></option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
         </div>
       </div>
 
@@ -61,12 +76,15 @@
         <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.search_section') %></h2>
         <div>
           <label class="block text-sm font-bold mb-2"><%= t('settings.fallback_search_provider') %></label>
-          <select name="fallbackSearchProviderId" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-            <option value=""><%= t('settings.no_fallback_search') %></option>
-            <% searchProviders.forEach(provider => { %>
-              <option value="<%= provider.id %>" <%= settings.fallbackSearchProviderId === provider.id ? 'selected' : '' %>><%= provider.name %></option>
-            <% }) %>
-          </select>
+          <div class="relative group">
+            <select name="fallbackSearchProviderId" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+              <option value=""><%= t('settings.no_fallback_search') %></option>
+              <% searchProviders.forEach(provider => { %>
+                <option value="<%= provider.id %>" <%= settings.fallbackSearchProviderId === provider.id ? 'selected' : '' %>><%= provider.name %></option>
+              <% }) %>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
           <p class="text-xs opacity-50 mt-1"><%= t('settings.fallback_search_hint') %></p>
         </div>
       </div>

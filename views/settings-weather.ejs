@@ -24,17 +24,23 @@
         <div class="space-y-6">
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.weather_unit') %></label>
-            <select name="weatherUnit" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="celsius" <%= settings.weatherUnit === 'celsius' ? 'selected' : '' %>><%= t('settings.weather_unit_celsius') %></option>
-              <option value="fahrenheit" <%= settings.weatherUnit === 'fahrenheit' ? 'selected' : '' %>><%= t('settings.weather_unit_fahrenheit') %></option>
-            </select>
+            <div class="relative group">
+              <select name="weatherUnit" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="celsius" <%= settings.weatherUnit === 'celsius' ? 'selected' : '' %>><%= t('settings.weather_unit_celsius') %></option>
+                <option value="fahrenheit" <%= settings.weatherUnit === 'fahrenheit' ? 'selected' : '' %>><%= t('settings.weather_unit_fahrenheit') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.weather_extra') %></label>
-            <select name="weatherExtra" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="humidity" <%= settings.weatherExtra === 'humidity' ? 'selected' : '' %>><%= t('settings.weather_extra_humidity') %></option>
-              <option value="cloud_coverage" <%= settings.weatherExtra === 'cloud_coverage' ? 'selected' : '' %>><%= t('settings.weather_extra_cloud_coverage') %></option>
-            </select>
+            <div class="relative group">
+              <select name="weatherExtra" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="humidity" <%= settings.weatherExtra === 'humidity' ? 'selected' : '' %>><%= t('settings.weather_extra_humidity') %></option>
+                <option value="cloud_coverage" <%= settings.weatherExtra === 'cloud_coverage' ? 'selected' : '' %>><%= t('settings.weather_extra_cloud_coverage') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
         </div>
       </div>

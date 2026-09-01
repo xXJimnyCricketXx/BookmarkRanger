@@ -18,18 +18,24 @@
         <div class="space-y-6">
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_search') %></label>
-            <select name="hideSearchBar" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideSearchBar" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideSearchBar ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_disable_autofocus') %></label>
-            <select name="disableSearchAutofocus" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.disableSearchAutofocus ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.disableSearchAutofocus ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="disableSearchAutofocus" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.disableSearchAutofocus ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.disableSearchAutofocus ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -39,34 +45,46 @@
         <div class="space-y-6">
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_headline') %></label>
-            <select name="hideHeadline" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideHeadline ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideHeadline ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideHeadline" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideHeadline ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideHeadline ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_date') %></label>
-            <select name="hideDate" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideDate ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideDate ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideDate" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideDate ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideDate ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_time') %></label>
-            <select name="hideTime" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideTime ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideTime ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideTime" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideTime ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideTime ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_date_format') %></label>
-            <select name="dateFormat" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="day-first" <%= settings.dateFormat === 'day-first' ? 'selected' : '' %>><%= t('settings.interface_date_format_day_first') %></option>
-              <option value="month-first" <%= settings.dateFormat === 'month-first' ? 'selected' : '' %>><%= t('settings.interface_date_format_month_first') %></option>
-            </select>
+            <div class="relative group">
+              <select name="dateFormat" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="day-first" <%= settings.dateFormat === 'day-first' ? 'selected' : '' %>><%= t('settings.interface_date_format_day_first') %></option>
+                <option value="month-first" <%= settings.dateFormat === 'month-first' ? 'selected' : '' %>><%= t('settings.interface_date_format_month_first') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
@@ -89,10 +107,13 @@
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_weather') %></label>
-            <select name="hideWeather" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideWeather ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideWeather ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideWeather" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideWeather ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideWeather ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -102,18 +123,24 @@
         <div class="space-y-6">
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_bookmarks') %></label>
-            <select name="hideBookmarksSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideBookmarksSection" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideBookmarksSection ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
 
           <div>
             <label class="block text-sm font-bold mb-2"><%= t('settings.interface_hide_snippets') %></label>
-            <select name="hideSnippetsSection" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-              <option value="true" <%= settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.true') %></option>
-              <option value="false" <%= !settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.false') %></option>
-            </select>
+            <div class="relative group">
+              <select name="hideSnippetsSection" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+                <option value="true" <%= settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.true') %></option>
+                <option value="false" <%= !settings.hideSnippetsSection ? 'selected' : '' %>><%= t('settings.false') %></option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
           </div>
         </div>
       </div>

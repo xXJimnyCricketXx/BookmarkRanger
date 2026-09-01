@@ -22,15 +22,18 @@
 
     <div>
       <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.category_label') %></label>
-      <select name="categoryId" required class="input-theme w-full px-4 py-3 rounded-xl text-sm">
-        <% boards.forEach(board => { %>
-          <optgroup label="<%= board.name %>">
-            <% board.categories.forEach(category => { %>
-              <option value="<%= category.id %>" <%= String(selectedCategoryId) === String(category.id) ? 'selected' : '' %>><%= category.name %></option>
-            <% }) %>
-          </optgroup>
-        <% }) %>
-      </select>
+      <div class="relative group">
+        <select name="categoryId" required class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+          <% boards.forEach(board => { %>
+            <optgroup label="<%= board.name %>">
+              <% board.categories.forEach(category => { %>
+                <option value="<%= category.id %>" <%= String(selectedCategoryId) === String(category.id) ? 'selected' : '' %>><%= category.name %></option>
+              <% }) %>
+            </optgroup>
+          <% }) %>
+        </select>
+        <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+      </div>
     </div>
 
     <div>

@@ -52,13 +52,16 @@
             class="w-full h-full bg-transparent border-0 pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-0"
             placeholder="<%= t('dashboard.search_placeholder') %>" <%= settings.disableSearchAutofocus ? '' : 'autofocus' %>>
         </div>
-        <select id="search-provider-select"
-          class="bg-transparent border-0 border-l border-black/10 dark:border-white/10 text-sm px-3 shrink-0 max-w-[8.5rem] focus:outline-none focus:ring-0 cursor-pointer">
-          <option value="local"><%= t('dashboard.local_search') %></option>
-          <% searchProviders.forEach(provider => { %>
-            <option value="<%= provider.id %>" data-template="<%= provider.queryTemplate %>"><%= provider.name %></option>
-          <% }) %>
-        </select>
+        <div class="relative group shrink-0 max-w-[8.5rem] border-l border-black/10 dark:border-white/10">
+          <select id="search-provider-select"
+            class="appearance-none bg-transparent border-0 text-sm pl-3 pr-6 py-3 w-full focus:outline-none focus:ring-0 cursor-pointer">
+            <option value="local"><%= t('dashboard.local_search') %></option>
+            <% searchProviders.forEach(provider => { %>
+              <option value="<%= provider.id %>" data-template="<%= provider.queryTemplate %>"><%= provider.name %></option>
+            <% }) %>
+          </select>
+          <i class="fa-solid fa-chevron-down text-[9px] opacity-20 group-hover:opacity-60 transition-all absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        </div>
         <button type="submit" class="bg-primary-theme px-5 text-sm font-bold hover:brightness-110 transition shrink-0"><%= t('dashboard.search_button') %></button>
       </div>
     </div>
