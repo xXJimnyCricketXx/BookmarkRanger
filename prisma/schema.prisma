@@ -76,6 +76,10 @@ model Category {
   color     String?
   order     Int        @default(0)
   isPinned  Boolean    @default(false)
+  // Separate from `order` (position within this category's own board) — the dashboard
+  // shows pinned categories from *different* boards together, so it needs its own
+  // ordering that doesn't collide with each board's independent order sequence.
+  pinnedOrder Int      @default(0)
   board     Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId   Int
   bookmarks Bookmark[]
@@ -88,6 +92,10 @@ model Bookmark {
   description   String?
   icon          String?
   order         Int       @default(0)
+  // Separate from `order` (position within this bookmark's category) — the dashboard
+  // shows pinned bookmarks from *different* categories together, so it needs its own
+  // ordering, same reasoning as Category.pinnedOrder.
+  pinnedOrder   Int       @default(0)
   clicks        Int       @default(0)
   lastVisitedAt DateTime?
   isPinned      Boolean   @default(false)
