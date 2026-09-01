@@ -49,6 +49,10 @@
           ghostClass: 'sortable-ghost',
           chosenClass: 'sortable-chosen',
           dragClass: 'sortable-drag',
+          // Some dragroots (e.g. the board tab strip) have a non-reorderable action
+          // button — like the "+" — as a plain sibling; keep it out of the drag.
+          filter: ':not(.draggable-item)',
+          preventOnFilter: false,
           onEnd: () => {
             const ids = [...root.querySelectorAll('.draggable-item')].map((el) => el.dataset.id);
             fetch(root.dataset.reorderUrl, {

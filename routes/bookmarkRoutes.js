@@ -6,6 +6,7 @@ router.get('/', bookmarkController.list);
 router.get('/boards/:id/panel', bookmarkController.boardPanel);
 
 router.post('/boards', bookmarkController.createBoard);
+router.post('/boards/reorder', bookmarkController.reorderBoards);
 router.post('/boards/:id/rename', bookmarkController.renameBoard);
 router.post('/boards/:id/delete', bookmarkController.deleteBoard);
 

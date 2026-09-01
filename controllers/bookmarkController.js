@@ -56,6 +56,12 @@ exports.createBoard = async (req, res) => {
     res.redirect(`${res.locals.baseUrl}/bookmarks`);
 };
 
+exports.reorderBoards = async (req, res) => {
+    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    await prisma.$transaction(ids.map((id, index) => prisma.board.update({ where: { id }, data: { order: index } })));
+    res.json({ ok: true });
+};
+
 exports.renameBoard = async (req, res) => {
     const { name } = req.body;
     const id = parseInt(req.params.id, 10);

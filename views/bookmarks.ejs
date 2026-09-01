@@ -1,4 +1,5 @@
 <% locals.activeNav = 'bookmarks'; %>
+<% const canDrag = settings.sortingType === 'custom'; %>
 <%- include('partials/header') %>
 
 <% if (boards.length > 0 || activeBoard) { %>
@@ -12,9 +13,9 @@
 </div>
 <% } %>
 
-<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3">
+<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/bookmarks/boards/reorder"` : "" %>>
   <% boards.forEach(board => { %>
-    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" data-board-id="<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
+    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" data-board-id="<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %> <%= canDrag ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- canDrag ? `data-id="${board.id}"` : '' %>><%= board.name %></a>
   <% }) %>
   <button type="button" id="new-board-btn" class="tab-link px-4 py-3 text-lg font-bold">+</button>
 </div>
