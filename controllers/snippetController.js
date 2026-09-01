@@ -9,7 +9,7 @@ exports.list = async (req, res) => {
     const activeTags = (req.query.tags || '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
     const q = req.query.q || '';
 
-    // Combined "field_direction" token (e.g. "created_desc"), matching VHSRanger's collection sort UX.
+    // Combined "field_direction" token (e.g. "created_desc") for the sort dropdown.
     const [sortField, sortDir] = (req.query.sort || '').split('_');
     const sort = SORT_FIELDS[sortField] ? sortField : 'created';
     const dir = sortDir === 'asc' ? 'asc' : 'desc';

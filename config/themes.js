@@ -1,8 +1,8 @@
 // Each theme defines just 4 base colors: bg (page), text (font), accent
 // (highlight/buttons/links) and header (navbar background). Everything else
 // (card, footer, subtext, contrast text) is derived automatically — see
-// utils/color.js#resolveTheme. This mirrors Flame: a theme is one fixed
-// look, not a light/dark pair with a toggle.
+// utils/color.js#resolveTheme. A theme is one fixed look, not a light/dark
+// pair with a toggle.
 const PRESETS = {
     bookmarkranger: {
         label: 'BookmarkRanger!',

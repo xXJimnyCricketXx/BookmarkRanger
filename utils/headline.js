@@ -5,7 +5,7 @@ function escapeHtml(str) {
 }
 
 // Greeting order mirrors the Custom greetings field: evening;afternoon;morning;night.
-// {username} in the custom text is swapped for the account's name, highlighted like VHSRanger's.
+// {username} in the custom text is swapped for the account's name, highlighted via CSS.
 function greetingFor(settings, username, now = new Date()) {
     const [evening, afternoon, morning, night] = settings.customGreetings.split(';').map((s) => s.trim());
     const hour = now.getHours();
