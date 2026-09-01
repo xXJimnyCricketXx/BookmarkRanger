@@ -10,6 +10,7 @@ router.post('/boards/:id/rename', bookmarkController.renameBoard);
 router.post('/boards/:id/delete', bookmarkController.deleteBoard);
 
 router.post('/categories', bookmarkController.createCategory);
+router.post('/categories/:id/rename', bookmarkController.renameCategory);
 router.post('/categories/:id/delete', bookmarkController.deleteCategory);
 router.post('/categories/:id/pin', bookmarkController.togglePinCategory);
 router.post('/categories/reorder', bookmarkController.reorderCategories);

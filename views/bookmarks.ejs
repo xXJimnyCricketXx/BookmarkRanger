@@ -49,6 +49,22 @@
         </div>
       <% }) %>
     </div>
+
+    <% if (activeBoard) { %>
+    <h3 class="text-sm font-black opacity-60 uppercase tracking-wide mt-6 mb-3"><%= t('bookmarks.manage_categories') %></h3>
+    <div id="manage-categories-list" class="space-y-2">
+      <% categories.forEach(category => { %>
+        <div class="flex items-center gap-2">
+          <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/rename" method="POST" class="flex-grow min-w-0">
+            <input type="text" name="name" value="<%= category.name %>" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
+          </form>
+          <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: category.name }) %>')">
+            <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+    <% } %>
   </div>
 </div>
 
@@ -74,6 +90,28 @@
   document.getElementById('manage-boards-close').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
   document.getElementById('manage-boards-backdrop').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
 
+  function renderCategoryRows(categories) {
+    const list = document.getElementById('manage-categories-list');
+    if (!list) return;
+    list.innerHTML = categories.map((category) => `
+      <div class="flex items-center gap-2">
+        <form action="<%= baseUrl %>/bookmarks/categories/${category.id}/rename" method="POST" class="flex-grow min-w-0">
+          <input type="text" name="name" value="${category.name}" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
+        </form>
+        <form action="<%= baseUrl %>/bookmarks/categories/${category.id}/delete" method="POST">
+          <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
+        </form>
+      </div>
+    `).join('');
+    // Delegated once on the container itself since these rows get rebuilt on every switch.
+    list.querySelectorAll('form[action*="/delete"]').forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        const name = form.querySelector('input')?.value;
+        if (!confirm('<%= t("common.confirm_delete", { name: "__NAME__" }) %>'.replace('__NAME__', name))) e.preventDefault();
+      });
+    });
+  }
+
   async function loadBoard(boardId, push) {
     try {
       const res = await fetch('<%= baseUrl %>/bookmarks/boards/' + boardId + '/panel');
@@ -81,6 +119,7 @@
       const data = await res.json();
       boardPanel.innerHTML = data.html;
       window.initDragroots(boardPanel);
+      renderCategoryRows(data.categories);
 
       document.querySelectorAll('.tab-link[data-board-id]').forEach((tab) => {
         tab.classList.toggle('active', tab.dataset.boardId === String(boardId));

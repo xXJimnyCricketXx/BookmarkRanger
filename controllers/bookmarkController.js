@@ -38,7 +38,11 @@ exports.boardPanel = async (req, res) => {
 
     res.render('partials/board-panel', { activeBoard, categories }, (err, html) => {
         if (err) return res.status(500).send('Render error');
-        res.json({ html, boardName: activeBoard.name });
+        res.json({
+            html,
+            boardName: activeBoard.name,
+            categories: categories.map((c) => ({ id: c.id, name: c.name }))
+        });
     });
 };
 
@@ -83,6 +87,17 @@ exports.createCategory = async (req, res) => {
         });
     }
     res.redirect(`${res.locals.baseUrl}/bookmarks?board=${boardId}`);
+};
+
+exports.renameCategory = async (req, res) => {
+    const { name } = req.body;
+    const id = parseInt(req.params.id, 10);
+    const category = await prisma.category.findUnique({ where: { id } });
+    if (!category) return res.redirect(`${res.locals.baseUrl}/bookmarks`);
+    if (name && name.trim()) {
+        await prisma.category.update({ where: { id }, data: { name: name.trim() } });
+    }
+    res.redirect(`${res.locals.baseUrl}/bookmarks?board=${category.boardId}`);
 };
 
 exports.deleteCategory = async (req, res) => {
