@@ -5,7 +5,7 @@
   <% if (categories.length === 0) { %>
     <p class="opacity-50 text-sm mb-6"><%= t('bookmarks.no_categories') %></p>
   <% } else { %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/bookmarks/categories/reorder"` : "" %>>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10 items-start mb-8 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/bookmarks/categories/reorder"` : "" %>>
       <% categories.forEach(category => { %>
         <%- include('category-column', { category, draggable: canDrag }) %>
       <% }) %>
