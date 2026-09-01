@@ -121,7 +121,7 @@
 <% } %>
 
 <% if (!noResults && !settings.hideBookmarksSection) { %>
-<section class="mb-20">
+<section class="mb-32 md:mb-60">
   <h2 class="text-xl font-black mb-3"><%= t('dashboard.pinned_bookmarks') %></h2>
   <div class="border-b border-black/10 dark:border-white/10 mb-8"></div>
   <% if (pinnedCategories.length === 0 && pinnedBookmarks.length === 0 && dashboardGroups.length === 0) { %>
