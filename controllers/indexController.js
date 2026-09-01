@@ -13,7 +13,7 @@ exports.dashboard = async (req, res) => {
 
     const pinnedBookmarks = q
         ? await prisma.bookmark.findMany({ where: bookmarkSearchWhere(parsed), include: { tags: true, category: true }, orderBy: { order: 'asc' } })
-        : await prisma.bookmark.findMany({ where: { isPinned: true, dashboardGroupId: null }, include: { tags: true, category: true }, orderBy: { order: 'asc' } });
+        : await prisma.bookmark.findMany({ where: { isPinned: true, dashboardGroupId: null }, include: { tags: true, category: true }, orderBy: { pinnedOrder: 'asc' } });
 
     const dashboardGroups = isSearch
         ? []
@@ -30,7 +30,7 @@ exports.dashboard = async (req, res) => {
         ? []
         : await prisma.category.findMany({
             where: { isPinned: true },
-            orderBy: { order: 'asc' },
+            orderBy: { pinnedOrder: 'asc' },
             include: { bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } } }
         });
 

@@ -154,7 +154,7 @@
                 const categoryIds = idsWithPrefix('category-');
                 persist('<%= baseUrl %>/bookmarks/reorder', { ids: bookmarkIds });
                 if (groupIds.length) persist('<%= baseUrl %>/dashboard-groups/reorder', { ids: groupIds });
-                if (categoryIds.length) persist('<%= baseUrl %>/bookmarks/categories/reorder', { ids: categoryIds });
+                if (categoryIds.length) persist('<%= baseUrl %>/bookmarks/categories/reorder-pinned', { ids: categoryIds });
               }
               return;
             }
