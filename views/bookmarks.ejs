@@ -1,5 +1,4 @@
 <% locals.activeNav = 'bookmarks'; %>
-<% const canDrag = settings.sortingType === 'custom'; %>
 <%- include('partials/header') %>
 
 <% if (boards.length > 0 || activeBoard) { %>
@@ -13,9 +12,9 @@
 </div>
 <% } %>
 
-<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3 <%= canDrag ? 'dragroot' : '' %>" <%- canDrag ? `data-reorder-url="${baseUrl}/bookmarks/boards/reorder"` : "" %>>
+<div class="flex items-center gap-1 overflow-x-auto border-b border-black/10 dark:border-white/10 mb-3">
   <% boards.forEach(board => { %>
-    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" data-board-id="<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %> <%= canDrag ? 'draggable-item cursor-grab active:cursor-grabbing' : '' %>" <%- canDrag ? `data-id="${board.id}"` : '' %>><%= board.name %></a>
+    <a href="<%= baseUrl %>/bookmarks?board=<%= board.id %>" data-board-id="<%= board.id %>" class="tab-link px-4 py-3 text-sm font-bold whitespace-nowrap <%= activeBoard && activeBoard.id === board.id ? 'active' : '' %>"><%= board.name %></a>
   <% }) %>
   <button type="button" id="new-board-btn" class="tab-link px-4 py-3 text-lg font-bold">+</button>
 </div>
@@ -38,9 +37,10 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-    <div class="space-y-2">
+    <div id="manage-boards-list" class="space-y-2">
       <% boards.forEach(board => { %>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 draggable-item" data-id="<%= board.id %>">
+          <i class="fa-solid fa-grip-vertical drag-handle text-xs opacity-30 hover:opacity-70 cursor-grab active:cursor-grabbing shrink-0" title="<%= t('dashboard.drag_handle') %>"></i>
           <form action="<%= baseUrl %>/bookmarks/boards/<%= board.id %>/rename" method="POST" class="flex-grow min-w-0">
             <input type="text" name="name" value="<%= board.name %>" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
           </form>
@@ -90,6 +90,28 @@
   if (editBoardsBtn) editBoardsBtn.addEventListener('click', () => manageBoardsModal.classList.remove('hidden'));
   document.getElementById('manage-boards-close').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
   document.getElementById('manage-boards-backdrop').addEventListener('click', () => manageBoardsModal.classList.add('hidden'));
+
+  // Boards always display in a fixed order (no "sort by name/date" mode exists for
+  // them), so reordering here isn't gated behind the "Manuelle Reihenfolge" setting
+  // the way categories/bookmarks are — it always has a visible effect.
+  const manageBoardsList = document.getElementById('manage-boards-list');
+  if (manageBoardsList) {
+    Sortable.create(manageBoardsList, {
+      animation: 150,
+      handle: '.drag-handle',
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      dragClass: 'sortable-drag',
+      onEnd: () => {
+        const ids = [...manageBoardsList.querySelectorAll('.draggable-item')].map((el) => el.dataset.id);
+        fetch('<%= baseUrl %>/bookmarks/boards/reorder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids })
+        }).then(() => window.location.reload()).catch(() => {});
+      }
+    });
+  }
 
   function renderCategoryRows(categories) {
     const list = document.getElementById('manage-categories-list');
