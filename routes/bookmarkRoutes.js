@@ -14,6 +14,7 @@ router.post('/categories/:id/rename', bookmarkController.renameCategory);
 router.post('/categories/:id/delete', bookmarkController.deleteCategory);
 router.post('/categories/:id/pin', bookmarkController.togglePinCategory);
 router.post('/categories/reorder', bookmarkController.reorderCategories);
+router.post('/categories/reorder-pinned', bookmarkController.reorderPinnedCategories);
 router.post('/reorder', bookmarkController.reorder);
 
 router.get('/add', bookmarkController.showAddForm);

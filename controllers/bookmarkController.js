@@ -109,8 +109,20 @@ exports.deleteCategory = async (req, res) => {
 exports.togglePinCategory = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const category = await prisma.category.findUnique({ where: { id } });
-    await prisma.category.update({ where: { id }, data: { isPinned: !category.isPinned } });
+    const data = { isPinned: !category.isPinned };
+    if (data.isPinned) {
+        // Newly pinned — append to the end of the dashboard's pinned order, not
+        // this category's position within its own board (see schema comment).
+        data.pinnedOrder = await prisma.category.count({ where: { isPinned: true } });
+    }
+    await prisma.category.update({ where: { id }, data });
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${category.boardId}`);
+};
+
+exports.reorderPinnedCategories = async (req, res) => {
+    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    await prisma.$transaction(ids.map((id, index) => prisma.category.update({ where: { id }, data: { pinnedOrder: index } })));
+    res.json({ ok: true });
 };
 
 exports.showAddForm = async (req, res) => {
@@ -188,7 +200,13 @@ exports.delete = async (req, res) => {
 exports.togglePin = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const bookmark = await prisma.bookmark.findUnique({ where: { id }, include: { category: true } });
-    await prisma.bookmark.update({ where: { id }, data: { isPinned: !bookmark.isPinned } });
+    const data = { isPinned: !bookmark.isPinned };
+    if (data.isPinned) {
+        // Newly pinned — append to the end of the dashboard's pinned order, not
+        // this bookmark's position within its own category (see schema comment).
+        data.pinnedOrder = await prisma.bookmark.count({ where: { isPinned: true } });
+    }
+    await prisma.bookmark.update({ where: { id }, data });
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
 };
 
@@ -215,9 +233,11 @@ exports.moveBookmark = async (req, res) => {
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
 };
 
+// Only ever called from the dashboard's pinned-bookmarks grid — reorders across
+// categories, so it writes pinnedOrder, not each bookmark's in-category `order`.
 exports.reorder = async (req, res) => {
     const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
-    await prisma.$transaction(ids.map((id, index) => prisma.bookmark.update({ where: { id }, data: { order: index } })));
+    await prisma.$transaction(ids.map((id, index) => prisma.bookmark.update({ where: { id }, data: { pinnedOrder: index } })));
     res.json({ ok: true });
 };
 
