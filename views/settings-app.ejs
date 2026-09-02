@@ -20,23 +20,29 @@
 
 <div id="changelog-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
   <div id="changelog-backdrop" class="absolute inset-0 bg-black/60"></div>
-  <div class="card-theme relative rounded-3xl shadow-xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto">
-    <div class="flex items-center justify-between mb-6">
+  <div class="card-theme relative rounded-3xl shadow-xl p-6 md:p-8 w-full max-w-3xl max-h-[85vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-8">
       <h2 class="text-sm font-black opacity-60 uppercase tracking-wide"><%= t('settings.changelog_modal_title') %></h2>
       <button type="button" id="changelog-close" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-    <div class="space-y-6">
-      <% changelog.forEach(entry => { %>
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <span class="font-black">v<%= entry.version %></span>
+    <div class="space-y-8">
+      <% changelog.forEach((entry, i) => { %>
+        <div class="<%= i > 0 ? 'pt-8 border-t border-black/10 dark:border-white/10' : '' %>">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="bg-primary-theme font-black text-xs px-3 py-1 rounded-full">v<%= entry.version %></span>
             <span class="text-xs opacity-50"><%= entry.date %></span>
+            <% if (i === 0) { %>
+              <span class="text-xs font-bold text-primary-theme"><%= t('settings.changelog_current') %></span>
+            <% } %>
           </div>
-          <ul class="list-disc list-inside space-y-1 text-sm opacity-80">
+          <ul class="space-y-2.5 text-sm opacity-80 leading-relaxed">
             <% entry.changes.forEach(change => { %>
-              <li><%= change %></li>
+              <li class="flex gap-3">
+                <i class="fa-solid fa-circle text-[5px] mt-[7px] opacity-50 shrink-0"></i>
+                <span><%= change %></span>
+              </li>
             <% }) %>
           </ul>
         </div>

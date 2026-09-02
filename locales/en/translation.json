@@ -237,6 +237,7 @@
     "no_backups": "No backups yet.",
     "app_version_title": "App version",
     "changelog_button": "View changelog",
-    "changelog_modal_title": "Changelog"
+    "changelog_modal_title": "Changelog",
+    "changelog_current": "Current"
   }
 }
