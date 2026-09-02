@@ -1,0 +1,66 @@
+<% const sharePages = locals.sharePages || []; %>
+<div id="share-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div id="share-backdrop" class="absolute inset-0 bg-black/60"></div>
+  <div class="card-theme relative rounded-3xl shadow-xl p-6 w-full max-w-sm">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-sm font-black opacity-60 uppercase tracking-wide"><%= t('share.modal_title') %></h2>
+      <button type="button" id="share-close" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <% if (sharePages.length === 0) { %>
+      <p class="text-sm opacity-60"><%= t('share.no_share_pages') %> <a href="<%= baseUrl %>/shared" class="text-primary-theme underline"><%= t('share.manage_pages_link') %></a></p>
+    <% } else { %>
+      <p id="share-hint" class="text-xs opacity-60 mb-3 hidden"><%= t('share.board_hint') %></p>
+      <div id="share-page-list" class="space-y-2 mb-5">
+        <% sharePages.forEach(page => { %>
+          <label class="flex items-center gap-3 cursor-pointer text-sm">
+            <input type="checkbox" value="<%= page.id %>" class="share-page-checkbox w-4 h-4">
+            <span class="truncate"><%= page.name %></span>
+          </label>
+        <% }) %>
+      </div>
+      <button type="button" id="share-save" class="bg-primary-theme w-full py-2 rounded-lg text-sm font-bold"><%= t('common.save') %></button>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const modal = document.getElementById('share-modal');
+    const backdrop = document.getElementById('share-backdrop');
+    const closeBtn = document.getElementById('share-close');
+    const saveBtn = document.getElementById('share-save');
+    const hint = document.getElementById('share-hint');
+    let currentType = null;
+    let currentId = null;
+    let currentMode = 'set';
+
+    window.openShareModal = function (type, id, checkedIds, mode) {
+      currentType = type;
+      currentId = id;
+      currentMode = mode || 'set';
+      document.querySelectorAll('.share-page-checkbox').forEach((cb) => {
+        cb.checked = currentMode === 'add' ? false : (checkedIds || []).includes(parseInt(cb.value, 10));
+      });
+      if (hint) hint.classList.toggle('hidden', currentMode !== 'add');
+      modal.classList.remove('hidden');
+    };
+
+    function close() { modal.classList.add('hidden'); }
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (backdrop) backdrop.addEventListener('click', close);
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        const ids = [...document.querySelectorAll('.share-page-checkbox:checked')].map((cb) => parseInt(cb.value, 10));
+        fetch('<%= baseUrl %>/shared/items/' + currentType + '/' + currentId, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids, mode: currentMode })
+        }).then(() => { close(); window.location.reload(); }).catch(() => {});
+      });
+    }
+  })();
+</script>

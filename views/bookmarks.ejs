@@ -44,6 +44,7 @@
           <form action="<%= baseUrl %>/bookmarks/boards/<%= board.id %>/rename" method="POST" class="flex-grow min-w-0">
             <input type="text" name="name" value="<%= board.name %>" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
           </form>
+          <button type="button" onclick="openShareModal('board', <%= board.id %>, [], 'add')" title="<%= t('share.share_tooltip') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10"><i class="fa-solid fa-share-nodes text-xs opacity-60"></i></button>
           <form action="<%= baseUrl %>/bookmarks/boards/<%= board.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: board.name }) %>')">
             <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
           </form>
@@ -59,6 +60,7 @@
           <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/rename" method="POST" class="flex-grow min-w-0">
             <input type="text" name="name" value="<%= category.name %>" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
           </form>
+          <button type="button" onclick="openShareModal('category', <%= category.id %>, [<%= category.sharePages.map(sp => sp.id).join(',') %>], 'set')" title="<%= t('share.share_tooltip') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10"><i class="fa-solid fa-share-nodes text-xs opacity-60"></i></button>
           <form action="<%= baseUrl %>/bookmarks/categories/<%= category.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: category.name }) %>')">
             <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
           </form>
@@ -68,6 +70,8 @@
     <% } %>
   </div>
 </div>
+
+<%- include('partials/share-modal', { sharePages }) %>
 
 <script>
   document.getElementById('new-board-btn').addEventListener('click', () => {
@@ -121,6 +125,7 @@
         <form action="<%= baseUrl %>/bookmarks/categories/${category.id}/rename" method="POST" class="flex-grow min-w-0">
           <input type="text" name="name" value="${category.name}" onchange="this.form.submit()" class="input-theme w-full px-3 py-2 rounded-lg text-sm">
         </form>
+        <button type="button" onclick="openShareModal('category', ${category.id}, [${(category.sharePageIds || []).join(',')}], 'set')" title="<%= t('share.share_tooltip') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10"><i class="fa-solid fa-share-nodes text-xs opacity-60"></i></button>
         <form action="<%= baseUrl %>/bookmarks/categories/${category.id}/delete" method="POST">
           <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
         </form>

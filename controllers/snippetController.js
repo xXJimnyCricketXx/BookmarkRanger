@@ -29,7 +29,11 @@ exports.list = async (req, res) => {
     }
     if (AND.length) where.AND = AND;
 
-    const snippets = await prisma.snippet.findMany({ where, include: { tags: true }, orderBy: { [SORT_FIELDS[sort]]: dir } });
+    const snippets = await prisma.snippet.findMany({
+        where,
+        include: { tags: true, sharePages: { select: { id: true } } },
+        orderBy: { [SORT_FIELDS[sort]]: dir }
+    });
 
     const allSnippetsForTags = await prisma.snippet.findMany({ include: { tags: true } });
     const tagCounts = {};
@@ -40,6 +44,8 @@ exports.list = async (req, res) => {
     }
     const tags = Object.entries(tagCounts).sort((a, b) => a[0].localeCompare(b[0]));
 
+    const sharePages = await prisma.sharePage.findMany({ orderBy: { order: 'asc' }, select: { id: true, name: true } });
+
     res.render('snippets', {
         title: 'Snippets',
         snippets,
@@ -47,7 +53,8 @@ exports.list = async (req, res) => {
         activeTags,
         total: allSnippetsForTags.length,
         q,
-        currentSort
+        currentSort,
+        sharePages
     });
 };
 
@@ -61,14 +68,19 @@ exports.showEditForm = async (req, res) => {
 };
 
 exports.detail = async (req, res) => {
-    const snippet = await prisma.snippet.findUnique({ where: { id: parseInt(req.params.id, 10) }, include: { tags: true } });
+    const snippet = await prisma.snippet.findUnique({
+        where: { id: parseInt(req.params.id, 10) },
+        include: { tags: true, sharePages: { select: { id: true } } }
+    });
     if (!snippet) return res.status(404).render('404', { title: '404' });
 
     const highlighted = hljs.getLanguage(snippet.language)
         ? hljs.highlight(snippet.code, { language: snippet.language })
         : hljs.highlightAuto(snippet.code);
 
-    res.render('snippet-detail', { title: snippet.title, snippet, highlightedCode: highlighted.value });
+    const sharePages = await prisma.sharePage.findMany({ orderBy: { order: 'asc' }, select: { id: true, name: true } });
+
+    res.render('snippet-detail', { title: snippet.title, snippet, highlightedCode: highlighted.value, sharePages });
 };
 
 exports.raw = async (req, res) => {

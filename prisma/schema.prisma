@@ -83,6 +83,9 @@ model Category {
   board     Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId   Int
   bookmarks Bookmark[]
+  // Which public share pages this category (and its bookmarks) is published on,
+  // independent of whether/where it's pinned on the personal dashboard.
+  sharePages SharePage[] @relation("SharePageCategories")
 }
 
 model Bookmark {
@@ -133,6 +136,20 @@ model Snippet {
   tags             Tag[]    @relation("SnippetTags")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  sharePages       SharePage[] @relation("SharePageSnippets")
+}
+
+// A named, publicly reachable page (no login required) showing a curated set of
+// categories and snippets — independent of the personal dashboard, and independent
+// of each other, so the same item can be published to several different audiences.
+model SharePage {
+  id         Int        @id @default(autoincrement())
+  name       String
+  token      String     @unique
+  order      Int        @default(0)
+  createdAt  DateTime   @default(now())
+  categories Category[] @relation("SharePageCategories")
+  snippets   Snippet[]  @relation("SharePageSnippets")
 }
 
 model Tag {

@@ -1,0 +1,69 @@
+<% locals.activeNav = 'shared'; %>
+<%- include('partials/header') %>
+
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-2xl font-black mb-2"><%= t('share.management_title') %></h1>
+  <p class="text-sm opacity-60 mb-8"><%= t('share.intro') %></p>
+
+  <form action="<%= baseUrl %>/shared" method="POST" class="flex gap-2 mb-10 max-w-sm">
+    <input type="text" name="name" required placeholder="<%= t('share.name_placeholder') %>" class="input-theme flex-grow px-3 py-2 rounded-lg text-sm">
+    <button type="submit" class="bg-primary-theme px-4 py-2 rounded-lg text-sm font-bold whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i><%= t('share.create_button') %></button>
+  </form>
+
+  <% if (pages.length === 0) { %>
+    <p class="text-sm opacity-50"><%= t('share.no_pages') %></p>
+  <% } %>
+
+  <div class="space-y-6">
+    <% pages.forEach(page => { %>
+      <div class="card-theme rounded-3xl shadow-lg p-6">
+        <div class="flex items-center justify-between gap-3 mb-1">
+          <form action="<%= baseUrl %>/shared/<%= page.id %>/rename" method="POST" class="flex-grow min-w-0">
+            <input type="text" name="name" value="<%= page.name %>" onchange="this.form.submit()" class="input-theme font-black text-lg px-2 py-1 rounded-lg w-full max-w-xs">
+          </form>
+          <form action="<%= baseUrl %>/shared/<%= page.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: page.name }) %>')">
+            <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
+          </form>
+        </div>
+
+        <div class="flex items-center gap-2 mb-6 text-xs opacity-60">
+          <span class="truncate"><%= baseUrl %>/s/<%= page.token %></span>
+          <button type="button" class="copy-share-url-btn text-primary-theme font-bold shrink-0" data-url="/s/<%= page.token %>"><%= t('share.copy_url') %></button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-black uppercase text-xs tracking-wide opacity-60 mb-3 pb-1 border-b border-current"><%= t('share.categories_heading') %></h3>
+            <% if (page.categories.length === 0) { %>
+              <p class="text-xs opacity-40"><%= t('share.no_categories') %></p>
+            <% } %>
+            <% page.categories.forEach(category => { %>
+              <div class="flex items-center justify-between gap-2 py-1 text-sm">
+                <span class="truncate"><%= category.name %></span>
+                <form action="<%= baseUrl %>/shared/<%= page.id %>/categories/<%= category.id %>/remove" method="POST">
+                  <button type="submit" title="<%= t('share.remove') %>"><i class="fa-solid fa-xmark text-xs opacity-40 hover:opacity-80"></i></button>
+                </form>
+              </div>
+            <% }) %>
+          </div>
+          <div>
+            <h3 class="font-black uppercase text-xs tracking-wide opacity-60 mb-3 pb-1 border-b border-current"><%= t('share.snippets_heading') %></h3>
+            <% if (page.snippets.length === 0) { %>
+              <p class="text-xs opacity-40"><%= t('share.no_snippets') %></p>
+            <% } %>
+            <% page.snippets.forEach(snippet => { %>
+              <div class="flex items-center justify-between gap-2 py-1 text-sm">
+                <span class="truncate"><%= snippet.title %></span>
+                <form action="<%= baseUrl %>/shared/<%= page.id %>/snippets/<%= snippet.id %>/remove" method="POST">
+                  <button type="submit" title="<%= t('share.remove') %>"><i class="fa-solid fa-xmark text-xs opacity-40 hover:opacity-80"></i></button>
+                </form>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

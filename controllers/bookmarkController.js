@@ -8,13 +8,17 @@ async function categoriesFor(boardId, settings) {
     return prisma.category.findMany({
         where: { boardId },
         orderBy: { order: 'asc' },
-        include: { bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } } }
+        include: {
+            bookmarks: { orderBy: orderByFor(settings.sortingType), include: { tags: true } },
+            sharePages: { select: { id: true } }
+        }
     });
 }
 
 exports.list = async (req, res) => {
     const settings = await getSettings();
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' } });
+    const sharePages = await prisma.sharePage.findMany({ orderBy: { order: 'asc' }, select: { id: true, name: true } });
 
     let activeBoard = null;
     if (boards.length) {
@@ -24,7 +28,7 @@ exports.list = async (req, res) => {
 
     const categories = activeBoard ? await categoriesFor(activeBoard.id, settings) : [];
 
-    res.render('bookmarks', { title: 'Lesezeichen', boards, activeBoard, categories });
+    res.render('bookmarks', { title: 'Lesezeichen', boards, activeBoard, categories, sharePages });
 };
 
 // Renders just the board panel (toolbar + categories) so the board tabs can swap boards
@@ -41,7 +45,7 @@ exports.boardPanel = async (req, res) => {
         res.json({
             html,
             boardName: activeBoard.name,
-            categories: categories.map((c) => ({ id: c.id, name: c.name }))
+            categories: categories.map((c) => ({ id: c.id, name: c.name, sharePageIds: c.sharePages.map((sp) => sp.id) }))
         });
     });
 };

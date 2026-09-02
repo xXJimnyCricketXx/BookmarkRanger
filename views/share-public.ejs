@@ -1,0 +1,131 @@
+<%
+  const theme = locals.theme;
+  const isDark = typeof locals.isDark !== 'undefined' ? locals.isDark : theme.isDarkBg;
+  const logoVariant = locals.logoVariant || 'light';
+  const langColors = {
+    python: 'bg-amber-500', javascript: 'bg-yellow-400 text-black', typescript: 'bg-blue-600',
+    sql: 'bg-teal-500', java: 'bg-red-500', html: 'bg-orange-500', css: 'bg-sky-500',
+    php: 'bg-indigo-500', bash: 'bg-slate-500', shell: 'bg-slate-500', go: 'bg-cyan-600',
+    rust: 'bg-orange-700', csharp: 'bg-purple-600', c: 'bg-gray-500', cpp: 'bg-gray-600'
+  };
+%>
+<!DOCTYPE html>
+<html lang="<%= currentLng %>" class="<%= isDark ? 'dark' : '' %>">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= page.name %> — <%= settings.siteName %></title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/hljs-atom-one-dark.min.css">
+  <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
+
+  <style>
+    :root {
+        --bg-page: <%= theme.bg %>;
+        --bg-card: <%= theme.card %>;
+        --bg-nav: <%= theme.navbar %>;
+        --text-main: <%= theme.text %>;
+        --text-sub: <%= theme.subtext %>;
+        --highlight: <%= theme.highlight %>;
+        --highlight-text: <%= theme.highlightText %>;
+        --nav-text: <%= theme.navText %>;
+        --accent-text: <%= theme.accentText %>;
+        --bg-footer: <%= theme.footer %>;
+        --footer-text: <%= theme.footerText %>;
+        --border-color: <%= theme.isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' %>;
+    }
+    html, body { margin: 0; padding: 0; }
+    body { background-color: var(--bg-page) !important; color: var(--text-main) !important; }
+    .nav-custom { background-color: var(--bg-nav) !important; border-bottom: 1px solid var(--border-color); color: var(--nav-text) !important; }
+    .footer-custom { background-color: var(--bg-footer) !important; border-top: 1px solid var(--border-color); color: var(--footer-text) !important; }
+    .text-primary-theme { color: var(--accent-text) !important; }
+    .bg-primary-theme { background-color: var(--highlight) !important; color: var(--highlight-text) !important; }
+    .card-theme { background-color: var(--bg-card) !important; border: 1px solid var(--border-color); color: var(--text-main) !important; }
+  </style>
+</head>
+<body class="font-sans transition-colors duration-300 min-h-screen flex flex-col">
+
+  <nav class="nav-custom">
+    <div class="w-full flex items-center px-6 py-4">
+      <img src="<%= baseUrl %>/ressources/bookmarkranger-logo-mono-<%= logoVariant %>.png" alt="BookmarkRanger!" class="w-40 h-auto">
+    </div>
+  </nav>
+
+  <main class="p-6 flex-grow w-full max-w-[1440px] mx-auto">
+    <h1 class="text-2xl font-black mb-10 text-center"><%= page.name %></h1>
+
+    <% if (page.categories.length === 0 && snippets.length === 0) { %>
+      <p class="text-sm opacity-50 text-center"><%= t('share.public_page_empty') %></p>
+    <% } %>
+
+    <% if (page.categories.length > 0) { %>
+      <h2 class="text-xl font-black mb-3"><%= t('nav.bookmarks') %></h2>
+      <div class="border-b border-black/10 dark:border-white/10 mb-8"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10 items-start mb-16">
+        <% page.categories.forEach(category => { %>
+          <div>
+            <h3 class="font-black text-primary-theme uppercase text-xs tracking-wide truncate mb-3 pb-1 border-b border-current"><%= category.name %></h3>
+            <% if (category.bookmarks.length === 0) { %>
+              <p class="text-xs opacity-40">—</p>
+            <% } %>
+            <% category.bookmarks.forEach(bookmark => { %>
+              <div class="py-1.5">
+                <a href="<%= bookmark.url %>" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm hover:text-primary-theme transition-colors truncate min-w-0">
+                  <% if (bookmark.icon) { %>
+                    <img src="<%= baseUrl %><%= bookmark.icon %>" class="w-4 h-4 rounded-sm shrink-0" alt="">
+                  <% } else { %>
+                    <i class="fa-solid fa-link text-xs opacity-50 w-4 text-center shrink-0"></i>
+                  <% } %>
+                  <span class="truncate"><%= bookmark.title %></span>
+                </a>
+              </div>
+            <% }) %>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <% if (snippets.length > 0) { %>
+      <h2 class="text-xl font-black mb-3"><%= t('nav.snippets') %></h2>
+      <div class="border-b border-black/10 dark:border-white/10 mb-8"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% snippets.forEach(snippet => { %>
+          <div class="card-theme rounded-3xl shadow-xl p-5 flex flex-col">
+            <div class="flex items-start justify-between mb-2">
+              <span class="font-black text-lg leading-tight"><%= snippet.title %></span>
+            </div>
+            <span class="inline-block <%= langColors[snippet.language] || 'bg-gray-500' %> text-white text-[11px] font-bold px-2 py-0.5 rounded w-fit mb-3"><%= snippet.language %></span>
+            <% if (snippet.shortDescription) { %>
+              <p class="text-sm opacity-70 mb-4"><%= snippet.shortDescription %></p>
+            <% } %>
+            <button type="button" class="snippet-toggle-btn text-sm font-bold px-3 py-2 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition mb-3" data-target="code-<%= snippet.id %>"><%= t('share.view_code') %></button>
+            <pre id="code-<%= snippet.id %>" class="hidden text-xs rounded-xl overflow-hidden" style="white-space: pre-wrap; word-break: break-word;"><code class="hljs language-<%= snippet.language %>"><%- snippet.highlightedCode %></code></pre>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+
+  <footer class="mt-auto footer-custom">
+    <div class="max-w-screen-xl mx-auto py-5 px-4 text-center text-xs">
+      <span class="opacity-60"><%= t('footer.powered_by_prefix') %></span>
+      <a href="https://cricketcode.de" target="_blank" rel="noopener" class="text-primary-theme hover:underline">CricketCode Web Solutions</a>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.snippet-toggle-btn');
+      if (!btn) return;
+      const block = document.getElementById(btn.dataset.target);
+      if (!block) return;
+      const hidden = block.classList.toggle('hidden');
+      btn.textContent = hidden ? '<%= t("share.view_code") %>' : '<%= t("share.hide_code") %>';
+    });
+  </script>
+</body>
+</html>

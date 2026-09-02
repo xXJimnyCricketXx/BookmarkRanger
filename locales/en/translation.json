@@ -3,6 +3,7 @@
     "home": "Home",
     "bookmarks": "Bookmarks",
     "snippets": "Snippets",
+    "shared": "Shared Content",
     "settings": "Settings",
     "logout": "Log out",
     "login": "Log in"
@@ -12,7 +13,31 @@
   },
   "common": {
     "confirm_delete": "Really delete \"{{name}}\"?",
-    "confirm_dissolve_group": "Really dissolve \"{{name}}\"?"
+    "confirm_dissolve_group": "Really dissolve \"{{name}}\"?",
+    "save": "Save",
+    "copied": "Copied!"
+  },
+  "share": {
+    "management_title": "Shared Content",
+    "intro": "Create as many named pages as you like, each reachable via its own URL without login. Use the share icon on boards, categories and snippets to choose which pages they appear on.",
+    "create_button": "New page",
+    "name_placeholder": "e.g. Marketing Team",
+    "no_pages": "No shared pages yet.",
+    "public_url": "Public URL",
+    "copy_url": "Copy URL",
+    "categories_heading": "Categories",
+    "snippets_heading": "Snippets",
+    "no_categories": "No categories on this page yet.",
+    "no_snippets": "No snippets on this page yet.",
+    "remove": "Remove",
+    "modal_title": "Share",
+    "no_share_pages": "No shared pages yet.",
+    "manage_pages_link": "Manage pages",
+    "board_hint": "Adds all of this board's categories to the selected pages.",
+    "share_tooltip": "Share",
+    "public_page_empty": "This page has no content yet.",
+    "view_code": "View code",
+    "hide_code": "Hide code"
   },
   "login": {
     "title": "Log in",

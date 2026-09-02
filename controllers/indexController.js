@@ -23,8 +23,8 @@ exports.dashboard = async (req, res) => {
         });
 
     const pinnedSnippets = q
-        ? await prisma.snippet.findMany({ where: snippetSearchWhere(parsed), include: { tags: true }, orderBy: { createdAt: 'desc' } })
-        : await prisma.snippet.findMany({ where: { isPinned: true }, include: { tags: true }, orderBy: { createdAt: 'desc' } });
+        ? await prisma.snippet.findMany({ where: snippetSearchWhere(parsed), include: { tags: true, sharePages: { select: { id: true } } }, orderBy: { createdAt: 'desc' } })
+        : await prisma.snippet.findMany({ where: { isPinned: true }, include: { tags: true, sharePages: { select: { id: true } } }, orderBy: { createdAt: 'desc' } });
 
     const pinnedCategories = isSearch
         ? []
@@ -36,6 +36,7 @@ exports.dashboard = async (req, res) => {
 
     const noResults = isSearch && pinnedBookmarks.length === 0 && pinnedSnippets.length === 0;
     const searchProviders = await prisma.searchProvider.findMany({ orderBy: { name: 'asc' } });
+    const sharePages = await prisma.sharePage.findMany({ orderBy: { order: 'asc' }, select: { id: true, name: true } });
     const provider = settings.fallbackSearchProvider;
 
     const rawWeather = (!settings.hideWeather && settings.weatherLat != null && settings.weatherLon != null)
@@ -65,6 +66,7 @@ exports.dashboard = async (req, res) => {
         isSearch,
         noResults,
         searchProviders,
+        sharePages,
         fallbackSearchHref: noResults && provider ? provider.queryTemplate + encodeURIComponent(q) : null
     });
 };

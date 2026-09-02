@@ -3,6 +3,7 @@
     "home": "Home",
     "bookmarks": "Lesezeichen",
     "snippets": "Snippets",
+    "shared": "Geteilte Inhalte",
     "settings": "Einstellungen",
     "logout": "Abmelden",
     "login": "Anmelden"
@@ -12,7 +13,31 @@
   },
   "common": {
     "confirm_delete": "\"{{name}}\" wirklich löschen?",
-    "confirm_dissolve_group": "\"{{name}}\" wirklich auflösen?"
+    "confirm_dissolve_group": "\"{{name}}\" wirklich auflösen?",
+    "save": "Speichern",
+    "copied": "Kopiert!"
+  },
+  "share": {
+    "management_title": "Geteilte Inhalte",
+    "intro": "Lege beliebig viele benannte Seiten an, die ohne Login über eine eigene URL erreichbar sind. Über das Teilen-Icon bei Boards, Kategorien und Snippets wählst du aus, auf welchen Seiten sie erscheinen sollen.",
+    "create_button": "Neue Seite",
+    "name_placeholder": "z. B. Team Marketing",
+    "no_pages": "Noch keine geteilten Seiten angelegt.",
+    "public_url": "Öffentliche URL",
+    "copy_url": "URL kopieren",
+    "categories_heading": "Kategorien",
+    "snippets_heading": "Snippets",
+    "no_categories": "Noch keine Kategorien auf dieser Seite.",
+    "no_snippets": "Noch keine Snippets auf dieser Seite.",
+    "remove": "Entfernen",
+    "modal_title": "Teilen",
+    "no_share_pages": "Noch keine geteilten Seiten vorhanden.",
+    "manage_pages_link": "Seiten verwalten",
+    "board_hint": "Fügt alle Kategorien dieses Boards zu den ausgewählten Seiten hinzu.",
+    "share_tooltip": "Teilen",
+    "public_page_empty": "Diese Seite enthält noch keine Inhalte.",
+    "view_code": "Code anzeigen",
+    "hide_code": "Code ausblenden"
   },
   "login": {
     "title": "Anmelden",

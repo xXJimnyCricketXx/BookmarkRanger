@@ -16,6 +16,8 @@ const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const snippetRoutes = require('./routes/snippetRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
 const dashboardGroupRoutes = require('./routes/dashboardGroupRoutes');
+const sharePageRoutes = require('./routes/sharePageRoutes');
+const sharePageController = require('./controllers/sharePageController');
 
 const PRESETS = require('./config/themes');
 const prisma = require('./config/db');
@@ -73,11 +75,14 @@ app.use(ensureSetup);
 
 app.use('/setup', setupRoutes);
 app.use('/', authRoutes);
+// Public, unauthenticated share pages — reachable via their own URL, no login required.
+app.get('/s/:token', sharePageController.publicView);
 app.use('/', requireAuth, indexRoutes);
 app.use('/bookmarks', requireAuth, bookmarkRoutes);
 app.use('/snippets', requireAuth, snippetRoutes);
 app.use('/settings', requireAuth, settingsRoutes);
 app.use('/dashboard-groups', requireAuth, dashboardGroupRoutes);
+app.use('/shared', requireAuth, sharePageRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 

@@ -31,6 +31,17 @@
           rawBtn.textContent = '<%= t("snippets.copied") %>';
           setTimeout(() => { rawBtn.textContent = original; }, 1500);
         } catch (err) { /* clipboard unavailable */ }
+        return;
+      }
+
+      const shareUrlBtn = e.target.closest('.copy-share-url-btn');
+      if (shareUrlBtn) {
+        try {
+          await navigator.clipboard.writeText(new URL(shareUrlBtn.dataset.url, window.location.origin).href);
+          const original = shareUrlBtn.textContent;
+          shareUrlBtn.textContent = '<%= t("common.copied") %>';
+          setTimeout(() => { shareUrlBtn.textContent = original; }, 1500);
+        } catch (err) { /* clipboard unavailable */ }
       }
     });
   </script>

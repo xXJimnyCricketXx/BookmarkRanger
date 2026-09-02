@@ -72,10 +72,13 @@
         <button type="submit" class="w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition"><%= t('snippetDetail.delete') %></button>
       </form>
       <a href="<%= baseUrl %>/snippets/<%= snippet.id %>/edit" class="block text-center text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><%= t('snippetDetail.edit') %></a>
+      <button type="button" onclick="openShareModal('snippet', <%= snippet.id %>, [<%= snippet.sharePages.map(sp => sp.id).join(',') %>], 'set')" class="w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition"><i class="fa-solid fa-share-nodes mr-1"></i> <%= t('share.share_tooltip') %></button>
       <button type="button" class="copy-raw-url-btn w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition" data-url="<%= baseUrl %>/snippets/<%= snippet.id %>/raw"><%= t('snippetDetail.copy_raw_url') %></button>
       <button type="button" data-copy="<%= snippet.id %>" class="copy-code-btn w-full text-sm font-bold px-4 py-2.5 rounded-xl bg-primary-theme hover:brightness-110 transition"><%= t('snippets.copy_code') %></button>
     </div>
   </div>
 </div>
+
+<%- include('partials/share-modal', { sharePages }) %>
 
 <%- include('partials/footer') %>
