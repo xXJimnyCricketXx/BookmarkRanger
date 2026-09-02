@@ -3,4 +3,3 @@ node_modules
 .env
 data
 backups
-public/uploads
