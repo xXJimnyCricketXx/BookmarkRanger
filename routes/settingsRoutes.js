@@ -26,7 +26,6 @@ router.get('/account', settingsController.showAccount);
 router.post('/account', settingsController.updateAccount);
 
 router.get('/app', settingsController.showApp);
-router.get('/app/check-update', settingsController.checkUpdate);
 
 router.get('/backups', settingsController.showBackups);
 router.post('/backups', settingsController.createBackup);

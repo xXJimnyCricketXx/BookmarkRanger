@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 const PRESETS = require('../config/themes');
 const { getSettings } = require('../utils/settings');
-const { checkForUpdate } = require('../utils/updateCheck');
 const { getChangelog } = require('../utils/changelog');
 
 const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
@@ -186,11 +185,6 @@ exports.updateAccount = async (req, res) => {
 
 exports.showApp = (req, res) => {
     res.render('settings-app', { title: 'Einstellungen — App', repoUrl: REPO_URL, changelog: getChangelog() });
-};
-
-exports.checkUpdate = async (req, res) => {
-    const result = await checkForUpdate(res.locals.appVersion);
-    res.json(result);
 };
 
 exports.showBackups = (req, res) => {

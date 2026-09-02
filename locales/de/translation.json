@@ -237,11 +237,6 @@
     "no_backups": "Noch keine Backups vorhanden.",
     "app_version_title": "App-Version",
     "changelog_button": "Changelog anzeigen",
-    "changelog_modal_title": "Changelog",
-    "check_for_updates": "Nach Updates suchen",
-    "checking_for_updates": "Suche nach Updates …",
-    "update_check_failed": "Konnte nicht geprüft werden.",
-    "update_available": "Update verfügbar:",
-    "up_to_date": "Du nutzt die aktuelle Version."
+    "changelog_modal_title": "Changelog"
   }
 }

@@ -14,10 +14,6 @@
       <div>
         <button type="button" id="changelog-btn" class="text-primary-theme hover:underline"><%= t('settings.changelog_button') %></button>
       </div>
-      <div class="pt-2">
-        <button type="button" id="check-update-btn" class="input-theme px-4 py-2 rounded-xl text-sm font-bold hover:bg-black/5 dark:hover:bg-white/10 transition"><%= t('settings.check_for_updates') %></button>
-        <p id="check-update-result" class="text-xs opacity-70 mt-2"></p>
-      </div>
     </div>
   </div>
 </div>
@@ -54,30 +50,6 @@
   document.getElementById('changelog-btn').addEventListener('click', () => changelogModal.classList.remove('hidden'));
   document.getElementById('changelog-close').addEventListener('click', () => changelogModal.classList.add('hidden'));
   document.getElementById('changelog-backdrop').addEventListener('click', () => changelogModal.classList.add('hidden'));
-</script>
-
-<script>
-  document.getElementById('check-update-btn').addEventListener('click', async (e) => {
-    const btn = e.target;
-    const result = document.getElementById('check-update-result');
-    btn.disabled = true;
-    result.textContent = '<%= t("settings.checking_for_updates") %>';
-    try {
-      const res = await fetch('<%= baseUrl %>/settings/app/check-update');
-      const data = await res.json();
-      if (!data.checked) {
-        result.textContent = '<%= t("settings.update_check_failed") %>';
-      } else if (data.updateAvailable) {
-        result.textContent = '<%= t("settings.update_available") %> v' + data.latest;
-      } else {
-        result.textContent = '<%= t("settings.up_to_date") %>';
-      }
-    } catch (err) {
-      result.textContent = '<%= t("settings.update_check_failed") %>';
-    } finally {
-      btn.disabled = false;
-    }
-  });
 </script>
 
 <%- include('partials/footer') %>
