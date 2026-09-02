@@ -17,6 +17,17 @@
         </div>
 
         <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.account_language') %></label>
+          <div class="relative group">
+            <select name="language" class="select-theme input-theme w-full px-4 py-3 rounded-xl text-sm cursor-pointer">
+              <option value="de" <%= account.language === 'de' ? 'selected' : '' %>><%= t('settings.account_language_de') %></option>
+              <option value="en" <%= account.language === 'en' ? 'selected' : '' %>><%= t('settings.account_language_en') %></option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[10px] opacity-20 group-hover:opacity-60 transition-all absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+        </div>
+
+        <div>
           <label class="block text-sm font-bold mb-2"><%= t('settings.account_current_password') %></label>
           <input type="password" name="currentPassword" required class="input-theme w-full px-4 py-3 rounded-xl text-sm">
         </div>

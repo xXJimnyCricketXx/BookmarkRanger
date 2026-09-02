@@ -153,7 +153,7 @@ exports.showAccount = async (req, res) => {
 };
 
 exports.updateAccount = async (req, res) => {
-    const { username, currentPassword, newPassword, newPasswordConfirm } = req.body;
+    const { username, language, currentPassword, newPassword, newPasswordConfirm } = req.body;
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
 
     if (!(await bcrypt.compare(currentPassword, account.passwordHash))) {
@@ -161,6 +161,7 @@ exports.updateAccount = async (req, res) => {
     }
 
     const data = { username: username || account.username };
+    if (language === 'de' || language === 'en') data.language = language;
     if (newPassword) {
         if (newPassword !== newPasswordConfirm || newPassword.length < 6) {
             return res.render('settings-account', { title: 'Einstellungen — Konto', account, error: 'account.invalid_password', success: null });
@@ -170,6 +171,14 @@ exports.updateAccount = async (req, res) => {
 
     const updated = await prisma.account.update({ where: { id: account.id }, data });
     req.session.username = updated.username;
+
+    // Applies immediately on this same response — app.js also re-applies it on every
+    // later request from the account itself, but that only takes effect once this
+    // handler's own render has already picked a language for the page it's showing.
+    if (data.language) {
+        await req.i18n.changeLanguage(data.language);
+        res.locals.currentLng = req.language;
+    }
 
     res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, error: null, success: 'account.saved' });
 };

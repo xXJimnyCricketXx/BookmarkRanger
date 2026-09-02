@@ -32,7 +32,7 @@ BookmarkRanger! keeps your bookmarks and code snippets in one place. Organize li
 
 - **Boards & Categories** — Group bookmarks into boards, each split into categories. Reorder categories and links by drag-and-drop, or switch to manual mode and use simple up/down controls instead.
 - **Snippet Library** — A tagged, searchable collection of code snippets with real syntax highlighting, a documentation field, and one-click copy of the code or a raw-text URL.
-- **Customizable Dashboard** — Pin your favorite boards, categories, links, and snippets to the dashboard, and group pinned links into Kanban-style boxes by dragging one onto another. Includes an optional greeting header with the date/time and current weather (via Open-Meteo, no API key required).
+- **Customizable Dashboard** — Pin your favorite boards, categories, links, and snippets to the dashboard, and group pinned links into their own box by dragging one onto another. Includes an optional greeting header with the date/time and current weather (via Open-Meteo, no API key required).
 - **Sharing** — Publish selected boards, categories, and snippets to any number of named public pages, each with its own URL and no login required to view — useful for handing a curated set of links to someone without giving them access to everything else.
 - **Automatic Favicon Detection** — Looks up each bookmarked site's own declared icon instead of just guessing `/favicon.ico`.
 - **Backups** — Create and download on-demand database backups from Settings.

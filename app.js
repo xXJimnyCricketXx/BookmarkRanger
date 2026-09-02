@@ -65,7 +65,17 @@ app.use(async (req, res, next) => {
 
     if (req.session && req.session.userId) {
         const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
-        if (account) res.locals.user = account;
+        if (account) {
+            res.locals.user = account;
+            // The account's saved language is the source of truth once logged in — it
+            // must win over the i18next cookie so the preference follows the account
+            // across browsers/devices, not just the browser that last set the cookie.
+            if (account.language && account.language !== req.language) {
+                await req.i18n.changeLanguage(account.language);
+                res.locals.t = req.t;
+                res.locals.currentLng = req.language;
+            }
+        }
     }
 
     next();
