@@ -24,6 +24,7 @@ const prisma = require('./config/db');
 const { getSettings, getThemeBase } = require('./utils/settings');
 const { timeAgo } = require('./utils/timeAgo');
 const { logoVariantFor, resolveTheme } = require('./utils/color');
+const { getCurrentVersion } = require('./utils/changelog');
 
 const app = express();
 const PORT = process.env.PORT || 3099;
@@ -50,7 +51,7 @@ app.use(async (req, res, next) => {
     res.locals.baseUrl = process.env.BASE_URL || '';
     res.locals.allThemes = PRESETS;
     res.locals.resolveTheme = resolveTheme;
-    res.locals.appVersion = require('./package.json').version;
+    res.locals.appVersion = getCurrentVersion();
     res.locals.timeAgo = timeAgo;
     res.locals.user = null;
     res.locals.settings = await getSettings();
