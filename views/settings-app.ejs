@@ -12,7 +12,7 @@
         <span class="opacity-60">v<%= appVersion %></span>
       </div>
       <div>
-        <%= t('settings.see_changelog_prefix') %> <a href="<%= repoUrl %>/blob/main/CHANGELOG.md" target="_blank" rel="noopener" class="text-primary-theme hover:underline"><%= t('settings.here') %></a>.
+        <button type="button" id="changelog-btn" class="text-primary-theme hover:underline"><%= t('settings.changelog_button') %></button>
       </div>
       <div class="pt-2">
         <button type="button" id="check-update-btn" class="input-theme px-4 py-2 rounded-xl text-sm font-bold hover:bg-black/5 dark:hover:bg-white/10 transition"><%= t('settings.check_for_updates') %></button>
@@ -21,6 +21,40 @@
     </div>
   </div>
 </div>
+
+<div id="changelog-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div id="changelog-backdrop" class="absolute inset-0 bg-black/60"></div>
+  <div class="card-theme relative rounded-3xl shadow-xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-sm font-black opacity-60 uppercase tracking-wide"><%= t('settings.changelog_modal_title') %></h2>
+      <button type="button" id="changelog-close" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="space-y-6">
+      <% changelog.forEach(entry => { %>
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="font-black">v<%= entry.version %></span>
+            <span class="text-xs opacity-50"><%= entry.date %></span>
+          </div>
+          <ul class="list-disc list-inside space-y-1 text-sm opacity-80">
+            <% entry.changes.forEach(change => { %>
+              <li><%= change %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<script>
+  const changelogModal = document.getElementById('changelog-modal');
+  document.getElementById('changelog-btn').addEventListener('click', () => changelogModal.classList.remove('hidden'));
+  document.getElementById('changelog-close').addEventListener('click', () => changelogModal.classList.add('hidden'));
+  document.getElementById('changelog-backdrop').addEventListener('click', () => changelogModal.classList.add('hidden'));
+</script>
 
 <script>
   document.getElementById('check-update-btn').addEventListener('click', async (e) => {
