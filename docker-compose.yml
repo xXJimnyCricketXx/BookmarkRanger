@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  bookmarkranger-app:
+    build: .
+    container_name: bookmarkranger_app
+    restart: unless-stopped
+    ports:
+      - "18004:3099" # External port : Internal port
+    volumes:
+      - ./data:/app/data
+      - ./backups:/app/backups
+      - ./public/uploads:/app/public/uploads
+    env_file:
+      - .env

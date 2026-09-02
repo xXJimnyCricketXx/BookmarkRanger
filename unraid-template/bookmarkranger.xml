@@ -1,0 +1,34 @@
+<Container version="2">
+  <Name>BookmarkRanger</Name>
+  <Repository>ghcr.io/xxjimnycricketxx/bookmarkranger:latest</Repository>
+  <Registry>https://github.com/xXJimnyCricketXx/BookmarkRanger/pkgs/container/bookmarkranger</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/xXJimnyCricketXx/BookmarkRanger/issues</Support>
+  <Project>https://github.com/xXJimnyCricketXx/BookmarkRanger</Project>
+  <Overview>A self-hosted bookmarks and code snippet manager.</Overview>
+  <Description>BookmarkRanger is a self-hosted manager for bookmarks and code snippets: organize bookmarks into boards and categories, keep a tagged snippet library with syntax highlighting, pin favorites to a customizable dashboard, and publish curated collections to public share pages. Uses a built-in SQLite database — no separate database container required.</Description>
+  <Category>Productivity: Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:18004]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/xXJimnyCricketXx/BookmarkRanger/main/unraid-template/bookmarkranger.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/xXJimnyCricketXx/BookmarkRanger/main/public/ressources/bookmarkranger-icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+
+  <Config Name="WebUI Port" Target="3099" Default="18004" Mode="tcp" Description="The port BookmarkRanger will be accessible on." Type="Port" Display="always" Required="true" Mask="false">18004</Config>
+
+  <Config Name="Data Volume" Target="/app/data" Default="/mnt/user/appdata/bookmarkranger/data" Mode="rw" Description="Directory where the SQLite database and session data are stored." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/bookmarkranger/data</Config>
+
+  <Config Name="Backups Volume" Target="/app/backups" Default="/mnt/user/appdata/bookmarkranger/backups" Mode="rw" Description="Directory where manual and automatic database backups are stored." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/bookmarkranger/backups</Config>
+
+  <Config Name="Uploads Volume" Target="/app/public/uploads" Default="/mnt/user/appdata/bookmarkranger/uploads" Mode="rw" Description="Directory to store downloaded favicons and other uploaded files." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/bookmarkranger/uploads</Config>
+
+  <Config Name="Session Secret" Target="SESSION_SECRET" Default="ChangeThisToAComplexSecret" Mode="" Description="Complex secret used to sign session cookies." Type="Variable" Display="always" Required="true" Mask="true">ChangeThisToAComplexSecret</Config>
+  <Config Name="Base URL" Target="BASE_URL" Default="" Mode="" Description="Base path for serving on a sub-path (e.g. /bookmarkranger), leave empty to serve from root." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+</Container>
