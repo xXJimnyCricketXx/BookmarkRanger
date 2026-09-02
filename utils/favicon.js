@@ -1,30 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-
-const FAVICON_DIR = path.join(__dirname, '..', 'public', 'uploads', 'favicons');
-
-async function downloadIcon(imageUrl) {
+// Favicons are never downloaded or stored locally — a bookmark's icon field is just the
+// discovered image URL, hotlinked straight from the bookmarked site itself (like the link
+// itself, it depends on that site being reachable, so this adds no new dependency). This
+// keeps icons out of the database/filesystem entirely: nothing to clean up when a bookmark
+// is deleted, and nothing that can end up out of sync when the database is moved between
+// environments.
+async function isLikelyImage(imageUrl) {
     try {
-        const parsed = new URL(imageUrl);
-
         const response = await fetch(imageUrl, { signal: AbortSignal.timeout(4000) });
-        if (!response.ok) return null;
-
+        if (!response.ok) return false;
         const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('text/html')) return null;
-
-        const buffer = Buffer.from(await response.arrayBuffer());
-        if (!buffer.length) return null;
-
-        if (!fs.existsSync(FAVICON_DIR)) fs.mkdirSync(FAVICON_DIR, { recursive: true });
-
-        const ext = path.extname(parsed.pathname.split('?')[0]) || '.ico';
-        const filename = `${Date.now()}-${parsed.hostname.replace(/[^a-z0-9.-]/gi, '')}${ext}`;
-        fs.writeFileSync(path.join(FAVICON_DIR, filename), buffer);
-
-        return `/uploads/favicons/${filename}`;
+        return !contentType.includes('text/html');
     } catch (err) {
-        return null;
+        return false;
     }
 }
 
@@ -60,19 +47,22 @@ async function findDeclaredIconUrl(pageUrl) {
 
 async function fetchFavicon(pageUrl) {
     const declared = await findDeclaredIconUrl(pageUrl);
-    if (declared) {
-        const result = await downloadIcon(declared);
-        if (result) return result;
-    }
+    if (declared && (await isLikelyImage(declared))) return declared;
 
     // Fall back to the legacy root path if the page declared nothing (or it failed to load).
     try {
         const parsed = new URL(pageUrl);
         const icoUrl = `${parsed.protocol}//${parsed.host}/favicon.ico`;
-        return await downloadIcon(icoUrl);
+        return (await isLikelyImage(icoUrl)) ? icoUrl : null;
     } catch (err) {
         return null;
     }
 }
 
-module.exports = { fetchFavicon, downloadIcon };
+// For a manually entered icon URL — just confirms it actually resolves to an image
+// before storing it, same quality bar as the auto-discovered case.
+async function verifyIconUrl(imageUrl) {
+    return (await isLikelyImage(imageUrl)) ? imageUrl : null;
+}
+
+module.exports = { fetchFavicon, verifyIconUrl };

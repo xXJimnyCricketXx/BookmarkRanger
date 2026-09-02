@@ -1,13 +1,18 @@
-// One-off maintenance script: retries favicon detection for bookmarks that have none yet
-// (e.g. ones added before the <link rel="icon"> lookup existed). Run with: node scripts/backfill-favicons.js
+// One-off maintenance script: (re-)runs favicon detection for bookmarks that have none yet,
+// or whose icon still points at the old locally-stored-file format (/uploads/favicons/...)
+// from before icons became hotlinked URLs — re-resolving those also fixes the case where a
+// bookmarks database was copied to an environment that doesn't have the matching icon files
+// on disk. Run with: node scripts/backfill-favicons.js
 const { PrismaClient } = require('@prisma/client');
 const { fetchFavicon } = require('../utils/favicon');
 
 const prisma = new PrismaClient();
 
 (async () => {
-    const bookmarks = await prisma.bookmark.findMany({ where: { icon: null } });
-    console.log(`Found ${bookmarks.length} bookmark(s) without an icon.`);
+    const bookmarks = await prisma.bookmark.findMany({
+        where: { OR: [{ icon: null }, { icon: { startsWith: '/uploads/favicons/' } }] }
+    });
+    console.log(`Found ${bookmarks.length} bookmark(s) to (re-)resolve.`);
 
     let updated = 0;
     for (const bookmark of bookmarks) {

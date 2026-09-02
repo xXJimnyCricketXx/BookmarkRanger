@@ -40,7 +40,7 @@
       <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.icon_label') %></label>
       <div class="flex items-center gap-3">
         <% if (bookmark && bookmark.icon) { %>
-          <img src="<%= baseUrl %><%= bookmark.icon %>" class="w-8 h-8 rounded-lg shrink-0" alt="">
+          <img src="<%= bookmark.icon %>" class="w-8 h-8 rounded-lg shrink-0" alt="">
         <% } %>
         <input type="url" name="iconUrl" placeholder="https://example.com/icon.png" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
       </div>
