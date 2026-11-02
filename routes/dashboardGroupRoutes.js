@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const dashboardGroupController = require('../controllers/dashboardGroupController');
+const { validateId } = require('../middleware/validateId');
+
+router.param('id', validateId);
+router.param('bookmarkId', validateId);
 
 router.post('/', dashboardGroupController.create);
 router.post('/reorder', dashboardGroupController.reorderGroups);

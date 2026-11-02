@@ -1,6 +1,21 @@
 {
   "entries": [
     {
+      "version": "1.0.2",
+      "date": "2026-11-02",
+      "changes": [
+        "Fixed messages on the login and account pages that showed a technical key such as account.saved instead of text.",
+        "Page titles and new dashboard groups now follow the selected language.",
+        "Pinned snippets keep the order you dragged them into, and otherwise follow the sorting from Settings.",
+        "The X on a dashboard group member now returns to the dashboard instead of showing raw data.",
+        "Unpinning a bookmark removes it from its dashboard group, and groups disappear once their last bookmark is gone.",
+        "Fixed the category list after switching boards: the delete prompt shows the right name, and names with quotes display correctly.",
+        "Names with special characters now display correctly in delete prompts.",
+        "Unknown or invalid addresses now show the \"not found\" page instead of an error.",
+        "Snippets can now be up to 2 MB instead of 100 KB."
+      ]
+    },
+    {
       "version": "1.0.1",
       "date": "2026-11-02",
       "changes": [

@@ -1,5 +1,11 @@
 {
+  "account": {
+    "saved": "Changes saved.",
+    "wrong_password": "The current password is incorrect.",
+    "invalid_password": "The new password needs at least 6 characters and must match in both fields."
+  },
   "errors": {
+    "not_found": "This page does not exist.",
     "forbidden": "This request was blocked for security reasons.",
     "too_large": "The submitted data is too large.",
     "bad_request": "This request could not be processed.",
@@ -66,6 +72,7 @@
     "invalid": "Please fill in all fields. Password must be at least 6 characters and match."
   },
   "dashboard": {
+    "new_group": "New group",
     "search_placeholder": "Search …",
     "pinned_bookmarks": "Pinned bookmarks",
     "pinned_snippets": "Pinned snippets",

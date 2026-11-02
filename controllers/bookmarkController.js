@@ -4,6 +4,8 @@ const { fetchFavicon, verifyIconUrl } = require('../utils/favicon');
 const { orderByFor } = require('../utils/sorting');
 const { getSettings } = require('../utils/settings');
 const { isHttpUrl } = require('../utils/url');
+const { parseIds } = require('../utils/ids');
+const { removeEmptyGroups } = require('../utils/dashboardGroups');
 
 async function categoriesFor(boardId, settings) {
     return prisma.category.findMany({
@@ -29,7 +31,7 @@ exports.list = async (req, res) => {
 
     const categories = activeBoard ? await categoriesFor(activeBoard.id, settings) : [];
 
-    res.render('bookmarks', { title: 'Lesezeichen', boards, activeBoard, categories, sharePages });
+    res.render('bookmarks', { title: res.locals.t('bookmarks.title'), boards, activeBoard, categories, sharePages });
 };
 
 // Renders just the board panel (toolbar + categories) so the board tabs can swap boards
@@ -62,7 +64,7 @@ exports.createBoard = async (req, res) => {
 };
 
 exports.reorderBoards = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.board.update({ where: { id }, data: { order: index } })));
     res.json({ ok: true });
 };
@@ -78,6 +80,7 @@ exports.renameBoard = async (req, res) => {
 
 exports.deleteBoard = async (req, res) => {
     await prisma.board.delete({ where: { id: parseInt(req.params.id, 10) } });
+    await removeEmptyGroups();
     res.redirect(`${res.locals.baseUrl}/bookmarks`);
 };
 
@@ -113,13 +116,17 @@ exports.renameCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
     const category = await prisma.category.findUnique({ where: { id: parseInt(req.params.id, 10) } });
-    if (category) await prisma.category.delete({ where: { id: category.id } });
+    if (category) {
+        await prisma.category.delete({ where: { id: category.id } });
+        await removeEmptyGroups();
+    }
     res.redirect(`${res.locals.baseUrl}/bookmarks?board=${category ? category.boardId : ''}`);
 };
 
 exports.togglePinCategory = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const category = await prisma.category.findUnique({ where: { id } });
+    if (!category) return res.status(404).render('404', { title: '404' });
     const data = { isPinned: !category.isPinned };
     if (data.isPinned) {
         // Newly pinned — append to the end of the dashboard's pinned order, not
@@ -131,26 +138,27 @@ exports.togglePinCategory = async (req, res) => {
 };
 
 exports.reorderPinnedCategories = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.category.update({ where: { id }, data: { pinnedOrder: index } })));
     res.json({ ok: true });
 };
 
 exports.showAddForm = async (req, res) => {
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' }, include: { categories: true } });
-    res.render('bookmark-form', { title: 'Lesezeichen hinzufügen', boards, bookmark: null, selectedCategoryId: req.query.categoryId || null });
+    res.render('bookmark-form', { title: res.locals.t('bookmarkForm.title_add'), boards, bookmark: null, selectedCategoryId: req.query.categoryId || null });
 };
 
 exports.showEditForm = async (req, res) => {
     const bookmark = await prisma.bookmark.findUnique({ where: { id: parseInt(req.params.id, 10) }, include: { tags: true } });
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' }, include: { categories: true } });
-    res.render('bookmark-form', { title: 'Lesezeichen bearbeiten', boards, bookmark, selectedCategoryId: bookmark.categoryId });
+    if (!bookmark) return res.status(404).render('404', { title: '404' });
+    res.render('bookmark-form', { title: res.locals.t('bookmarkForm.title_edit'), boards, bookmark, selectedCategoryId: bookmark.categoryId });
 };
 
 async function renderInvalidUrl(res, bookmark, selectedCategoryId) {
     const boards = await prisma.board.findMany({ orderBy: { order: 'asc' }, include: { categories: true } });
     res.status(400).render('bookmark-form', {
-        title: bookmark ? 'Lesezeichen bearbeiten' : 'Lesezeichen hinzufügen',
+        title: res.locals.t(bookmark ? 'bookmarkForm.title_edit' : 'bookmarkForm.title_add'),
         boards,
         bookmark,
         selectedCategoryId,
@@ -187,7 +195,8 @@ exports.update = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const { title, url, description, categoryId, tags, iconUrl } = req.body;
     const existing = await prisma.bookmark.findUnique({ where: { id }, include: { tags: true } });
-    if (existing && !isHttpUrl(url)) return renderInvalidUrl(res, existing, categoryId);
+    if (!existing) return res.status(404).render('404', { title: '404' });
+    if (!isHttpUrl(url)) return renderInvalidUrl(res, existing, categoryId);
 
     let icon = existing.icon;
     if (iconUrl && iconUrl.trim()) {
@@ -217,6 +226,7 @@ exports.delete = async (req, res) => {
     const bookmark = await prisma.bookmark.findUnique({ where: { id }, include: { category: true } });
     if (bookmark) {
         await prisma.bookmark.delete({ where: { id } });
+        await removeEmptyGroups();
         return res.redirect(`${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
     }
     res.redirect(`${res.locals.baseUrl}/bookmarks`);
@@ -225,13 +235,18 @@ exports.delete = async (req, res) => {
 exports.togglePin = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const bookmark = await prisma.bookmark.findUnique({ where: { id }, include: { category: true } });
+    if (!bookmark) return res.status(404).render('404', { title: '404' });
     const data = { isPinned: !bookmark.isPinned };
     if (data.isPinned) {
         // Newly pinned — append to the end of the dashboard's pinned order, not
         // this bookmark's position within its own category (see schema comment).
         data.pinnedOrder = await prisma.bookmark.count({ where: { isPinned: true } });
+    } else {
+        // Groups show their members regardless of isPinned, so an unpinned one has to leave.
+        data.dashboardGroupId = null;
     }
     await prisma.bookmark.update({ where: { id }, data });
+    await removeEmptyGroups();
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/bookmarks?board=${bookmark.category.boardId}`);
 };
 
@@ -261,13 +276,13 @@ exports.moveBookmark = async (req, res) => {
 // Only ever called from the dashboard's pinned-bookmarks grid — reorders across
 // categories, so it writes pinnedOrder, not each bookmark's in-category `order`.
 exports.reorder = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.bookmark.update({ where: { id }, data: { pinnedOrder: index } })));
     res.json({ ok: true });
 };
 
 exports.reorderCategories = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.category.update({ where: { id }, data: { order: index } })));
     res.json({ ok: true });
 };

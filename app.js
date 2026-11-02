@@ -84,8 +84,8 @@ app.use(async (req, res, next) => {
 
 app.use(originCheck);
 // After the locals above, so an oversized or malformed body still gets the normal error page.
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
+app.use(express.json({ limit: '2mb' }));
 
 app.use(ensureSetup);
 
@@ -108,6 +108,8 @@ app.use((req, res) => res.status(404).render('404', { title: '404' }));
 // Falls back to plain text if the page can't render, e.g. when the database is down.
 app.use((err, req, res, next) => {
     if (res.headersSent) return next(err);
+    // Prisma's "record not found" — e.g. renaming or deleting something that's already gone.
+    if (err.code === 'P2025') return res.status(404).render('404', { title: '404' });
     const status = err.status || err.statusCode || 500;
     if (status >= 500) console.error(err);
     res.status(status).render('error', { title: String(status), status }, (renderErr, html) => {

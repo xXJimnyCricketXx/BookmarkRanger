@@ -7,7 +7,7 @@ const { getCurrentWeather } = require('../utils/weather');
 
 exports.dashboard = async (req, res) => {
     const settings = await getSettings();
-    const q = req.query.q || '';
+    const q = typeof req.query.q === 'string' ? req.query.q : '';
     const parsed = parseSearchQuery(q);
     const isSearch = Boolean(q);
 
@@ -24,7 +24,7 @@ exports.dashboard = async (req, res) => {
 
     const pinnedSnippets = q
         ? await prisma.snippet.findMany({ where: snippetSearchWhere(parsed), include: { tags: true, sharePages: { select: { id: true } } }, orderBy: { createdAt: 'desc' } })
-        : await prisma.snippet.findMany({ where: { isPinned: true }, include: { tags: true, sharePages: { select: { id: true } } }, orderBy: { createdAt: 'desc' } });
+        : await prisma.snippet.findMany({ where: { isPinned: true }, include: { tags: true, sharePages: { select: { id: true } } }, orderBy: orderByFor(settings.sortingType) });
 
     const pinnedCategories = isSearch
         ? []
@@ -76,7 +76,7 @@ exports.dashboard = async (req, res) => {
 // resets the browser's user-activation state and gets window.open() popup-blocked.
 exports.searchCheck = async (req, res) => {
     const settings = await getSettings();
-    const q = req.query.q || '';
+    const q = typeof req.query.q === 'string' ? req.query.q : '';
     const parsed = parseSearchQuery(q);
 
     const [bookmarkCount, snippetCount] = await Promise.all([

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bookmarkController = require('../controllers/bookmarkController');
+const { validateId } = require('../middleware/validateId');
+
+router.param('id', validateId);
 
 router.get('/', bookmarkController.list);
 router.get('/boards/:id/panel', bookmarkController.boardPanel);

@@ -9,6 +9,8 @@ i18next
     .init({
         backend: { loadPath: path.join(__dirname, '..', 'locales', '{{lng}}', 'translation.json') },
         fallbackLng: 'de',
+        // Templates already escape through <%= %> — escaping here too shows names like "R&amp;D".
+        interpolation: { escapeValue: false },
         preload: ['de', 'en'],
         detection: { order: ['cookie'], caches: ['cookie'] }
     });

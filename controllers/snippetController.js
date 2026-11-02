@@ -2,15 +2,18 @@ const hljs = require('highlight.js');
 const prisma = require('../config/db');
 const { resolveTags } = require('../utils/tags');
 const { getSettings } = require('../utils/settings');
+const { parseIds } = require('../utils/ids');
+
+const queryString = (value) => (typeof value === 'string' ? value : '');
 
 const SORT_FIELDS = { created: 'createdAt', updated: 'updatedAt', name: 'title' };
 
 exports.list = async (req, res) => {
-    const activeTags = (req.query.tags || '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
-    const q = req.query.q || '';
+    const activeTags = queryString(req.query.tags).split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
+    const q = queryString(req.query.q);
 
     // Combined "field_direction" token (e.g. "created_desc") for the sort dropdown.
-    const [sortField, sortDir] = (req.query.sort || '').split('_');
+    const [sortField, sortDir] = queryString(req.query.sort).split('_');
     const sort = SORT_FIELDS[sortField] ? sortField : 'created';
     const dir = sortDir === 'asc' ? 'asc' : 'desc';
     const currentSort = `${sort}_${dir}`;
@@ -47,7 +50,7 @@ exports.list = async (req, res) => {
     const sharePages = await prisma.sharePage.findMany({ orderBy: { order: 'asc' }, select: { id: true, name: true } });
 
     res.render('snippets', {
-        title: 'Snippets',
+        title: res.locals.t('snippets.title'),
         snippets,
         tags,
         activeTags,
@@ -59,12 +62,13 @@ exports.list = async (req, res) => {
 };
 
 exports.showAddForm = (req, res) => {
-    res.render('snippet-form', { title: 'Neues Snippet', snippet: null });
+    res.render('snippet-form', { title: res.locals.t('snippetForm.title_add'), snippet: null });
 };
 
 exports.showEditForm = async (req, res) => {
     const snippet = await prisma.snippet.findUnique({ where: { id: parseInt(req.params.id, 10) }, include: { tags: true } });
-    res.render('snippet-form', { title: 'Snippet bearbeiten', snippet });
+    if (!snippet) return res.status(404).render('404', { title: '404' });
+    res.render('snippet-form', { title: res.locals.t('snippetForm.title_edit'), snippet });
 };
 
 exports.detail = async (req, res) => {
@@ -139,12 +143,13 @@ exports.delete = async (req, res) => {
 exports.togglePin = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const snippet = await prisma.snippet.findUnique({ where: { id } });
+    if (!snippet) return res.status(404).render('404', { title: '404' });
     await prisma.snippet.update({ where: { id }, data: { isPinned: !snippet.isPinned } });
     res.redirect(req.get('Referer') || `${res.locals.baseUrl}/snippets`);
 };
 
 exports.reorder = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.snippet.update({ where: { id }, data: { order: index } })));
     res.json({ ok: true });
 };

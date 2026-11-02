@@ -13,7 +13,7 @@ use most to your own dashboard. Your data stays on your own server.
 
 <p>
   <img src="https://img.shields.io/badge/Status-Stable-FF6F9C?style=for-the-badge" alt="Status">
-  <img src="https://img.shields.io/badge/Version-1.0.1-FF6F9C?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.0.2-FF6F9C?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/Docker-Ready-FF6F9C?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/Unraid-Template-FF6F9C?style=for-the-badge&logo=unraid&logoColor=white" alt="Unraid">
 </p>
@@ -168,7 +168,7 @@ BookmarkRanger/
 | :---: | :--- | :---: |
 | **1.2.0** | <ul><li>Major updates of Prisma and EJS</li><li>Frontend libraries served from the app instead of external CDNs</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
 | **1.1.0** | <ul><li>Automatic backups with configurable schedule and retention</li><li>Restoring and deleting backups in the app</li><li>Container without root rights on a current Node.js LTS</li><li>Public health endpoint and Docker health check</li><li>Test suite that runs before every image build</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
-| **1.0.2** | <ul><li>Bug fixes for dashboard groups, snippet ordering and the board management dialog</li><li>Complete translations and proper "not found" pages</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
+| **1.0.2** | <ul><li>Bug fixes for dashboard groups, snippet ordering and the board management dialog</li><li>Complete translations and proper "not found" pages</li><li>Larger snippets, up to 2 MB</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 | **1.0.1** | <ul><li>Security hardening for sessions, login and input validation</li><li>Session secret generated automatically if none is set</li><li>Dependency updates</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 | **1.0.0** | <ul><li>Boards, categories and bookmarks with automatic favicons</li><li>Snippet library with syntax highlighting</li><li>Customizable dashboard with groups, greeting and weather</li><li>Public share pages</li><li>Themes, German and English, on-demand backups</li><li>Docker image and Unraid template</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 

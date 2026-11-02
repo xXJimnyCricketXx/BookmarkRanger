@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const settingsController = require('../controllers/settingsController');
+const { validateId } = require('../middleware/validateId');
+
+router.param('id', validateId);
 
 router.get('/', (req, res) => res.redirect(`${res.locals.baseUrl}/settings/theme`));
 

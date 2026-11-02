@@ -21,7 +21,7 @@
           <form action="<%= baseUrl %>/shared/<%= page.id %>/rename" method="POST" class="flex-grow min-w-0">
             <input type="text" name="name" value="<%= page.name %>" onchange="this.form.submit()" class="input-theme font-black text-lg px-2 py-1 rounded-lg w-full max-w-xs">
           </form>
-          <form action="<%= baseUrl %>/shared/<%= page.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: page.name }) %>')">
+          <form action="<%= baseUrl %>/shared/<%= page.id %>/delete" method="POST" data-confirm="<%= t('common.confirm_delete', { name: page.name }) %>">
             <button type="submit" title="<%= t('bookmarks.delete') %>" class="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center hover:bg-red-500/10 text-red-500"><i class="fa-solid fa-trash text-xs"></i></button>
           </form>
         </div>

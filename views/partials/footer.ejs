@@ -8,6 +8,15 @@
   </footer>
 
   <script>
+  // On the document so forms added later (board switches) are covered too. A data attribute
+  // instead of an inline confirm('...') — a name containing a quote would break that script,
+  // and a broken onsubmit means the form submits without asking.
+  document.addEventListener('submit', (e) => {
+    const message = e.target.dataset.confirm;
+    if (message && !confirm(message)) e.preventDefault();
+  });
+</script>
+<script>
     document.addEventListener('click', async (e) => {
       const copyBtn = e.target.closest('.copy-code-btn');
       if (copyBtn) {

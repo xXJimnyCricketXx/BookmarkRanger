@@ -1,5 +1,11 @@
 {
+  "account": {
+    "saved": "Änderungen gespeichert.",
+    "wrong_password": "Das aktuelle Passwort ist falsch.",
+    "invalid_password": "Das neue Passwort muss mindestens 6 Zeichen haben und in beiden Feldern gleich sein."
+  },
   "errors": {
+    "not_found": "Diese Seite gibt es nicht.",
     "forbidden": "Diese Anfrage wurde aus Sicherheitsgründen blockiert.",
     "too_large": "Die übermittelten Daten sind zu groß.",
     "bad_request": "Diese Anfrage konnte nicht verarbeitet werden.",
@@ -66,6 +72,7 @@
     "invalid": "Bitte alle Felder ausfüllen. Passwort mind. 6 Zeichen, beide Felder müssen übereinstimmen."
   },
   "dashboard": {
+    "new_group": "Neue Gruppe",
     "search_placeholder": "Suchen …",
     "pinned_bookmarks": "Angepinnte Lesezeichen",
     "pinned_snippets": "Angepinnte Snippets",

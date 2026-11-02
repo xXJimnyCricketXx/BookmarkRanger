@@ -3,7 +3,7 @@ const prisma = require('../config/db');
 const { startSession } = require('../middleware/auth');
 
 exports.showSetup = (req, res) => {
-    res.render('setup', { title: 'Einrichtung', error: null });
+    res.render('setup', { title: res.locals.t('setup.title'), error: null });
 };
 
 exports.setup = async (req, res) => {
@@ -13,7 +13,7 @@ exports.setup = async (req, res) => {
     const { username, password, passwordConfirm } = req.body;
 
     if (typeof username !== 'string' || !username || typeof password !== 'string' || password.length < 6 || password !== passwordConfirm) {
-        return res.render('setup', { title: 'Einrichtung', error: 'setup.invalid' });
+        return res.render('setup', { title: res.locals.t('setup.title'), error: 'setup.invalid' });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

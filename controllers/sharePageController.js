@@ -3,6 +3,7 @@ const hljs = require('highlight.js');
 const prisma = require('../config/db');
 const { orderByFor } = require('../utils/sorting');
 const { getSettings } = require('../utils/settings');
+const { parseIds } = require('../utils/ids');
 
 function generateToken() {
     return crypto.randomBytes(12).toString('base64url');
@@ -63,7 +64,7 @@ exports.removeSnippet = async (req, res) => {
 exports.updateItemSharing = async (req, res) => {
     const { type, id } = req.params;
     const itemId = parseInt(id, 10);
-    const ids = (req.body.ids || []).map((v) => parseInt(v, 10)).filter((v) => !Number.isNaN(v));
+    const ids = parseIds(req.body.ids);
     const mode = req.body.mode === 'add' ? 'add' : 'set';
     const connect = ids.map((sharePageId) => ({ id: sharePageId }));
 

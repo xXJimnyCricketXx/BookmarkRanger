@@ -9,6 +9,10 @@ const { getChangelog } = require('../utils/changelog');
 const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
 const REPO_URL = 'https://github.com/xXJimnyCricketXx/BookmarkRanger';
 
+function settingsTitle(res, tab) {
+    return `${res.locals.t('nav.settings')} — ${res.locals.t(`settings.nav_${tab}`)}`;
+}
+
 function dbFilePath() {
     // Prisma resolves a relative sqlite "file:" path relative to prisma/schema.prisma,
     // not the project root, so the backup source path must match that.
@@ -19,7 +23,7 @@ function dbFilePath() {
 exports.showTheme = async (req, res) => {
     const settings = await getSettings();
     const customThemes = await prisma.customTheme.findMany({ orderBy: { id: 'asc' } });
-    res.render('settings-theme', { title: 'Einstellungen — Theme', settings, presets: PRESETS, customThemes });
+    res.render('settings-theme', { title: settingsTitle(res, 'theme'), settings, presets: PRESETS, customThemes });
 };
 
 exports.saveTheme = async (req, res) => {
@@ -31,13 +35,13 @@ exports.saveTheme = async (req, res) => {
 exports.showAddCustomTheme = (req, res) => {
     // "customTheme", not "theme" — the latter is the resolved site-wide theme header.ejs
     // renders its CSS variables from, and would get shadowed by this raw DB row otherwise.
-    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', customTheme: null });
+    res.render('settings-theme-custom-form', { title: settingsTitle(res, 'theme'), customTheme: null });
 };
 
 exports.showEditCustomTheme = async (req, res) => {
     const customTheme = await prisma.customTheme.findUnique({ where: { id: parseInt(req.params.id, 10) } });
     if (!customTheme) return res.status(404).render('404', { title: '404' });
-    res.render('settings-theme-custom-form', { title: 'Einstellungen — Theme', customTheme });
+    res.render('settings-theme-custom-form', { title: settingsTitle(res, 'theme'), customTheme });
 };
 
 exports.createCustomTheme = async (req, res) => {
@@ -70,7 +74,7 @@ exports.deleteCustomTheme = async (req, res) => {
 exports.showGeneral = async (req, res) => {
     const settings = await getSettings();
     const searchProviders = await prisma.searchProvider.findMany({ orderBy: { id: 'asc' } });
-    res.render('settings-general', { title: 'Einstellungen — Allgemein', settings, searchProviders });
+    res.render('settings-general', { title: settingsTitle(res, 'general'), settings, searchProviders });
 };
 
 exports.saveGeneral = async (req, res) => {
@@ -91,7 +95,7 @@ exports.saveGeneral = async (req, res) => {
 
 exports.showInterface = async (req, res) => {
     const settings = await getSettings();
-    res.render('settings-interface', { title: 'Einstellungen — Oberfläche', settings });
+    res.render('settings-interface', { title: settingsTitle(res, 'interface'), settings });
 };
 
 exports.saveInterface = async (req, res) => {
@@ -123,7 +127,7 @@ exports.saveInterface = async (req, res) => {
 
 exports.showWeather = async (req, res) => {
     const settings = await getSettings();
-    res.render('settings-weather', { title: 'Einstellungen — Wetter', settings });
+    res.render('settings-weather', { title: settingsTitle(res, 'weather'), settings });
 };
 
 exports.saveWeather = async (req, res) => {
@@ -149,22 +153,22 @@ function splitList(value) {
 
 exports.showAccount = async (req, res) => {
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
-    res.render('settings-account', { title: 'Einstellungen — Konto', account, error: null, success: null });
+    res.render('settings-account', { title: settingsTitle(res, 'account'), account, error: null, success: null });
 };
 
 exports.updateAccount = async (req, res) => {
     const { username, language, currentPassword, newPassword, newPasswordConfirm } = req.body;
     const account = await prisma.account.findUnique({ where: { id: req.session.userId } });
 
-    if (!(await bcrypt.compare(currentPassword, account.passwordHash))) {
-        return res.render('settings-account', { title: 'Einstellungen — Konto', account, error: 'account.wrong_password', success: null });
+    if (typeof currentPassword !== 'string' || !(await bcrypt.compare(currentPassword, account.passwordHash))) {
+        return res.render('settings-account', { title: settingsTitle(res, 'account'), account, error: 'account.wrong_password', success: null });
     }
 
     const data = { username: username || account.username };
     if (language === 'de' || language === 'en') data.language = language;
     if (newPassword) {
         if (newPassword !== newPasswordConfirm || newPassword.length < 6) {
-            return res.render('settings-account', { title: 'Einstellungen — Konto', account, error: 'account.invalid_password', success: null });
+            return res.render('settings-account', { title: settingsTitle(res, 'account'), account, error: 'account.invalid_password', success: null });
         }
         data.passwordHash = await bcrypt.hash(newPassword, 10);
     }
@@ -177,20 +181,21 @@ exports.updateAccount = async (req, res) => {
     // handler's own render has already picked a language for the page it's showing.
     if (data.language) {
         await req.i18n.changeLanguage(data.language);
+        res.locals.t = req.t;
         res.locals.currentLng = req.language;
     }
 
-    res.render('settings-account', { title: 'Einstellungen — Konto', account: updated, error: null, success: 'account.saved' });
+    res.render('settings-account', { title: settingsTitle(res, 'account'), account: updated, error: null, success: 'account.saved' });
 };
 
 exports.showApp = (req, res) => {
-    res.render('settings-app', { title: 'Einstellungen — App', repoUrl: REPO_URL, changelog: getChangelog() });
+    res.render('settings-app', { title: settingsTitle(res, 'app'), repoUrl: REPO_URL, changelog: getChangelog() });
 };
 
 exports.showBackups = (req, res) => {
     if (!fs.existsSync(BACKUPS_DIR)) fs.mkdirSync(BACKUPS_DIR, { recursive: true });
     const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-    res.render('settings-backups', { title: 'Einstellungen — Backups', backups });
+    res.render('settings-backups', { title: settingsTitle(res, 'backups'), backups });
 };
 
 exports.createBackup = async (req, res) => {

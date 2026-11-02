@@ -5,7 +5,7 @@ const { recordFailure, clearFailures } = require('../middleware/loginLimit');
 
 exports.showLogin = (req, res) => {
     if (req.session.userId) return res.redirect(`${res.locals.baseUrl}/`);
-    res.render('login', { title: 'Anmelden', error: null });
+    res.render('login', { title: res.locals.t('login.title'), error: null });
 };
 
 exports.login = async (req, res) => {
@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
 
     if (!account || !(await bcrypt.compare(password, account.passwordHash))) {
         recordFailure(req.ip);
-        return res.render('login', { title: 'Anmelden', error: 'auth.invalid' });
+        return res.render('login', { title: res.locals.t('login.title'), error: 'login.invalid' });
     }
 
     clearFailures(req.ip);

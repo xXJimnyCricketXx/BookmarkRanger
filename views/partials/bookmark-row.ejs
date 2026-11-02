@@ -22,7 +22,7 @@
       </button>
     </form>
     <a href="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/edit" title="<%= t('bookmarks.edit') %>"><i class="fa-solid fa-pen text-xs opacity-40 hover:opacity-80"></i></a>
-    <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/delete" method="POST" onsubmit="return confirm('<%= t('common.confirm_delete', { name: bookmark.title }) %>')">
+    <form action="<%= baseUrl %>/bookmarks/<%= bookmark.id %>/delete" method="POST" data-confirm="<%= t('common.confirm_delete', { name: bookmark.title }) %>">
       <button type="submit" title="<%= t('bookmarks.delete') %>"><i class="fa-solid fa-trash text-xs opacity-40 hover:opacity-80"></i></button>
     </form>
   </div>

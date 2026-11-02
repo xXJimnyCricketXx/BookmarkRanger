@@ -17,7 +17,7 @@ function isLimited(ip) {
 
 function limitLogin(req, res, next) {
     if (!isLimited(req.ip)) return next();
-    res.status(429).render('login', { title: 'Anmelden', error: 'login.too_many_attempts' });
+    res.status(429).render('login', { title: res.locals.t('login.title'), error: 'login.too_many_attempts' });
 }
 
 function recordFailure(ip) {

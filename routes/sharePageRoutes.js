@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const sharePageController = require('../controllers/sharePageController');
+const { validateId } = require('../middleware/validateId');
+
+router.param('id', validateId);
+router.param('categoryId', validateId);
+router.param('snippetId', validateId);
 
 router.get('/', sharePageController.list);
 router.post('/', sharePageController.create);

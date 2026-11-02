@@ -1,25 +1,24 @@
 const prisma = require('../config/db');
+const { parseIds } = require('../utils/ids');
 
 // Dragging bookmark A onto bookmark B (neither already grouped) — create a new
 // dashboard-only box holding both, so they display stacked instead of side by side.
 exports.create = async (req, res) => {
-    const ids = (req.body.bookmarkIds || []).map((id) => parseInt(id, 10));
-    // Reject before creating the group — otherwise a bad id fails the transaction below
-    // *after* the group already exists, leaving an empty orphaned group behind.
-    if (ids.length < 2 || ids.some((id) => !Number.isFinite(id))) {
+    const ids = parseIds(req.body.bookmarkIds);
+    if (ids.length < 2) {
         return res.status(400).json({ error: 'need at least 2 valid bookmark ids' });
     }
 
-    const group = await prisma.dashboardGroup.create({
-        data: { name: req.body.name || 'Neue Gruppe', order: 0 }
+    // One transaction, so an unknown bookmark id can't leave an empty group behind.
+    const group = await prisma.$transaction(async (tx) => {
+        const created = await tx.dashboardGroup.create({
+            data: { name: req.body.name || res.locals.t('dashboard.new_group'), order: 0 }
+        });
+        for (const [index, id] of ids.entries()) {
+            await tx.bookmark.update({ where: { id }, data: { dashboardGroupId: created.id, dashboardGroupOrder: index } });
+        }
+        return created;
     });
-
-    await prisma.$transaction(
-        ids.map((id, index) => prisma.bookmark.update({
-            where: { id },
-            data: { dashboardGroupId: group.id, dashboardGroupOrder: index }
-        }))
-    );
 
     res.json({ ok: true, groupId: group.id });
 };
@@ -61,6 +60,8 @@ exports.removeBookmark = async (req, res) => {
         if (remaining === 0) await prisma.dashboardGroup.delete({ where: { id: groupId } });
     }
 
+    // Dragging out posts JSON and reloads itself, the X button is a plain form.
+    if (!req.is('json')) return res.redirect(req.get('Referer') || `${res.locals.baseUrl}/`);
     res.json({ ok: true });
 };
 
@@ -79,13 +80,13 @@ exports.delete = async (req, res) => {
 };
 
 exports.reorderGroups = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.dashboardGroup.update({ where: { id }, data: { order: index } })));
     res.json({ ok: true });
 };
 
 exports.reorderMembers = async (req, res) => {
-    const ids = (req.body.ids || []).map((id) => parseInt(id, 10));
+    const ids = parseIds(req.body.ids);
     await prisma.$transaction(ids.map((id, index) => prisma.bookmark.update({ where: { id }, data: { dashboardGroupOrder: index } })));
     res.json({ ok: true });
 };

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const snippetController = require('../controllers/snippetController');
+const { validateId } = require('../middleware/validateId');
+
+router.param('id', validateId);
 
 router.get('/', snippetController.list);
 router.get('/add', snippetController.showAddForm);
