@@ -1,24 +1,17 @@
 {
   "entries": [
     {
-      "version": "1.1.0",
-      "date": "2026-09-02",
-      "changes": [
-        "Added sharing: publish boards, categories and snippets to any number of named public pages, each with its own URL and no login required to view.",
-        "Added a language switcher in Account settings (German/English) — previously the app was translated but had no way to actually switch.",
-        "Redesigned the Bookmarks page: boards now switch without a page reload, categories support drag-and-drop reordering, links have up/down move controls as a non-drag alternative, and board/category management (rename, delete, reorder) is consolidated into one modal.",
-        "Redesigned the dashboard: pinned boards, categories and links now share one grid with consistent ordering, added an optional greeting header with date/time and current weather (via Open-Meteo, no API key required), and fixed an ordering bug where newly pinned items could land in the wrong position.",
-        "Redesigned the Snippets page and detail view: proper sort-by dropdown (created/updated/name, each with direction toggle), real syntax highlighting, a raw-code copy URL, and a two-column detail layout.",
-        "Fixed automatic favicon detection to look up each site's own declared icon instead of just guessing /favicon.ico.",
-        "Added Docker packaging: Dockerfile, docker-compose, a GitHub Actions workflow that publishes the image, and an Unraid template.",
-        "Reorganized Settings into more focused tabs (Interface, Weather, Backups split out from Account, App/update check)."
-      ]
-    },
-    {
       "version": "1.0.0",
-      "date": "2026-08-30",
+      "date": "2026-11-02",
       "changes": [
-        "Initial release of BookmarkRanger — self-hosted bookmarks and code snippet manager."
+        "First tagged release of BookmarkRanger, a self-hosted manager for bookmarks and code snippets.",
+        "Bookmarks: boards and categories that switch without a page reload, drag-and-drop and up/down reordering with custom sorting, and one dialog for renaming, deleting and reordering.",
+        "Snippets: tags, search, sorting by created/updated/name, syntax highlighting, and copying the code or a raw-text URL.",
+        "Dashboard: pinned categories, links and snippets, groups for pinned links, and an optional greeting with date, time and current weather (via Open-Meteo, no API key required).",
+        "Sharing: publish boards, categories and snippets to any number of named public pages, each with its own URL and no login required to view.",
+        "Favicons are looked up from each site's own declared icon and hotlinked from that site instead of being stored locally.",
+        "Settings: 16 color themes plus custom themes, German and English per account, on-demand database backups, and this changelog.",
+        "Docker image published via GitHub Actions, docker-compose file and Unraid template."
       ]
     }
   ]
