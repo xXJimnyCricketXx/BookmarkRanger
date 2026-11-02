@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
+const { startSession } = require('../middleware/auth');
+const { recordFailure, clearFailures } = require('../middleware/loginLimit');
 
 exports.showLogin = (req, res) => {
     if (req.session.userId) return res.redirect(`${res.locals.baseUrl}/`);
@@ -8,14 +10,16 @@ exports.showLogin = (req, res) => {
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;
-    const account = await prisma.account.findUnique({ where: { username } });
+    const validInput = typeof username === 'string' && typeof password === 'string';
+    const account = validInput ? await prisma.account.findUnique({ where: { username } }) : null;
 
     if (!account || !(await bcrypt.compare(password, account.passwordHash))) {
+        recordFailure(req.ip);
         return res.render('login', { title: 'Anmelden', error: 'auth.invalid' });
     }
 
-    req.session.userId = account.id;
-    req.session.username = account.username;
+    clearFailures(req.ip);
+    await startSession(req, account);
     res.redirect(`${res.locals.baseUrl}/`);
 };
 

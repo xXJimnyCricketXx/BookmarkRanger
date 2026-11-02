@@ -3,6 +3,7 @@ const { resolveTags } = require('../utils/tags');
 const { fetchFavicon, verifyIconUrl } = require('../utils/favicon');
 const { orderByFor } = require('../utils/sorting');
 const { getSettings } = require('../utils/settings');
+const { isHttpUrl } = require('../utils/url');
 
 async function categoriesFor(boardId, settings) {
     return prisma.category.findMany({
@@ -146,8 +147,21 @@ exports.showEditForm = async (req, res) => {
     res.render('bookmark-form', { title: 'Lesezeichen bearbeiten', boards, bookmark, selectedCategoryId: bookmark.categoryId });
 };
 
+async function renderInvalidUrl(res, bookmark, selectedCategoryId) {
+    const boards = await prisma.board.findMany({ orderBy: { order: 'asc' }, include: { categories: true } });
+    res.status(400).render('bookmark-form', {
+        title: bookmark ? 'Lesezeichen bearbeiten' : 'Lesezeichen hinzufügen',
+        boards,
+        bookmark,
+        selectedCategoryId,
+        error: 'bookmarkForm.invalid_url'
+    });
+}
+
 exports.create = async (req, res) => {
     const { title, url, description, categoryId, tags, iconUrl } = req.body;
+    if (!isHttpUrl(url)) return renderInvalidUrl(res, null, categoryId);
+
     const settings = await getSettings();
     const icon = iconUrl && iconUrl.trim() ? await verifyIconUrl(iconUrl.trim()) : await fetchFavicon(url);
     const count = await prisma.bookmark.count({ where: { categoryId: parseInt(categoryId, 10) } });
@@ -172,7 +186,8 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const { title, url, description, categoryId, tags, iconUrl } = req.body;
-    const existing = await prisma.bookmark.findUnique({ where: { id } });
+    const existing = await prisma.bookmark.findUnique({ where: { id }, include: { tags: true } });
+    if (existing && !isHttpUrl(url)) return renderInvalidUrl(res, existing, categoryId);
 
     let icon = existing.icon;
     if (iconUrl && iconUrl.trim()) {

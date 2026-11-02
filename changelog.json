@@ -1,6 +1,19 @@
 {
   "entries": [
     {
+      "version": "1.0.1",
+      "date": "2026-11-02",
+      "changes": [
+        "Forms can no longer be submitted from other websites, and session cookies are no longer sent along with cross-site requests.",
+        "Error pages no longer reveal technical details. Docker images now run in production mode.",
+        "Bookmark addresses must start with http:// or https://, also for icons.",
+        "Login is locked for 15 minutes after 10 failed attempts, and every login starts with a fresh session.",
+        "The session secret is now optional: if none is set, or only the example value, one is generated and stored in the data folder. Installations still using the example value are logged out once.",
+        "Custom greeting texts are now shown as plain text, HTML in them is no longer interpreted.",
+        "Updated dependencies with known security issues."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-11-02",
       "changes": [

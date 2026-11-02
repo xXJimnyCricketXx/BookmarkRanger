@@ -1,4 +1,10 @@
 {
+  "errors": {
+    "forbidden": "Diese Anfrage wurde aus Sicherheitsgründen blockiert.",
+    "too_large": "Die übermittelten Daten sind zu groß.",
+    "bad_request": "Diese Anfrage konnte nicht verarbeitet werden.",
+    "generic": "Da ist etwas schiefgelaufen."
+  },
   "nav": {
     "home": "Home",
     "bookmarks": "Lesezeichen",
@@ -46,7 +52,8 @@
     "password_label": "Passwort",
     "password_placeholder": "••••••••",
     "submit_btn": "Anmelden",
-    "invalid": "Benutzername oder Passwort falsch."
+    "invalid": "Benutzername oder Passwort falsch.",
+    "too_many_attempts": "Zu viele Fehlversuche. Bitte versuche es in 15 Minuten erneut."
   },
   "setup": {
     "title": "Willkommen bei BookmarkRanger!",
@@ -93,6 +100,7 @@
     "move_down": "Nach unten"
   },
   "bookmarkForm": {
+    "invalid_url": "Bitte gib eine Adresse an, die mit http:// oder https:// beginnt.",
     "title_add": "Lesezeichen hinzufügen",
     "title_edit": "Lesezeichen bearbeiten",
     "title_label": "Titel",

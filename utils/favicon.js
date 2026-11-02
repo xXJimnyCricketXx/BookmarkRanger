@@ -1,3 +1,5 @@
+const { isHttpUrl } = require('./url');
+
 // Favicons are never downloaded or stored locally — a bookmark's icon field is just the
 // discovered image URL, hotlinked straight from the bookmarked site itself (like the link
 // itself, it depends on that site being reachable, so this adds no new dependency). This
@@ -5,6 +7,7 @@
 // is deleted, and nothing that can end up out of sync when the database is moved between
 // environments.
 async function isLikelyImage(imageUrl) {
+    if (!isHttpUrl(imageUrl)) return false;
     try {
         const response = await fetch(imageUrl, { signal: AbortSignal.timeout(4000) });
         if (!response.ok) return false;

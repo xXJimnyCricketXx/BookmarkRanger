@@ -1,4 +1,10 @@
 {
+  "errors": {
+    "forbidden": "This request was blocked for security reasons.",
+    "too_large": "The submitted data is too large.",
+    "bad_request": "This request could not be processed.",
+    "generic": "Something went wrong."
+  },
   "nav": {
     "home": "Home",
     "bookmarks": "Bookmarks",
@@ -46,7 +52,8 @@
     "password_label": "Password",
     "password_placeholder": "••••••••",
     "submit_btn": "Log in",
-    "invalid": "Invalid username or password."
+    "invalid": "Invalid username or password.",
+    "too_many_attempts": "Too many failed attempts. Please try again in 15 minutes."
   },
   "setup": {
     "title": "Welcome to BookmarkRanger!",
@@ -93,6 +100,7 @@
     "move_down": "Move down"
   },
   "bookmarkForm": {
+    "invalid_url": "Please enter an address starting with http:// or https://.",
     "title_add": "Add bookmark",
     "title_edit": "Edit bookmark",
     "title_label": "Title",

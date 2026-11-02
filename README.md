@@ -13,7 +13,7 @@ use most to your own dashboard. Your data stays on your own server.
 
 <p>
   <img src="https://img.shields.io/badge/Status-Stable-FF6F9C?style=for-the-badge" alt="Status">
-  <img src="https://img.shields.io/badge/Version-1.0.0-FF6F9C?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.0.1-FF6F9C?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/Docker-Ready-FF6F9C?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/Unraid-Template-FF6F9C?style=for-the-badge&logo=unraid&logoColor=white" alt="Unraid">
 </p>
@@ -77,7 +77,7 @@ public page. Visitors need no account and only see what you put on that page.
 ```bash
 git clone https://github.com/xXJimnyCricketXx/BookmarkRanger.git
 cd BookmarkRanger
-cp .env.example .env    # set SESSION_SECRET
+cp .env.example .env
 docker compose up -d --build
 ```
 
@@ -106,7 +106,7 @@ ghcr.io/xxjimnycricketxx/bookmarkranger:latest
 curl -fsSL -o /boot/config/plugins/dockerMan/templates-user/bookmarkranger.xml https://raw.githubusercontent.com/xXJimnyCricketXx/BookmarkRanger/main/unraid-template/bookmarkranger.xml
 ```
 
-**2. Create the container.** Go to *Docker → Add Container → Template: bookmarkranger* and set a session secret.
+**2. Create the container.** Go to *Docker → Add Container → Template: bookmarkranger*.
 
 Port `18004` and the appdata paths under `/mnt/user/appdata/bookmarkranger` are pre-filled.
 
@@ -120,7 +120,7 @@ All settings are environment variables: `.env` for Docker Compose, template vari
 
 | Variable | Required | Default | Description |
 | --- | :---: | --- | --- |
-| `SESSION_SECRET` | ✅ | – | Complex secret used to sign session cookies |
+| `SESSION_SECRET` | ❌ | generated | Signs session cookies. If empty, one is generated on the first start and stored as `session_secret` in the data folder |
 | `BASE_URL` | ❌ | empty | Base path for serving on a sub-path, leave empty to serve from root |
 | `PORT` | ❌ | `3099` | Port the app listens on inside the container |
 | `DATABASE_URL` | ❌ | `file:../data/bookmarkranger.db` | SQLite connection string. The Docker image already points this at the mounted data volume, so it only matters for a manual install |
@@ -131,7 +131,8 @@ All settings are environment variables: `.env` for Docker Compose, template vari
 
 > [!WARNING]
 > The app itself speaks plain HTTP. Keep it inside your home network, and use a VPN or an HTTPS reverse
-> proxy for access from outside.
+> proxy for access from outside. A reverse proxy must pass the original `Host` or `X-Forwarded-Host` header,
+> otherwise the app blocks form submissions as cross-site requests.
 
 <br/><br/>
 
@@ -168,7 +169,7 @@ BookmarkRanger/
 | **1.2.0** | <ul><li>Major updates of Prisma and EJS</li><li>Frontend libraries served from the app instead of external CDNs</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
 | **1.1.0** | <ul><li>Automatic backups with configurable schedule and retention</li><li>Restoring and deleting backups in the app</li><li>Container without root rights on a current Node.js LTS</li><li>Public health endpoint and Docker health check</li><li>Test suite that runs before every image build</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
 | **1.0.2** | <ul><li>Bug fixes for dashboard groups, snippet ordering and the board management dialog</li><li>Complete translations and proper "not found" pages</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
-| **1.0.1** | <ul><li>Security hardening for sessions, login and input validation</li><li>Dependency updates</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
+| **1.0.1** | <ul><li>Security hardening for sessions, login and input validation</li><li>Session secret generated automatically if none is set</li><li>Dependency updates</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 | **1.0.0** | <ul><li>Boards, categories and bookmarks with automatic favicons</li><li>Snippet library with syntax highlighting</li><li>Customizable dashboard with groups, greeting and weather</li><li>Public share pages</li><li>Themes, German and English, on-demand backups</li><li>Docker image and Unraid template</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 
 See the [open issues](../../issues) for planned features and known problems.

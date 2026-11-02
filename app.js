@@ -8,6 +8,8 @@ const middleware = require('i18next-http-middleware');
 
 const i18next = require('./config/i18n');
 const { ensureSetup, requireAuth } = require('./middleware/auth');
+const { originCheck } = require('./middleware/originCheck');
+const { getSessionSecret } = require('./config/sessionSecret');
 
 const setupRoutes = require('./routes/setupRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -33,16 +35,14 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(middleware.handle(i18next));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     store: new FileStore({ path: path.join(__dirname, 'data', 'sessions'), retries: 0, logFn: () => {} }),
-    secret: process.env.SESSION_SECRET || 'dev-secret',
+    secret: getSessionSecret(),
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 }
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'lax' }
 }));
 
 app.use(async (req, res, next) => {
@@ -82,6 +82,11 @@ app.use(async (req, res, next) => {
     next();
 });
 
+app.use(originCheck);
+// After the locals above, so an oversized or malformed body still gets the normal error page.
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(ensureSetup);
 
 app.use('/setup', setupRoutes);
@@ -98,6 +103,18 @@ app.use('/shared', requireAuth, sharePageRoutes);
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.use((req, res) => res.status(404).render('404', { title: '404' }));
+
+// Never hands the error itself to the browser — stack traces reveal paths and internals.
+// Falls back to plain text if the page can't render, e.g. when the database is down.
+app.use((err, req, res, next) => {
+    if (res.headersSent) return next(err);
+    const status = err.status || err.statusCode || 500;
+    if (status >= 500) console.error(err);
+    res.status(status).render('error', { title: String(status), status }, (renderErr, html) => {
+        if (renderErr) return res.type('text/plain').send(String(status));
+        res.send(html);
+    });
+});
 
 app.listen(PORT, () => console.log(`BookmarkRanger listening on port ${PORT}`));
 

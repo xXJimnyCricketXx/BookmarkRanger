@@ -20,4 +20,16 @@ function requireAuth(req, res, next) {
     res.redirect(`${res.locals.baseUrl}/login`);
 }
 
-module.exports = { ensureSetup, requireAuth };
+// A fresh session id on login, so an id planted in the browser beforehand stays worthless.
+function startSession(req, account) {
+    return new Promise((resolve, reject) => {
+        req.session.regenerate((err) => {
+            if (err) return reject(err);
+            req.session.userId = account.id;
+            req.session.username = account.username;
+            resolve();
+        });
+    });
+}
+
+module.exports = { ensureSetup, requireAuth, startSession };

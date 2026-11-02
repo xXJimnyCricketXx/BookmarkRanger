@@ -17,7 +17,7 @@ function greetingFor(settings, username, now = new Date()) {
     else text = night;
 
     const highlighted = `<span class="username-highlight">${escapeHtml(username)}</span>`;
-    return text.replace(/\{username\}/g, highlighted);
+    return escapeHtml(text).replace(/\{username\}/g, () => highlighted);
 }
 
 function formattedDateFor(settings, now = new Date()) {

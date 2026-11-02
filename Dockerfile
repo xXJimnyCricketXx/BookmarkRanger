@@ -12,8 +12,10 @@ RUN npx prisma generate
 
 COPY . .
 
-# Sane defaults matching the mounted volumes below — override SESSION_SECRET (no
-# safe default exists) and BASE_URL (only needed for sub-path deployments).
+# Sane defaults matching the mounted volumes below — SESSION_SECRET is generated into
+# the data volume if unset, BASE_URL is only needed for sub-path deployments. NODE_ENV
+# stays below "npm install" because the prisma CLI is a devDependency (see above).
+ENV NODE_ENV=production
 ENV DATABASE_URL="file:../data/bookmarkranger.db"
 ENV PORT=3099
 
