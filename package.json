@@ -1,11 +1,12 @@
 {
   "name": "bookmarkranger",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Self-hosted bookmarks and code snippet manager",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "test": "node --test --test-concurrency=2 \"test/*.test.js\"",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
     "prisma:seed": "node prisma/seed.js"

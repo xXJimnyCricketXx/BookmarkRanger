@@ -16,7 +16,9 @@ async function ensureSetup(req, res, next) {
 }
 
 function requireAuth(req, res, next) {
-    if (req.session && req.session.userId) return next();
+    // res.locals.user, not just the session: after a restore the account behind an old
+    // session may no longer exist.
+    if (res.locals.user) return next();
     res.redirect(`${res.locals.baseUrl}/login`);
 }
 

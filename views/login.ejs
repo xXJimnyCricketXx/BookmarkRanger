@@ -34,6 +34,10 @@
       <div class="form-bg rounded-2xl shadow-xl p-8">
         <h1 class="text-xl font-black mb-6 text-center"><%= t('login.title') %></h1>
 
+        <% if (locals.notice) { %>
+          <p class="text-green-500 text-sm text-center mb-4"><%= t(notice) %></p>
+        <% } %>
+
         <% if (error) { %>
           <p class="error text-sm text-center mb-4"><%= t(error) %></p>
         <% } %>

@@ -10,6 +10,8 @@ const i18next = require('./config/i18n');
 const { ensureSetup, requireAuth } = require('./middleware/auth');
 const { originCheck } = require('./middleware/originCheck');
 const { getSessionSecret } = require('./config/sessionSecret');
+const { DATA_DIR } = require('./config/paths');
+const { isRestoring, startBackupScheduler } = require('./utils/backups');
 
 const setupRoutes = require('./routes/setupRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -37,8 +39,25 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(middleware.handle(i18next));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Ahead of login and setup — the container's health check has no session. A running restore
+// counts as healthy, otherwise the check could restart the container right in the middle.
+app.get('/api/health', async (req, res) => {
+    try {
+        if (!isRestoring()) await prisma.$queryRaw`SELECT 1`;
+        res.json({ status: 'ok' });
+    } catch (err) {
+        res.status(503).json({ status: 'error' });
+    }
+});
+
+// A restore swaps the database file, nothing else may open it during that moment.
+app.use((req, res, next) => {
+    if (isRestoring()) return res.status(503).set('Retry-After', '5').type('text/plain').send('Restoring backup');
+    next();
+});
+
 app.use(session({
-    store: new FileStore({ path: path.join(__dirname, 'data', 'sessions'), retries: 0, logFn: () => {} }),
+    store: new FileStore({ path: path.join(DATA_DIR, 'sessions'), retries: 0, logFn: () => {} }),
     secret: getSessionSecret(),
     resave: false,
     saveUninitialized: false,
@@ -100,8 +119,6 @@ app.use('/settings', requireAuth, settingsRoutes);
 app.use('/dashboard-groups', requireAuth, dashboardGroupRoutes);
 app.use('/shared', requireAuth, sharePageRoutes);
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
-
 app.use((req, res) => res.status(404).render('404', { title: '404' }));
 
 // Never hands the error itself to the browser — stack traces reveal paths and internals.
@@ -118,6 +135,13 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(PORT, () => console.log(`BookmarkRanger listening on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`BookmarkRanger listening on port ${PORT}`);
+    startBackupScheduler();
+});
+
+// As the container's main process, Node ignores this signal unless it's handled explicitly —
+// "docker stop" would wait out its full timeout on every update.
+process.on('SIGTERM', () => process.exit(0));
 
 module.exports = app;

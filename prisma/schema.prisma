@@ -42,6 +42,10 @@ model Settings {
   customMonthNames       String  @default("Januar;Februar;März;April;Mai;Juni;Juli;August;September;Oktober;November;Dezember")
   fallbackSearchProvider   SearchProvider? @relation(fields: [fallbackSearchProviderId], references: [id])
   fallbackSearchProviderId Int?
+  autoBackupEnabled      Boolean @default(true)
+  autoBackupIntervalDays Int     @default(1)
+  backupKeepCount        Int     @default(7)
+  backupKeepDays         Int     @default(30)
 }
 
 model SearchProvider {

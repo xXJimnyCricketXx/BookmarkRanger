@@ -12,7 +12,7 @@ function getChangelog() {
     }
 }
 
-// The app version shown in Settings and used for the update check is the newest
+// The app version shown in Settings is the newest
 // entry's version in changelog.json, so bumping the version is just part of writing
 // the changelog entry instead of a separate, easy-to-forget step.
 function getCurrentVersion() {

@@ -28,5 +28,7 @@
   <Config Name="Backups Volume" Target="/app/backups" Default="/mnt/user/appdata/bookmarkranger/backups" Mode="rw" Description="Directory where manual and automatic database backups are stored." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/bookmarkranger/backups</Config>
 
   <Config Name="Session Secret" Target="SESSION_SECRET" Default="" Mode="" Description="Secret used to sign session cookies. Leave empty to have one generated and stored in the data folder." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="User the container runs as and that owns the data and backups folders." Type="Variable" Display="advanced" Required="false" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="Group the container runs as and that owns the data and backups folders." Type="Variable" Display="advanced" Required="false" Mask="false">100</Config>
   <Config Name="Base URL" Target="BASE_URL" Default="" Mode="" Description="Base path for serving on a sub-path (e.g. /bookmarkranger), leave empty to serve from root." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
 </Container>

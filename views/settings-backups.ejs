@@ -3,26 +3,95 @@
 <div class="layout-with-sidebar">
   <%- include('partials/settings-nav', { active: 'backups' }) %>
 
-  <div class="flex-grow max-w-xl">
-    <h2 class="text-xl font-black mb-4"><%= t('settings.backups_title') %></h2>
+  <div class="flex-grow max-w-xl space-y-10">
+    <% if (message) { %>
+      <p class="<%= message.isError ? 'text-red-500' : 'text-green-500' %> text-sm"><%= t(`settings.backup_msg_${message.key}`) %></p>
+    <% } %>
 
-    <form action="<%= baseUrl %>/settings/backups" method="POST" class="mb-5">
-      <button type="submit" class="bg-primary-theme font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition"><%= t('settings.create_backup') %></button>
+    <form action="<%= baseUrl %>/settings/backups/settings" method="POST">
+      <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.backup_auto_section') %></h2>
+      <div class="space-y-6">
+        <label class="flex items-center gap-3 text-sm font-bold cursor-pointer">
+          <input type="checkbox" name="autoBackupEnabled" value="true" <%= settings.autoBackupEnabled ? 'checked' : '' %>>
+          <%= t('settings.backup_auto_enabled') %>
+        </label>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.backup_interval_days') %></label>
+          <input type="number" name="autoBackupIntervalDays" min="1" max="365" required value="<%= settings.autoBackupIntervalDays %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.backup_keep_count') %></label>
+          <input type="number" name="backupKeepCount" min="1" max="1000" required value="<%= settings.backupKeepCount %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-2"><%= t('settings.backup_keep_days') %></label>
+          <input type="number" name="backupKeepDays" min="1" max="3650" required value="<%= settings.backupKeepDays %>" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
+          <p class="text-xs opacity-50 mt-2"><%= t('settings.backup_retention_hint') %></p>
+        </div>
+        <button type="submit" class="bg-primary-theme font-bold px-6 py-3 rounded-xl hover:brightness-110 transition"><%= t('settings.save_changes') %></button>
+      </div>
     </form>
 
-    <% if (backups.length === 0) { %>
-      <p class="opacity-50 text-sm"><%= t('settings.no_backups') %></p>
-    <% } else { %>
-      <ul class="space-y-2">
-        <% backups.forEach(file => { %>
-          <li class="card-theme rounded-xl px-4 py-2.5 flex items-center justify-between text-sm">
-            <span class="truncate"><%= file %></span>
-            <a href="<%= baseUrl %>/settings/backups/<%= file %>" class="text-primary-theme font-bold shrink-0 ml-3"><%= t('settings.download') %></a>
-          </li>
-        <% }) %>
-      </ul>
-    <% } %>
+    <div>
+      <h2 class="text-lg font-black mb-4 pb-2 border-b border-black/5 dark:border-white/10"><%= t('settings.backups_title') %></h2>
+
+      <div class="flex flex-wrap gap-3 mb-5">
+        <form action="<%= baseUrl %>/settings/backups" method="POST">
+          <button type="submit" class="bg-primary-theme font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition"><%= t('settings.create_backup') %></button>
+        </form>
+        <input type="file" id="backup-upload-input" accept=".db" class="hidden">
+        <button type="button" id="backup-upload-btn" class="card-theme font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition"><%= t('settings.backup_upload') %></button>
+      </div>
+
+      <% if (backups.length === 0) { %>
+        <p class="opacity-50 text-sm"><%= t('settings.no_backups') %></p>
+      <% } else { %>
+        <ul class="space-y-2">
+          <% backups.forEach(backup => { %>
+            <% const label = backup.createdAt.toLocaleString(currentLng); %>
+            <li class="card-theme rounded-xl px-4 py-2.5 text-sm">
+              <div class="flex items-center justify-between gap-3">
+                <span class="font-bold truncate"><%= label %></span>
+                <span class="text-xs opacity-50 shrink-0"><%= t(`settings.backup_type_${backup.type}`) %> · <%= (backup.size / 1024 / 1024).toFixed(2) %> MB</span>
+              </div>
+              <div class="flex items-center gap-4 mt-1.5 text-xs">
+                <a href="<%= baseUrl %>/settings/backups/<%= backup.file %>" class="text-primary-theme font-bold"><%= t('settings.download') %></a>
+                <form action="<%= baseUrl %>/settings/backups/<%= backup.file %>/restore" method="POST" data-confirm="<%= t('settings.backup_confirm_restore', { name: label }) %>">
+                  <button type="submit" class="text-primary-theme font-bold"><%= t('settings.backup_restore') %></button>
+                </form>
+                <form action="<%= baseUrl %>/settings/backups/<%= backup.file %>/delete" method="POST" data-confirm="<%= t('common.confirm_delete', { name: label }) %>">
+                  <button type="submit" class="text-red-500 font-bold"><%= t('bookmarks.delete') %></button>
+                </form>
+              </div>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    const input = document.getElementById('backup-upload-input');
+    const page = '<%= baseUrl %>/settings/backups';
+    document.getElementById('backup-upload-btn').addEventListener('click', () => input.click());
+    input.addEventListener('change', async () => {
+      if (!input.files.length) return;
+      let message = 'failed';
+      try {
+        const res = await fetch(page + '/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: input.files[0]
+        });
+        message = (await res.json()).message;
+      } catch (err) {
+        // Stays on "failed" — the server also cuts the connection on oversized uploads.
+      }
+      window.location.href = page + '?message=' + encodeURIComponent(message);
+    });
+  })();
+</script>
 
 <%- include('partials/footer') %>

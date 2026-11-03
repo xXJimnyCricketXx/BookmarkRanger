@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { DATA_DIR } = require('./paths');
 
-const SECRET_PATH = path.join(__dirname, '..', 'data', 'session_secret');
+const SECRET_PATH = path.join(DATA_DIR, 'session_secret');
 // The example values from .env.example and older Unraid templates are public, so they
 // count as "not set" instead of silently signing sessions with a known secret.
 const PLACEHOLDERS = new Set(['change-this-secret', 'ChangeThisToAComplexSecret']);

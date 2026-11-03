@@ -5,7 +5,7 @@ const { recordFailure, clearFailures } = require('../middleware/loginLimit');
 
 exports.showLogin = (req, res) => {
     if (req.session.userId) return res.redirect(`${res.locals.baseUrl}/`);
-    res.render('login', { title: res.locals.t('login.title'), error: null });
+    res.render('login', { title: res.locals.t('login.title'), error: null, notice: req.query.restored ? 'login.restored' : null });
 };
 
 exports.login = async (req, res) => {

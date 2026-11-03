@@ -32,6 +32,10 @@ router.get('/app', settingsController.showApp);
 
 router.get('/backups', settingsController.showBackups);
 router.post('/backups', settingsController.createBackup);
+router.post('/backups/settings', settingsController.saveBackupSettings);
+router.post('/backups/upload', settingsController.uploadBackup);
 router.get('/backups/:file', settingsController.downloadBackup);
+router.post('/backups/:file/restore', settingsController.restoreBackup);
+router.post('/backups/:file/delete', settingsController.deleteBackup);
 
 module.exports = router;

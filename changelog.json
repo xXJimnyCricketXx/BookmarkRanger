@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-03",
+      "changes": [
+        "Automatic backups, by default once a day: set the interval in days, how many to always keep, and after how many days older ones are deleted. Manual, uploaded and safety backups are never deleted automatically.",
+        "Backups can now be restored, uploaded and deleted in Settings. Restoring checks the backup, saves the current state as a safety backup first, also accepts backups from older versions, and then asks you to sign in again.",
+        "Backups now stay consistent even if something is being saved at that moment, and also work with a custom database path.",
+        "The container no longer runs as root. It uses PUID and PGID (default 1000, Unraid template 99/100) and takes over its data and backups folders on start.",
+        "Updated to Node.js 24 LTS, and the container now reports its health and stops immediately on updates.",
+        "A test suite now runs before every image is built."
+      ]
+    },
+    {
       "version": "1.0.2",
       "date": "2026-11-02",
       "changes": [

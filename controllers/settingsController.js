@@ -1,23 +1,21 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const { Transform } = require('stream');
+const { pipeline } = require('stream/promises');
 const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 const PRESETS = require('../config/themes');
 const { getSettings } = require('../utils/settings');
 const { getChangelog } = require('../utils/changelog');
+const { BACKUPS_DIR } = require('../config/paths');
+const backups = require('../utils/backups');
 
-const BACKUPS_DIR = path.join(__dirname, '..', 'backups');
+const MAX_UPLOAD_BYTES = 256 * 1024 * 1024;
 const REPO_URL = 'https://github.com/xXJimnyCricketXx/BookmarkRanger';
 
 function settingsTitle(res, tab) {
     return `${res.locals.t('nav.settings')} — ${res.locals.t(`settings.nav_${tab}`)}`;
-}
-
-function dbFilePath() {
-    // Prisma resolves a relative sqlite "file:" path relative to prisma/schema.prisma,
-    // not the project root, so the backup source path must match that.
-    const raw = (process.env.DATABASE_URL || '').replace(/^file:/, '');
-    return path.join(__dirname, '..', 'prisma', raw);
 }
 
 exports.showTheme = async (req, res) => {
@@ -192,22 +190,107 @@ exports.showApp = (req, res) => {
     res.render('settings-app', { title: settingsTitle(res, 'app'), repoUrl: REPO_URL, changelog: getChangelog() });
 };
 
-exports.showBackups = (req, res) => {
-    if (!fs.existsSync(BACKUPS_DIR)) fs.mkdirSync(BACKUPS_DIR, { recursive: true });
-    const backups = fs.readdirSync(BACKUPS_DIR).filter((f) => f.endsWith('.db')).sort().reverse();
-    res.render('settings-backups', { title: settingsTitle(res, 'backups'), backups });
+const BACKUP_MESSAGES = {
+    created: false, saved: false, uploaded: false, deleted: false,
+    invalid: true, newer: true, no_account: true, too_large: true, failed: true
+};
+
+function backupsRedirect(res, message) {
+    res.redirect(`${res.locals.baseUrl}/settings/backups?message=${message}`);
+}
+
+function backupErrorMessage(err) {
+    if (err instanceof backups.BackupError) return err.code;
+    console.error(err);
+    return 'failed';
+}
+
+function intInRange(value, min, max, fallback) {
+    const number = parseInt(value, 10);
+    if (Number.isNaN(number)) return fallback;
+    return Math.min(Math.max(number, min), max);
+}
+
+exports.showBackups = async (req, res) => {
+    const settings = await getSettings();
+    const key = req.query.message;
+    const message = Object.hasOwn(BACKUP_MESSAGES, key) ? { key, isError: BACKUP_MESSAGES[key] } : null;
+    res.render('settings-backups', { title: settingsTitle(res, 'backups'), settings, backups: backups.listBackups(), message });
+};
+
+exports.saveBackupSettings = async (req, res) => {
+    const settings = await getSettings();
+    const updated = await prisma.settings.update({
+        where: { id: settings.id },
+        data: {
+            autoBackupEnabled: req.body.autoBackupEnabled === 'true',
+            autoBackupIntervalDays: intInRange(req.body.autoBackupIntervalDays, 1, 365, settings.autoBackupIntervalDays),
+            backupKeepCount: intInRange(req.body.backupKeepCount, 1, 1000, settings.backupKeepCount),
+            backupKeepDays: intInRange(req.body.backupKeepDays, 1, 3650, settings.backupKeepDays)
+        }
+    });
+    if (updated.autoBackupEnabled) backups.applyRetention(updated);
+    backupsRedirect(res, 'saved');
 };
 
 exports.createBackup = async (req, res) => {
-    if (!fs.existsSync(BACKUPS_DIR)) fs.mkdirSync(BACKUPS_DIR, { recursive: true });
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const dest = path.join(BACKUPS_DIR, `bookmarkranger-${timestamp}.db`);
-    fs.copyFileSync(dbFilePath(), dest);
-    res.redirect(`${res.locals.baseUrl}/settings/backups`);
+    await backups.createBackup();
+    backupsRedirect(res, 'created');
 };
 
 exports.downloadBackup = (req, res) => {
-    const file = path.join(BACKUPS_DIR, req.params.file);
-    if (!file.startsWith(BACKUPS_DIR) || !fs.existsSync(file)) return res.status(404).send('Not found');
+    const file = backups.resolveBackup(req.params.file);
+    if (!file) return res.status(404).render('404', { title: '404' });
     res.download(file);
+};
+
+exports.deleteBackup = (req, res) => {
+    if (!backups.deleteBackup(req.params.file)) return res.status(404).render('404', { title: '404' });
+    backupsRedirect(res, 'deleted');
+};
+
+// Sent as the raw request body by the page's script, and streamed to disk because a backup
+// can be far larger than what the form parsers accept.
+exports.uploadBackup = async (req, res) => {
+    if (!req.is('application/octet-stream')) return res.status(400).json({ message: 'invalid' });
+
+    fs.mkdirSync(BACKUPS_DIR, { recursive: true });
+    const temp = path.join(BACKUPS_DIR, `upload-${crypto.randomBytes(8).toString('hex')}.tmp`);
+    let received = 0;
+    const limiter = new Transform({
+        transform(chunk, encoding, callback) {
+            received += chunk.length;
+            if (received > MAX_UPLOAD_BYTES) return callback(new backups.BackupError('too_large'));
+            callback(null, chunk);
+        }
+    });
+
+    try {
+        await pipeline(req, limiter, fs.createWriteStream(temp));
+        await backups.validateBackup(temp);
+        fs.renameSync(temp, path.join(BACKUPS_DIR, backups.newFileName('upload')));
+        res.json({ message: 'uploaded' });
+    } catch (err) {
+        const message = backupErrorMessage(err);
+        res.status(message === 'too_large' ? 413 : message === 'failed' ? 500 : 400).json({ message });
+    } finally {
+        fs.rmSync(temp, { force: true });
+        fs.rmSync(`${temp}-journal`, { force: true });
+    }
+};
+
+exports.restoreBackup = async (req, res) => {
+    if (!backups.resolveBackup(req.params.file)) return res.status(404).render('404', { title: '404' });
+
+    try {
+        await backups.restoreBackup(req.params.file);
+    } catch (err) {
+        return backupsRedirect(res, backupErrorMessage(err));
+    }
+
+    // The restored data can hold another password, so every open session ends here.
+    const store = req.sessionStore;
+    req.session.destroy(() => {
+        store.clear(() => res.redirect(`${res.locals.baseUrl}/login?restored=1`));
+    });
 };
