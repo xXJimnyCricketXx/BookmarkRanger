@@ -13,7 +13,7 @@ use most to your own dashboard. Your data stays on your own server.
 
 <p>
   <img src="https://img.shields.io/badge/Status-Stable-FF6F9C?style=for-the-badge" alt="Status">
-  <img src="https://img.shields.io/badge/Version-1.1.0-FF6F9C?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.1.1-FF6F9C?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/Docker-Ready-FF6F9C?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/Unraid-Template-FF6F9C?style=for-the-badge&logo=unraid&logoColor=white" alt="Unraid">
 </p>
@@ -103,14 +103,20 @@ ghcr.io/xxjimnycricketxx/bookmarkranger:latest
 **1. Install the template.** On the Unraid console:
 
 ```bash
-curl -fsSL -o /boot/config/plugins/dockerMan/templates-user/bookmarkranger.xml https://raw.githubusercontent.com/xXJimnyCricketXx/BookmarkRanger/main/unraid-template/bookmarkranger.xml
+curl -fsSL -o /boot/config/plugins/dockerMan/templates-user/my-BookmarkRanger.xml https://raw.githubusercontent.com/xXJimnyCricketXx/BookmarkRanger/main/unraid-template/bookmarkranger.xml
 ```
 
-**2. Create the container.** Go to *Docker → Add Container → Template: bookmarkranger*.
+**2. Create the container.** Go to *Docker → Add Container → Template: BookmarkRanger*.
 
 Port `18004`, the appdata paths under `/mnt/user/appdata/bookmarkranger` and `PUID`/`PGID` are pre-filled.
 
 **Updates:** *Docker → Check for Updates*, then apply the update for BookmarkRanger.
+
+**Installed before 1.1.1?** The old command saved the template as `bookmarkranger.xml`. Unraid can then rebuild the container from that file on updates and drop variables added later. Move it out of the way once:
+
+```bash
+mv /boot/config/plugins/dockerMan/templates-user/bookmarkranger.xml /boot/config/plugins/dockerMan/bookmarkranger.xml.bak
+```
 
 <br/><br/>
 
@@ -123,7 +129,7 @@ All settings are environment variables: `.env` for Docker Compose, template vari
 | `SESSION_SECRET` | ❌ | generated | Signs session cookies. If empty, one is generated on the first start and stored as `session_secret` in the data folder |
 | `BASE_URL` | ❌ | empty | Base path for serving on a sub-path, leave empty to serve from root |
 | `PORT` | ❌ | `3099` | Port the app listens on inside the container |
-| `PUID` / `PGID` | ❌ | `1000` | User and group the container runs as and that own the data and backups folders. The Unraid template uses `99` / `100` |
+| `PUID` / `PGID` | ❌ | Owner of the data folder, or `1000` if that is root | User and group the container runs as and that own the data and backups folders. The Unraid template uses `99` / `100` |
 | `DATABASE_URL` | ❌ | `file:../data/bookmarkranger.db` | SQLite connection string. The Docker image already points this at the mounted data volume, so it only matters for a manual install |
 
 > [!IMPORTANT]
@@ -170,6 +176,7 @@ BookmarkRanger/
 | **Version** | **Features** | **Status** |
 | :---: | :--- | :---: |
 | **1.2.0** | <ul><li>Major updates of Prisma and EJS</li><li>Frontend libraries served from the app instead of external CDNs</li></ul> | <img src="https://img.shields.io/badge/Planned-6E7681?style=for-the-badge" alt="Planned"> |
+| **1.1.1** | <ul><li>Unraid install no longer leaves a second template behind that can drop variables on updates</li><li>Container keeps the folder owner when PUID and PGID are not set</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 | **1.1.0** | <ul><li>Automatic backups with an interval in days and adjustable retention</li><li>Restoring, uploading and deleting backups in the app</li><li>Container without root rights on Node.js 24 LTS</li><li>Public health endpoint and Docker health check</li><li>Test suite that runs before every image build</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 | **1.0.2** | <ul><li>Bug fixes for dashboard groups, snippet ordering and the board management dialog</li><li>Complete translations and proper "not found" pages</li><li>Larger snippets, up to 2 MB</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |
 | **1.0.1** | <ul><li>Security hardening for sessions, login and input validation</li><li>Session secret generated automatically if none is set</li><li>Dependency updates</li></ul> | <img src="https://img.shields.io/badge/Released-FF6F9C?style=for-the-badge" alt="Released"> |

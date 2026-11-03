@@ -1,6 +1,14 @@
 {
   "entries": [
     {
+      "version": "1.1.1",
+      "date": "2026-11-03",
+      "changes": [
+        "Without PUID and PGID the container now keeps the current owner of its data and backups folders instead of switching them to 1000. Only root-owned or new folders fall back to 1000.",
+        "Unraid: the install command now saves the template under the name Unraid uses itself. The old file name could make updates drop variables added later, such as PUID and PGID. If you installed before this version, see the README for a one-line fix."
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-03",
       "changes": [
