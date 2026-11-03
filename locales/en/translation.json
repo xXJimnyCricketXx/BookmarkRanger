@@ -172,7 +172,7 @@
     "backup_retention_hint": "Only applies to automatic backups. Manual, uploaded and safety backups are never deleted automatically.",
     "backup_upload": "Upload backup",
     "backup_restore": "Restore",
-    "backup_confirm_restore": "Restore the backup from {{name}}? The current state is saved as a safety backup first, and you will need to sign in again.",
+    "backup_confirm_restore": "Restore the backup from {{name}}? Everything returns to the state of this backup, including username and password. The current state is saved as a safety backup first, and you will need to sign in again.",
     "backup_type_manual": "Manual",
     "backup_type_auto": "Automatic",
     "backup_type_safety": "Safety backup",

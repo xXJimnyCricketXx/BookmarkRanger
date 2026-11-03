@@ -9,8 +9,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title><%= t('setup.title') %></title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/fontawesome/css/all.min.css">
   <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
 
   <style>
@@ -23,6 +22,7 @@
     .btn-setup:hover { filter: brightness(1.1); }
     .error { color: #f87171; }
   </style>
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/tailwind.min.css">
 </head>
 <body class="flex flex-col min-h-screen">
   <div class="flex-grow flex items-center justify-center p-4">

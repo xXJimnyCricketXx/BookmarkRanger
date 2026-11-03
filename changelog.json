@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-03",
+      "changes": [
+        "The app no longer loads Tailwind and Font Awesome from external servers. Everything it needs to display now ships with it, so pages also look right without internet access.",
+        "Bookmarks without an icon, or whose icon link no longer works, now show a local fallback icon instead of a broken image.",
+        "Uploaded backups keep the date from their file name and sort accordingly, so an old backup no longer appears at the top of the list as if it were new.",
+        "The restore prompt now states clearly that everything returns to the state of the backup, including username and password.",
+        "After restoring an older backup, old local icon paths are looked up again in the background.",
+        "Updated Prisma to version 7 and EJS to version 7, which also clears all reported security warnings in the packages the app runs on. Your database file stays as it is."
+      ]
+    },
+    {
       "version": "1.1.1",
       "date": "2026-11-03",
       "changes": [

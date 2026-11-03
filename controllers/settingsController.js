@@ -268,7 +268,7 @@ exports.uploadBackup = async (req, res) => {
     try {
         await pipeline(req, limiter, fs.createWriteStream(temp));
         await backups.validateBackup(temp);
-        fs.renameSync(temp, path.join(BACKUPS_DIR, backups.newFileName('upload')));
+        fs.renameSync(temp, path.join(BACKUPS_DIR, backups.uploadFileName(req.get('x-backup-name'))));
         res.json({ message: 'uploaded' });
     } catch (err) {
         const message = backupErrorMessage(err);
@@ -287,6 +287,8 @@ exports.restoreBackup = async (req, res) => {
     } catch (err) {
         return backupsRedirect(res, backupErrorMessage(err));
     }
+
+    backups.repairLegacyIcons().catch((err) => console.error('Icon repair failed:', err));
 
     // The restored data can hold another password, so every open session ends here.
     const store = req.sessionStore;

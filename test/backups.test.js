@@ -2,7 +2,7 @@ const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
 const path = require('path');
-const { PrismaClient } = require('@prisma/client');
+const { createClient } = require('../config/database');
 const { TestApp, PASSWORD, ROOT, fileUrl, migrate } = require('./helpers');
 
 const backupFiles = (app, type) => fs.readdirSync(app.backupsDir).filter((file) => (
@@ -30,7 +30,7 @@ function oldDatabase(app) {
 }
 
 async function withRawDb(file, callback) {
-    const client = new PrismaClient({ datasourceUrl: fileUrl(file) });
+    const client = createClient(file);
     try {
         return await callback(client);
     } finally {
@@ -179,6 +179,36 @@ describe('backups', () => {
         assert.strictEqual((await app.get('/settings/backups')).status, 200);
     });
 
+    test('an upload keeps the date from its file name and never replaces an earlier one', async () => {
+        const send = (name) => app.post('/settings/backups/upload', null, {
+            raw: fs.readFileSync(app.dbPath),
+            headers: { 'content-type': 'application/octet-stream', 'x-backup-name': encodeURIComponent(name) }
+        });
+        const existing = new Set(backupFiles(app, 'upload'));
+        const added = () => backupFiles(app, 'upload').filter((file) => !existing.has(file));
+
+        await send('bookmarkranger-2026-09-02T01-06-58-054Z.db');
+        await send('bookmarkranger-2026-09-02T01-06-58-054Z (1).db');
+        await send('bookmarkranger-auto-2026-08-30T01-57-33-200Z.db');
+        await send('my backup.db');
+        await send('bookmarkranger-2999-01-01T00-00-00-000Z.db');
+        await send('bookmarkranger-2026-13-45T00-00-00-000Z.db');
+
+        const files = added();
+        assert.ok(files.includes('bookmarkranger-upload-2026-09-02T01-06-58-054Z.db'));
+        assert.ok(files.includes('bookmarkranger-upload-2026-09-02T01-06-58-055Z.db'));
+        assert.ok(files.includes('bookmarkranger-upload-2026-08-30T01-57-33-200Z.db'));
+        const current = files.filter((file) => file.includes(`upload-${new Date().getUTCFullYear()}-${String(new Date().getUTCMonth() + 1).padStart(2, '0')}`));
+        assert.strictEqual(files.length, 6);
+        assert.strictEqual(current.length, 3);
+
+        const page = await app.get('/settings/backups');
+        for (const file of files) {
+            assert.ok(page.text.includes(file));
+            fs.rmSync(path.join(app.backupsDir, file));
+        }
+    });
+
     test('a backup from an older version is migrated on restore', async () => {
         const old = oldDatabase(app);
         await withRawDb(old, (client) => client.$executeRawUnsafe(
@@ -198,6 +228,42 @@ describe('backups', () => {
         assert.ok(columns.some((column) => column.name === 'autoBackupIntervalDays'));
         await check.$disconnect();
         assert.strictEqual((await app.get('/login')).status, 200);
+    });
+});
+
+describe('icons after a restore', () => {
+    let app;
+
+    before(async () => {
+        app = await new TestApp().start();
+        await app.setup();
+    });
+
+    after(async () => {
+        await app.destroy();
+    });
+
+    test('old local icon paths are replaced, hotlinked icons stay', async () => {
+        const db = app.db();
+        const category = await db.category.create({ data: { name: 'c', board: { create: { name: 'b' } } } });
+        const legacy = await db.bookmark.create({ data: { title: 'old', url: 'http://127.0.0.1:1/', icon: '/uploads/favicons/old.png', categoryId: category.id } });
+        const current = await db.bookmark.create({ data: { title: 'new', url: 'http://127.0.0.1:1/', icon: 'https://example.com/icon.png', categoryId: category.id } });
+        await db.$disconnect();
+
+        await app.post('/settings/backups');
+        const [file] = backupFiles(app, 'manual');
+        const res = await app.post(`/settings/backups/${file}/restore`);
+        assert.match(res.location, /\/login\?restored=1$/);
+
+        const check = app.db();
+        let icon = '/uploads/favicons/old.png';
+        for (let i = 0; i < 100 && icon; i++) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            icon = (await check.bookmark.findUnique({ where: { id: legacy.id } })).icon;
+        }
+        assert.strictEqual(icon, null);
+        assert.strictEqual((await check.bookmark.findUnique({ where: { id: current.id } })).icon, 'https://example.com/icon.png');
+        await check.$disconnect();
     });
 });
 

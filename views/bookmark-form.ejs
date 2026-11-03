@@ -42,7 +42,7 @@
       <label class="block text-sm font-bold mb-2"><%= t('bookmarkForm.icon_label') %></label>
       <div class="flex items-center gap-3">
         <% if (bookmark && bookmark.icon) { %>
-          <img src="<%= bookmark.icon %>" referrerpolicy="no-referrer" class="w-8 h-8 rounded-lg shrink-0" alt="">
+          <%- include('partials/bookmark-icon', { icon: bookmark.icon, size: 'w-8 h-8 rounded-lg' }) %>
         <% } %>
         <input type="url" name="iconUrl" placeholder="https://example.com/icon.png" class="input-theme w-full px-4 py-3 rounded-xl text-sm">
       </div>

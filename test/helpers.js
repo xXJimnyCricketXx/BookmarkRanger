@@ -3,15 +3,12 @@ const os = require('os');
 const net = require('net');
 const path = require('path');
 const { spawn, execFileSync } = require('child_process');
-const { PrismaClient } = require('@prisma/client');
+const { createClient } = require('../config/database');
+const { fileUrl } = require('../config/paths');
 
 const ROOT = path.join(__dirname, '..');
 const PRISMA_CLI = path.join(ROOT, 'node_modules', 'prisma', 'build', 'index.js');
 const PASSWORD = 'testpass1';
-
-function fileUrl(filePath) {
-    return `file:${filePath.replace(/\\/g, '/')}`;
-}
 
 function migrate(databaseUrl, schema) {
     const args = [PRISMA_CLI, 'migrate', 'deploy'];
@@ -86,7 +83,7 @@ class TestApp {
     }
 
     db() {
-        return new PrismaClient({ datasourceUrl: this.databaseUrl });
+        return createClient(this.dbPath);
     }
 
     // Keeps its session cookie like a browser unless called with { anon: true }.

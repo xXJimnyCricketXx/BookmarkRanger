@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const { execFile } = require('child_process');
-const { PrismaClient } = require('@prisma/client');
 const prisma = require('../config/db');
-const { ROOT_DIR, BACKUPS_DIR } = require('../config/paths');
+const { createClient } = require('../config/database');
+const { ROOT_DIR, BACKUPS_DIR, dbFilePath, fileUrl } = require('../config/paths');
 const { getSettings } = require('./settings');
+const { fetchFavicon } = require('./favicon');
 
 // Backups without a prefix are manual ones — that includes every backup made before the
 // other types existed. Retention only ever touches "auto".
@@ -31,17 +32,6 @@ function isRestoring() {
     return restoring;
 }
 
-function dbFilePath() {
-    // Prisma resolves a relative sqlite "file:" path relative to prisma/schema.prisma,
-    // not the project root, so the path here must match that.
-    const raw = (process.env.DATABASE_URL || '').replace(/^file:/, '').split('?')[0];
-    return path.resolve(ROOT_DIR, 'prisma', raw);
-}
-
-function fileUrl(filePath) {
-    return `file:${filePath.replace(/\\/g, '/')}`;
-}
-
 function parseFileName(file) {
     const match = FILE_NAME.exec(file);
     if (!match) return null;
@@ -52,6 +42,23 @@ function parseFileName(file) {
 function newFileName(type) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     return `bookmarkranger-${type === 'manual' ? '' : `${type}-`}${timestamp}.db`;
+}
+
+// Downloaded backups carry their creation time in the file name. An upload keeps it, so an
+// old backup doesn't look like the newest one. Other names count as created right now.
+function uploadFileName(originalName) {
+    const match = /\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/.exec(originalName || '');
+    const parsed = match && parseFileName(`bookmarkranger-${match[0]}.db`);
+    const validTime = parsed ? parsed.createdAt.getTime() : NaN;
+    let time = validTime <= Date.now() ? validTime : Date.now();
+
+    // The same file uploaded twice must not replace the earlier upload.
+    let file;
+    do {
+        file = `bookmarkranger-upload-${new Date(time).toISOString().replace(/[:.]/g, '-')}.db`;
+        time += 1;
+    } while (fs.existsSync(path.join(BACKUPS_DIR, file)));
+    return file;
 }
 
 function listBackups() {
@@ -114,7 +121,7 @@ function hasSqliteHeader(filePath) {
 async function validateBackup(filePath) {
     if (!hasSqliteHeader(filePath)) throw new BackupError('invalid');
 
-    const client = new PrismaClient({ datasourceUrl: fileUrl(filePath) });
+    const client = createClient(filePath);
     try {
         const [check] = await client.$queryRawUnsafe('PRAGMA quick_check');
         if (Object.values(check)[0] !== 'ok') throw new BackupError('invalid');
@@ -172,6 +179,17 @@ async function restoreBackup(file) {
     }
 }
 
+// Backups from before icons were hotlinked point at files that no longer exist. Runs after a
+// restore has finished, because it depends on how fast the bookmarked sites respond.
+async function repairLegacyIcons() {
+    const bookmarks = await prisma.bookmark.findMany({ where: { icon: { startsWith: '/uploads/' } } });
+    for (const bookmark of bookmarks) {
+        if (restoring) return;
+        const icon = await fetchFavicon(bookmark.url);
+        await prisma.bookmark.update({ where: { id: bookmark.id }, data: { icon } });
+    }
+}
+
 function applyRetention(settings, now = Date.now()) {
     listBackups()
         .filter((backup) => backup.type === 'auto')
@@ -207,8 +225,9 @@ module.exports = {
     BackupError,
     isRestoring,
     listBackups,
+    uploadFileName,
+    repairLegacyIcons,
     resolveBackup,
-    newFileName,
     createBackup,
     deleteBackup,
     validateBackup,

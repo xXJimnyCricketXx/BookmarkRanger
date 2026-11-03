@@ -16,10 +16,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= page.name %> — <%= settings.siteName %></title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' };</script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="<%= baseUrl %>/vendor/hljs-atom-one-dark.min.css">
   <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
 
@@ -46,6 +44,7 @@
     .bg-primary-theme { background-color: var(--highlight) !important; color: var(--highlight-text) !important; }
     .card-theme { background-color: var(--bg-card) !important; border: 1px solid var(--border-color); color: var(--text-main) !important; }
   </style>
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/tailwind.min.css">
 </head>
 <body class="font-sans transition-colors duration-300 min-h-screen flex flex-col">
 
@@ -75,11 +74,7 @@
             <% category.bookmarks.forEach(bookmark => { %>
               <div class="py-1.5">
                 <a href="<%= bookmark.url %>" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm hover:text-primary-theme transition-colors truncate min-w-0">
-                  <% if (bookmark.icon) { %>
-                    <img src="<%= bookmark.icon %>" referrerpolicy="no-referrer" class="w-4 h-4 rounded-sm shrink-0" alt="">
-                  <% } else { %>
-                    <i class="fa-solid fa-link text-xs opacity-50 w-4 text-center shrink-0"></i>
-                  <% } %>
+                  <%- include('partials/bookmark-icon', { icon: bookmark.icon, size: 'w-4 h-4 rounded-sm' }) %>
                   <span class="truncate"><%= bookmark.title %></span>
                 </a>
               </div>

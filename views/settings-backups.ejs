@@ -82,7 +82,7 @@
       try {
         const res = await fetch(page + '/upload', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/octet-stream' },
+          headers: { 'Content-Type': 'application/octet-stream', 'X-Backup-Name': encodeURIComponent(input.files[0].name) },
           body: input.files[0]
         });
         message = (await res.json()).message;

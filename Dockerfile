@@ -10,9 +10,9 @@ COPY prisma ./prisma
 # Full install (not --production): the prisma CLI is a devDependency but is also
 # needed at container start to run "prisma migrate deploy" against the SQLite volume.
 RUN npm ci
-RUN npx prisma generate
 
 COPY . .
+RUN npx prisma generate
 RUN chmod +x docker-entrypoint.sh
 
 # Sane defaults matching the mounted volumes below — SESSION_SECRET is generated into

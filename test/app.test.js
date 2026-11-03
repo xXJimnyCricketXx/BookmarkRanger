@@ -164,6 +164,37 @@ test('snippets up to 2 MB are accepted', async () => {
     assert.strictEqual(res.status, 302);
 });
 
+test('bookmarks fall back to the local icon', async () => {
+    const board = await db.board.create({ data: { name: 'icons' } });
+    const category = await db.category.create({ data: { name: 'c', boardId: board.id } });
+    await db.bookmark.create({ data: { title: 'none', url: 'https://example.com/', isPinned: true, categoryId: category.id } });
+    await db.bookmark.create({ data: { title: 'own', url: 'https://example.org/', icon: 'https://example.org/own.png', isPinned: true, categoryId: category.id } });
+
+    const fallback = '/ressources/bookmark-fallback.svg';
+    const pages = [await app.get('/'), await app.get(`/bookmarks/boards/${board.id}/panel`)];
+    for (const page of pages) {
+        assert.strictEqual(page.status, 200);
+        // The panel arrives as JSON, with its quotes escaped.
+        const html = page.text.replaceAll('\\"', '"');
+        assert.ok(html.includes(`<img src="${fallback}"`));
+        assert.ok(html.includes('<img src="https://example.org/own.png"'));
+        assert.ok(html.includes(`data-fallback="${fallback}"`));
+    }
+    const file = await app.get(fallback);
+    assert.strictEqual(file.status, 200);
+    assert.match(file.type, /svg/);
+
+    await db.board.delete({ where: { id: board.id } });
+});
+
+test('dates are stored in the format existing databases use', async () => {
+    const board = await db.board.create({ data: { name: 'dates' } });
+    const [{ type }] = await db.$queryRawUnsafe('SELECT typeof(createdAt) AS type FROM Board WHERE id = ?', board.id);
+    assert.strictEqual(type, 'integer');
+    assert.ok(Math.abs(board.createdAt.getTime() - Date.now()) < 60000);
+    await db.board.delete({ where: { id: board.id } });
+});
+
 // Last on purpose: invalidates the session the other tests use.
 test('a session whose account no longer exists goes back to login', async () => {
     const other = await db.account.create({ data: { username: 'other', passwordHash: 'x' } });

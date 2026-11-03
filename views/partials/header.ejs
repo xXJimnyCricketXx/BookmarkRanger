@@ -15,12 +15,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= typeof title !== 'undefined' ? title + ' — ' + siteName : siteName %></title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: 'class' };
-  </script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="<%= baseUrl %>/vendor/hljs-atom-one-dark.min.css">
   <link rel="icon" type="image/png" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
   <link rel="apple-touch-icon" href="<%= baseUrl %>/ressources/bookmarkranger-icon.png">
@@ -93,6 +89,7 @@
     .sidebar { width: 100%; flex-shrink: 0; }
     @media (min-width: 768px) { .sidebar { width: 15rem; } }
   </style>
+  <link rel="stylesheet" href="<%= baseUrl %>/vendor/tailwind.min.css">
 </head>
 
 <body class="font-sans transition-colors duration-300 min-h-screen flex flex-col">

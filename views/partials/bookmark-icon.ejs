@@ -1,0 +1,2 @@
+<% const fallbackIcon = `${baseUrl}/ressources/bookmark-fallback.svg`; %>
+<img src="<%= icon || fallbackIcon %>" data-fallback="<%= fallbackIcon %>" onerror="this.onerror=null;this.src=this.dataset.fallback" referrerpolicy="no-referrer" class="<%= size %> shrink-0" alt="">

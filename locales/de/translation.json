@@ -172,7 +172,7 @@
     "backup_retention_hint": "Gilt nur für automatische Backups. Manuelle, hochgeladene und Sicherheitskopien werden nie automatisch gelöscht.",
     "backup_upload": "Backup hochladen",
     "backup_restore": "Wiederherstellen",
-    "backup_confirm_restore": "Backup vom {{name}} wiederherstellen? Der aktuelle Stand wird vorher als Sicherheitskopie gespeichert, danach musst du dich neu anmelden.",
+    "backup_confirm_restore": "Backup vom {{name}} wiederherstellen? Alles geht auf den Stand dieses Backups zurück, auch Benutzername und Passwort. Der aktuelle Stand wird vorher als Sicherheitskopie gespeichert, danach musst du dich neu anmelden.",
     "backup_type_manual": "Manuell",
     "backup_type_auto": "Automatisch",
     "backup_type_safety": "Sicherheitskopie",

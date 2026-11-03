@@ -3,10 +3,11 @@
 // from before icons became hotlinked URLs — re-resolving those also fixes the case where a
 // bookmarks database was copied to an environment that doesn't have the matching icon files
 // on disk. Run with: node scripts/backfill-favicons.js
-const { PrismaClient } = require('@prisma/client');
+require('dotenv').config({ quiet: true });
+const { createClient } = require('../config/database');
 const { fetchFavicon } = require('../utils/favicon');
 
-const prisma = new PrismaClient();
+const prisma = createClient();
 
 (async () => {
     const bookmarks = await prisma.bookmark.findMany({

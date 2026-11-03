@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
-const { PrismaClient } = require('@prisma/client');
+require('dotenv').config({ quiet: true });
+const { createClient } = require('../config/database');
 
-const prisma = new PrismaClient();
+const prisma = createClient();
 
 async function main() {
     const existing = await prisma.account.count();

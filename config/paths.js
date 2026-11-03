@@ -7,4 +7,15 @@ const ROOT_DIR = path.join(__dirname, '..');
 const DATA_DIR = process.env.DATA_DIR || path.join(ROOT_DIR, 'data');
 const BACKUPS_DIR = process.env.BACKUPS_DIR || path.join(ROOT_DIR, 'backups');
 
-module.exports = { ROOT_DIR, DATA_DIR, BACKUPS_DIR };
+// A relative sqlite "file:" path has always meant relative to the prisma folder, and existing
+// installations rely on that. The driver would otherwise read it relative to the working directory.
+function dbFilePath() {
+    const raw = (process.env.DATABASE_URL || '').replace(/^file:/, '').split('?')[0];
+    return path.resolve(ROOT_DIR, 'prisma', raw);
+}
+
+function fileUrl(filePath) {
+    return `file:${filePath.split(path.sep).join('/')}`;
+}
+
+module.exports = { ROOT_DIR, DATA_DIR, BACKUPS_DIR, dbFilePath, fileUrl };

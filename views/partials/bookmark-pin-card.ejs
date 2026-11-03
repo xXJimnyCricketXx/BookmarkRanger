@@ -2,11 +2,7 @@
   <% if (locals.draggable) { %>
     <i class="fa-solid fa-grip-vertical drag-handle text-xs opacity-30 hover:opacity-70 cursor-grab active:cursor-grabbing shrink-0" title="<%= t('dashboard.drag_handle') %>"></i>
   <% } %>
-  <% if (bookmark.icon) { %>
-    <img src="<%= bookmark.icon %>" referrerpolicy="no-referrer" class="w-5 h-5 rounded shrink-0" alt="">
-  <% } else { %>
-    <i class="fa-solid fa-bookmark text-primary-theme text-xs w-5 text-center shrink-0"></i>
-  <% } %>
+  <%- include('bookmark-icon', { icon: bookmark.icon, size: 'w-5 h-5 rounded' }) %>
   <div class="min-w-0 flex-grow">
     <a href="<%= bookmark.url %>" <%- settings.openLinksInNewTab ? 'target="_blank" rel="noopener"' : '' %> class="font-bold text-sm hover:text-primary-theme transition-colors truncate block"><%= bookmark.title %></a>
     <p class="text-xs opacity-50 truncate"><%= bookmark.category ? bookmark.category.name : '' %></p>
